@@ -1,3 +1,5 @@
-authentication/.env
 .home
 .venv
+authentication/.env
+authentication/__pycache__
+services/__pycache__

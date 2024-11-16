@@ -1,18 +1,34 @@
-from authentication.getAuthDetails import AuthenticationDetails
 from datetime import datetime
 
 import requests
 
 
-class ServiceData():
-    def __init__(self):
-        details = AuthenticationDetails()
-        auth_details = details._get_details()
-        self.__password = auth_details[0]
-        self.__username = auth_details[1]
+class ServiceDetails():
+    def __init__(self, username: str = None, password: str = None):
+        self.__username = username
+        self.__password = password
 
-    def _get_service_details(self, service_uid: str, time_now = datetime.now().strftime("%d/%m/%Y")):
-        pass
+        self._service_url: str = "https://api.rtt.io/v1/json/service/"
 
-    def _filter_by_calling_point(self, filter):
-        pass
+
+    def _get_service_details(self, service_uid: str, time: str = datetime.now().strftime("/%d/%m/%Y")):
+        search_query = str(self._service_url) + str(service_uid) + str(time)
+        api_response =  requests.get(search_query, auth=(self.__username, self.__password))
+
+        if api_response.status_code == 200:
+            service_data = api_response.json()
+
+
+
+        else:
+            raise ConnectionAbortedError("Failed to connect to the RTT API server. Status code:", api_response.status_code)
+
+    def __filter_by_calling_point(self, filter = None):
+        if filter == None:
+            pass
+        else:
+            pass ## Search through calling points for filter 
+
+
+#sys = ServiceDetails()
+#print(sys._get_service_details("G10101"))
