@@ -21,11 +21,12 @@ class ServiceDetails():
 
 
         else:
-            raise ConnectionAbortedError("Failed to connect to the RTT API server. Status code:", api_response.status_code)
+            raise ConnectionRefusedError("Failed to connect to the RTT API server. Status code:", api_response.status_code)
 
-    def __filter_by_calling_point(self, filter = None):
+    def __filter_by_calling_point(self, filter_items: list, filter: str):
         if filter == None:
-            pass
+            raise ValueError("No filter was provided. Provide a filter.")
+
         else:
             pass ## Search through calling points for filter 
 

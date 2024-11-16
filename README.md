@@ -43,4 +43,14 @@ Your username is prefixed with `rttapi_` and your password is a 40 character hex
 
 ## Documentation
 
-Soon
+### get_departures()
+
+Details...
+
+### get_arrivals()
+
+Details...
+
+### get_service()
+
+Details...
