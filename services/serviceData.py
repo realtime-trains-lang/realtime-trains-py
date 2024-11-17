@@ -30,14 +30,14 @@ class ServiceDetails():
             elif api_response.status_code == 404:
                 raise ValueError("Service UID not recognised. \nStatus code:", api_response.status_code)
             
-            elif api_response.status_code == 400:
+            elif api_response.status_code == 401 or api_response.status_code == 403:
                 raise ValueError("Access blocked: check your credentials. \nStatus code:", api_response.status_code)
 
             else:
                 raise ConnectionRefusedError("Failed to connect to the RTT API server. Try again in a few minutes. \nStatus code:", api_response.status_code)
 
         else: 
-            raise ValueError("Date provided did not meet requirements or fall into the valid date range.")
+            raise ValueError("Invalid date. Date provided did not meet requirements or fall into the valid date range.")
 
     def __filter_by_calling_point(self, filter_items: list, filter: str):
         if filter == None:
