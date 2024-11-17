@@ -20,6 +20,8 @@ Soon
 
 Running the realtime-trains-py package locally on your machine will require you to implement a few things before you can start. You can skip step one (1) if you have installed the package using `pip install realtime-trains-py`.
 
+### Step one (1)
+
 The first step is to create a file called `.env`. You should add this file into the `authentication` folder. This will allow the package to reference your username and password without you having it on display in your code. [I don't have a username or password.](https://github.com/anonymous44401/realtime-trains-py/#i-dont-have-a-username-or-password)
 
 > [!IMPORTANT]
@@ -35,6 +37,8 @@ api_password = "your_password"
 
 Ensure you change the respective fields above to contain your username and password, or the package won't work and you'll receive and error.
 
+### Step two (2)
+
 The second step, is to initialise the package. To do this, you'll need to make a new python file: `your_file.py`. In this file, you'll need to import `realtime_trains_py` and assign `RealtimeTrainsPy()` to a variable of your choosing, like below.
 
 ```
@@ -46,27 +50,13 @@ your_var = RealtimeTrainsPy()
 When you initialise RealtimeTrainsPy(), you can provide between zero (0) and three (3) arguments, like below.
 
 ```
-your_var = RealtimeTrainsPy() # zero arguments
+your_var = RealtimeTrainsPy(complexity = "", username = "your_username", password = "your_password")
 ```
-
-```
-your_var = RealtimeTrainsPy(complexity = "") # one argument
-```
-
-```
-your_var = RealtimeTrainsPy(username = "your_username", password = "your_password") # two arguments
-```
-
-```
-your_var = RealtimeTrainsPy(complexity = "", username = "your_username", password = "your_password") # three arguments
-```
-
-On the same line
 
 > [!IMPORTANT]
-> Make sure you provide both your username and password, or you won't be able to access the API.
+> Make sure you provide both your username and password together, or you won't be able to access the API.
 
-Your final step is the try running the program
+Your final step is the try running the program. If you have followed this setup guide correctly, you shouldn't receive any [errors](https://github.com/anonymous44401/realtime-trains-py/#errors). If you receive an error, re-read the setup guide and [report an issue](https://github.com/anonymous44401/realtime-trains-py/issues) with realtime-trains-py on GitHub so that we can check our systems.
 
 ### Complexities:
 
