@@ -10,13 +10,13 @@ class RealtimeTrainsPy():
             self._username = self.__auth_details._username
             self.__password = self.__auth_details._password
         elif (username != None and password == None) or (username == None and password != None):
-            raise ValueError("Both username and password must be provided. Only one field was provided.")
+            raise ValueError("Missing details. Both username and password must be provided. Only one field was provided.")
 
         else:
             self._username = username
             self.__password = password
             if complexity not in ["s", "a", "c"]:
-                raise ValueError("Complexity not recognised. Select either 's' (simple), 'a' (advanced) or 'c' (complex).")
+                raise ValueError("Complexity not recognised. Select a valid type.")
         
         self.__service_details = ServiceDetails(username = self._username, password = self.__password, complexity = complexity)
 
