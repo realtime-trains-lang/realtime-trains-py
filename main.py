@@ -1,10 +1,10 @@
 from authentication.getAuthDetails import AuthenticationDetails
 ## board needed
-from services.serviceData import ServiceDetails
+from services.serviceData import Service, ServiceDetails
 
 
 class RealtimeTrainsPy():
-    def __init__(self, username: str = None, password: str = None):
+    def __init__(self, complexity = "s", username: str = None, password: str = None):
         if username == None and password == None:
             self.__auth_details = AuthenticationDetails()
             self._username = self.__auth_details._username
@@ -15,8 +15,11 @@ class RealtimeTrainsPy():
         else:
             self._username = username
             self.__password = password
+            if complexity not in ["s", "a", "c"]:
+                raise ValueError("Complexity not recognised. Select either 's' (simple), 'a' (advanced) or 'c' (complex).")
         
-        self.__service_details = ServiceDetails(self._username, self.__password )
+        self.__service_details = ServiceDetails(username = self._username, password = self.__password, complexity = complexity)
+
 
     def _get_departures(self, tiploc: str, filter: str, time: str = None, rows: int = None) -> list:
         pass
@@ -28,4 +31,4 @@ class RealtimeTrainsPy():
         pass
 
 
-sys = RealtimeTrainsPy("anonymous4401", "b")
+sys = RealtimeTrainsPy(complexity = "a", username = "rttapi_anonymous4401", password = "b")
