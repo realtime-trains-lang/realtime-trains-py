@@ -1,6 +1,7 @@
 .home
 .venv
+__pycache__
+authentication/.env
+pyproject.toml
 test.py
 tests
-authentication/.env
-__pycache__
