@@ -131,7 +131,7 @@ The `get_service()` method returns a list of departures. The amount of data retu
 > If you have recently registered it may take a while for your details to be verified before you can access the API.
 > If this problem persists, visit the [api portal](https://api.rtt.io/) for support. You can also [report an issue](https://github.com/anonymous44401/realtime-trains-py/issues) with realtime-trains-py on GitHub so that we can check our systems.
 
-### Invalid Fate
+### Invalid Date
 
 > ```
 > Date provided did not meet requirements or fall into the valid date range.
