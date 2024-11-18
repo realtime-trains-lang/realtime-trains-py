@@ -2,9 +2,9 @@
 
 Maintained by [@anonymous44401](https://github.com/anonymous44401)
 
-Last updated: 18/11/2024 11:08 UTC
+Last updated: 18/11/2024 20:31 UTC
 
-### Current version: [V0.0.0 [Alpha]](https://github.com/anonymous44401/realtime-trains-py/releases/tag/v0.0.0-alpha)
+### Current version: [V0.0.1 [Alpha]](https://github.com/anonymous44401/realtime-trains-py/releases/tag/v0.0.0-alpha)
 
 ## Contents
 
@@ -43,7 +43,7 @@ Ensure you change the respective fields above to contain your username and passw
 The second step, is to initialise the package. To do this, you'll need to make a new python file: `your_file.py`. In this file, you'll need to import `realtime_trains_py` and assign `RealtimeTrainsPy()` to a variable of your choosing, like below.
 
 ```
-from realtime_trains_py.main import RealtimeTrainsPy
+from [tbc] import [tbc]
 
 your_var = RealtimeTrainsPy()
 ```
