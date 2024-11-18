@@ -18,17 +18,17 @@ class RealtimeTrainsPy():
             if complexity not in ["s", "a", "c"]:
                 raise ValueError("Complexity not recognised. Select a valid type.")
         
-        self.__service_details = ServiceDetails(username = self._username, password = self.__password, complexity = complexity)
+        self.__services = ServiceDetails(username = self._username, password = self.__password, complexity = complexity)
 
 
-    def _get_departures(self, tiploc: str, filter: str, time: str = None, rows: int = None) -> list:
+    def get_departures(self, tiploc: str, filter: str, time: str = None, rows: int = None) -> list:
         pass
 
-    def _get_arrivals(self, tiploc: str, filter: str, time: str = None, rows: int = None) -> list:
+    def get_arrivals(self, tiploc: str, filter: str, time: str = None, rows: int = None) -> list:
         pass
 
-    def _get_service(self, service_uid: str, time: str = None) -> Service:
-        pass
+    def get_service(self, service_uid: str, date: str = None) -> Service:
+        self.__services._get_service_details(service_uid = service_uid, date = date)
 
 
 sys = RealtimeTrainsPy(complexity = "a", username = "rttapi_anonymous4401", password = "b")

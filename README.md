@@ -2,7 +2,7 @@
 
 Maintained by [@anonymous44401](https://github.com/anonymous44401)
 
-Last updated: 17/11/2024 16:40 UTC
+Last updated: 18/11/2024 11:08 UTC
 
 ### Current version: [V0.0.0 [Alpha]](https://github.com/anonymous44401/realtime-trains-py/releases/tag/v0.0.0-alpha)
 
@@ -75,7 +75,7 @@ Advanced (a)
 
 Complex (c)
 
-> Complex mode provides you with access to all data the API has to offer. This mode offers no restrictions to what you can access, however it does not format any data for you. Other modes will provide data in a set format, but complex mode will only provide you data in json format.
+> Complex mode provides you with access to all data the API has to offer. This mode offers no restrictions to what you can access, however it does not format any data for you. Other modes will provide data in a set format, but complex mode will only provide you data as a new .json file.
 >
 > This mode is recommended for anyone with understanding of json files and who wants to see all the nerdy train stuff.
 
@@ -103,7 +103,7 @@ Details...
 The `get_service()` method takes one (1) or two (2) positional arguments. These are:
 
 - `service_uid` (a string) - like G54072
-- `date` (a string) - like 16/11/2024 (Support for specific times will be added soon)
+- `date` (a string) - like 2024/11/16 (Support for specific times will be added soon)
 
 The `date` argument is optional. I will be defaulted to the current date (UTC) if left blank.
 
