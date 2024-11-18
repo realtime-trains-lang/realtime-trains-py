@@ -1,5 +1,6 @@
 .home
 .venv
+test.py
+tests
 authentication/.env
-authentication/__pycache__
-services/__pycache__
+__pycache__

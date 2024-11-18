@@ -4,7 +4,7 @@ from services.serviceData import Service, ServiceDetails
 
 
 class RealtimeTrainsPy():
-    def __init__(self, complexity = "s", username: str = None, password: str = None):
+    def __init__(self, complexity = "s", username: str = None, password: str = None) -> None: 
         if username == None and password == None:
             self.__auth_details = AuthenticationDetails()
             self._username = self.__auth_details._username
@@ -27,7 +27,7 @@ class RealtimeTrainsPy():
     def _get_arrivals(self, tiploc: str, filter: str, time: str = None, rows: int = None) -> list:
         pass
 
-    def _get_service(self, service_uid: str, time: str = None) -> list:
+    def _get_service(self, service_uid: str, time: str = None) -> Service:
         pass
 
 
