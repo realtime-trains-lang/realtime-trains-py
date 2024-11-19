@@ -1,6 +1,6 @@
-from authentication.getAuthDetails import AuthenticationDetails
+from src.authentication.getAuthDetails import AuthenticationDetails
 ## board needed
-from services.serviceData import Service, ServiceDetails
+from src.services.serviceData import Service, ServiceDetails
 
 
 class RealtimeTrainsPy():

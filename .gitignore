@@ -4,5 +4,7 @@ __pycache__
 authentication/.env
 dist
 pyproject.toml
+README_2.md
+realtime_trains_py.egg-info
 test.py
 tests
