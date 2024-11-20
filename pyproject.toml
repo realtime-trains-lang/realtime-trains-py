@@ -1,0 +1,25 @@
+[project]
+name = "realtime-trains-py"
+version = "0.0.2a1"
+authors = [
+  { name="anonymous44401", email="anonymous4401.ad@gmail.com" },
+]
+description = "Python Package for the RealTime Trains API."
+readme = "README.md"
+license = {file = "LICENSE.md"}
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Development Status :: 3 - Alpha",
+]
+
+[project.urls]
+Repository = "https://github.com/anonymous44401/realtime-trains-py"
+Issues = "https://github.com/anonymous44401/realtime-trains-py/issues"
+Discord = "https://discord.com/invite/"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
