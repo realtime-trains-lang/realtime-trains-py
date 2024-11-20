@@ -1,4 +1,3 @@
-- [ ] Set up initial folders
-- [ ] Set up API authentication
+- [x] Set up initial folders
 - [ ] Set up service class - adv and simple
 - [ ] Set up board classes - arrival, departure board
