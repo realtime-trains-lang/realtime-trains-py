@@ -3,27 +3,21 @@ from datetime import datetime, timedelta, date
 import requests
 import json
 
-class Service():
-    def __init__():
-        pass
-        ### Class service for returning services to main
-
-class ServiceDetails():
+class Boards:
     def __init__(self, username: str = None, password: str = None, complexity: str = "s"):
         self.__username = username
         self.__password = password
         self.__complexity = complexity
         self.__date: str = (datetime.now()).strftime("%Y/%m/%d")
 
-        self._service_url: str = "https://api.rtt.io/api/v1/json/service/"
+        self._board_url: str = "https://api.rtt.io/api/v1/json/search/"
 
-
-    def _get_service_details(self, service_uid: str, date: str = None) -> None | list:
+    def _get_board_details(self, tiploc, filter, date: str = None):
         if date is None:
             date = self.__date
 
-        if self.__complexity == "c" or self.__validate_time(date):
-            search_query = str(self._service_url) + str(service_uid) + "/" + str(date)
+        if self.__complexity == "c" or self.__complexity == "c" or self.__validate_time(date):
+            search_query = str(self._board_url) + str(tiploc) + "/" + str(date)
             print(search_query)
             api_response =  requests.get(search_query, auth=(self.__username, self.__password))
 
@@ -31,7 +25,7 @@ class ServiceDetails():
                 service_data = api_response.json()
 
                 if self.__complexity == "c":
-                    file_name = service_uid + "_service_data.json"
+                    file_name = tiploc + "_board_data.json"
 
                     with open(file_name, 'x', encoding='utf-8') as file:
                         json.dump(service_data, file, ensure_ascii = False, indent = 4)
@@ -58,12 +52,6 @@ class ServiceDetails():
         else: 
             raise ValueError("Invalid date. Date provided did not meet requirements or fall into the valid date range.")
 
-    def __filter_by_calling_point(self, filter_items: list, filter: str):
-        if filter == None:
-            raise ValueError("No filter was provided. Provide a filter.")
-
-        else:
-            pass ## Search through calling points for filter 
 
     def __validate_time(self, date: str) -> bool:
         first_valid_date = self.__get_time_delta(-8)
@@ -96,9 +84,3 @@ class ServiceDetails():
         date_delta[2] = (str(date_delta[2]).split(" "))[0]
 
         return date_delta
-
-
-#sys = ServiceDetails()
-
-#print(sys.__get_time_delta(7))
-#print(sys._get_service_details("G10101"))
