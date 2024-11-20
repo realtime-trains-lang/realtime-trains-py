@@ -1,6 +1,0 @@
-__init__
-authentication
-boards
-main
-services
-test
