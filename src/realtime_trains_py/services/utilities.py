@@ -2,13 +2,6 @@ from datetime import datetime, timedelta
 
 months: list = ["31", "28", "31", "30", "31", "30", "31", "31", "30", "31", "30", "31"]
 
-def validate(type: str, input: str):
-    if type == "d":
-        validate_date(input)
-
-    elif type == "t":
-        validate_time(input)
-
 def validate_date(date: str) -> bool:
     first_valid_date = get_time_delta(-8)
     last_valid_date = get_time_delta(81)
@@ -51,6 +44,7 @@ def get_time_delta(delta: int) -> str:
     date_delta[2] = (str(date_delta[2]).split(" "))[0]
 
     return date_delta
+
 
 def validate_time(time: str) -> bool:
     time_data: list = []

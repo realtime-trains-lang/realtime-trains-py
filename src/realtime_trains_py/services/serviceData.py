@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from services.utilities import validate
+from services.utilities import validate_time, validate_date
 
 import requests
 import json
@@ -19,24 +19,15 @@ class ServiceDetails():
         self._service_url: str = "https://api.rtt.io/api/v1/json/service/"
 
 
-    def _get_service_details(self, service_uid: str, date: str, time: str) -> str | list:
+    def _get_service_details(self, service_uid: str, date: str | None, time: str | None) -> str | list:
         if date is None:
             date = self.__date
-
-        else:
-            if not validate("d", date):
-                raise ValueError("Invalid date. Date provided did not meet requirements or fall into the valid date range.")
-            #### todo move validation to up here ish
 
         if time is None:
             time = (datetime.now()).strftime("%H%M")
 
-        else:
-            if not validate("t", time):
-                raise ValueError("Invalid time. Time provided did not meet requirements or fall into the valid time range.")
 
-
-        if self.__complexity == "c":
+        if self.__complexity == "c" or (validate_date(time) and validate_time(time)):
             search_query = str(self._service_url) + str(service_uid) + "/" + str(date)
             #print(search_query)
             api_response =  requests.get(search_query, auth=(self.__username, self.__password))
@@ -73,6 +64,8 @@ class ServiceDetails():
 
             else:
                 raise ConnectionRefusedError("Failed to connect to the RTT API server. Try again in a few minutes. Status code:", api_response.status_code)
+        else:
+            raise ValueError("Invalid date or time. Date or time provided did not meet requirements or fall into the valid date/time range.")
 
 
 #sys = ServiceDetails()

@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from services.utilities import validate
+from services.utilities import validate_time, validate_date
 
 import requests
 import json
@@ -20,7 +20,7 @@ class Boards:
         if time is None:
             time = (datetime.now()).strftime("%H%M")
 
-        if self.__complexity == "c" or (validate("d", date) and validate("t", time)):
+        if self.__complexity == "c" or (validate_date(date) and validate_time(time)):
             if filter != None:
                 search_query = "/json/search/" + str(tiploc) + "/to/<toStation>" + str(filter)
 
@@ -59,7 +59,7 @@ class Boards:
                 raise ConnectionRefusedError("Failed to connect to the RTT API server. Try again in a few minutes. Status code:", api_response.status_code)
 
         else: 
-            raise ValueError("Invalid date. Date provided did not meet requirements or fall into the valid date range.")
+            raise ValueError("Invalid date or time. Date or time provided did not meet requirements or fall into the valid date/time range.")
 
     def _get_arr_board_details(self, tiploc, filter, rows, time, date: str = None):
         if date is None:
@@ -68,7 +68,7 @@ class Boards:
         if time is None:
             time = (datetime.now()).strftime("%H%M")
 
-        if self.__complexity == "c" or (validate("d", date) and validate("t", time)):
+        if self.__complexity == "c" or (validate_date(date) and validate_time(time)):
             if filter != None:
                 search_query = "/json/search/" + str(tiploc) + "/to/<toStation>" + str(filter)
 
@@ -107,4 +107,4 @@ class Boards:
                 raise ConnectionRefusedError("Failed to connect to the RTT API server. Try again in a few minutes. Status code:", api_response.status_code)
 
         else: 
-            raise ValueError("Invalid date. Date provided did not meet requirements or fall into the valid date range.")
+            raise ValueError("Invalid date or time. Date or time provided did not meet requirements or fall into the valid date/time range.")
