@@ -1,0 +1,887 @@
+{
+    "serviceUid": "G54071",
+    "runDate": "2024-11-21",
+    "serviceType": "train",
+    "isPassenger": true,
+    "trainIdentity": "9J35",
+    "powerType": "EMU",
+    "trainClass": "B",
+    "atocCode": "TL",
+    "atocName": "Thameslink",
+    "performanceMonitored": true,
+    "origin": [
+        {
+            "tiploc": "PBRO",
+            "description": "Peterborough",
+            "workingTime": "125300",
+            "publicTime": "1253"
+        }
+    ],
+    "destination": [
+        {
+            "tiploc": "HORSHAM",
+            "description": "Horsham",
+            "workingTime": "154000",
+            "publicTime": "1540"
+        }
+    ],
+    "locations": [
+        {
+            "realtimeActivated": true,
+            "tiploc": "PBRO",
+            "crs": "PBO",
+            "description": "Peterborough",
+            "gbttBookedDeparture": "1253",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeDeparture": "1253",
+            "realtimeDepartureActual": false,
+            "platform": "1",
+            "platformConfirmed": false,
+            "platformChanged": false,
+            "line": "FL",
+            "lineConfirmed": false,
+            "displayAs": "ORIGIN",
+            "associations": [
+                {
+                    "type": "next",
+                    "associatedUid": "G54054",
+                    "associatedRunDate": "2024-11-21"
+                }
+            ]
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "HNTNGDN",
+            "crs": "HUN",
+            "description": "Huntingdon",
+            "gbttBookedArrival": "1307",
+            "gbttBookedDeparture": "1310",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1306",
+            "realtimeArrivalActual": false,
+            "realtimeDeparture": "1310",
+            "realtimeDepartureActual": false,
+            "platform": "2",
+            "platformConfirmed": false,
+            "platformChanged": false,
+            "line": "SL",
+            "lineConfirmed": false,
+            "path": "FL",
+            "pathConfirmed": false,
+            "displayAs": "CALL"
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "STNEOTS",
+            "crs": "SNO",
+            "description": "St Neots",
+            "gbttBookedArrival": "1317",
+            "gbttBookedDeparture": "1318",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1317",
+            "realtimeArrivalActual": false,
+            "realtimeDeparture": "1318",
+            "realtimeDepartureActual": false,
+            "platform": "4",
+            "platformConfirmed": false,
+            "platformChanged": false,
+            "displayAs": "CALL"
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "SNDY",
+            "crs": "SDY",
+            "description": "Sandy",
+            "gbttBookedArrival": "1325",
+            "gbttBookedDeparture": "1325",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1325",
+            "realtimeArrivalActual": false,
+            "realtimeDeparture": "1325",
+            "realtimeDepartureActual": false,
+            "platform": "1",
+            "platformConfirmed": false,
+            "platformChanged": false,
+            "line": "SL",
+            "lineConfirmed": false,
+            "displayAs": "CALL"
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "BIGLSWD",
+            "crs": "BIW",
+            "description": "Biggleswade",
+            "gbttBookedArrival": "1329",
+            "gbttBookedDeparture": "1330",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1329",
+            "realtimeArrivalActual": false,
+            "realtimeDeparture": "1330",
+            "realtimeDepartureActual": false,
+            "platform": "1",
+            "platformConfirmed": false,
+            "platformChanged": false,
+            "displayAs": "CALL"
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "ARLSEY",
+            "crs": "ARL",
+            "description": "Arlesey",
+            "gbttBookedArrival": "1335",
+            "gbttBookedDeparture": "1335",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1334",
+            "realtimeArrivalActual": false,
+            "realtimeDeparture": "1335",
+            "realtimeDepartureActual": false,
+            "displayAs": "CALL"
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "HITCHIN",
+            "crs": "HIT",
+            "description": "Hitchin",
+            "gbttBookedArrival": "1340",
+            "gbttBookedDeparture": "1341",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1340",
+            "realtimeArrivalActual": false,
+            "realtimeDeparture": "1341",
+            "realtimeDepartureActual": false,
+            "platform": "1",
+            "platformConfirmed": false,
+            "platformChanged": false,
+            "line": "SL",
+            "lineConfirmed": false,
+            "displayAs": "CALL"
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "STEVNGE",
+            "crs": "SVG",
+            "description": "Stevenage",
+            "gbttBookedArrival": "1346",
+            "gbttBookedDeparture": "1347",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1345",
+            "realtimeArrivalActual": false,
+            "realtimeDeparture": "1347",
+            "realtimeDepartureActual": false,
+            "platform": "1",
+            "platformConfirmed": false,
+            "platformChanged": false,
+            "displayAs": "CALL"
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "FNPK",
+            "crs": "FPK",
+            "description": "Finsbury Park",
+            "gbttBookedArrival": "1406",
+            "gbttBookedDeparture": "1407",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1405",
+            "realtimeArrivalActual": false,
+            "realtimeDeparture": "1407",
+            "realtimeDepartureActual": false,
+            "platform": "2",
+            "platformConfirmed": false,
+            "platformChanged": false,
+            "line": "SL1",
+            "lineConfirmed": false,
+            "displayAs": "CALL"
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "STPXBOX",
+            "crs": "STP",
+            "description": "St Pancras International",
+            "gbttBookedArrival": "1414",
+            "gbttBookedDeparture": "1415",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1413",
+            "realtimeArrivalActual": false,
+            "realtimeDeparture": "1415",
+            "realtimeDepartureActual": false,
+            "platform": "A",
+            "platformConfirmed": false,
+            "platformChanged": false,
+            "line": "SB",
+            "lineConfirmed": false,
+            "displayAs": "CALL"
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "FRNDNLT",
+            "crs": "ZFD",
+            "description": "Farringdon",
+            "gbttBookedArrival": "1419",
+            "gbttBookedDeparture": "1419",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1418",
+            "realtimeArrivalActual": false,
+            "realtimeDeparture": "1419",
+            "realtimeDepartureActual": false,
+            "platform": "3",
+            "platformConfirmed": false,
+            "platformChanged": false,
+            "displayAs": "CALL"
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "CTMSLNK",
+            "crs": "CTK",
+            "description": "City Thameslink",
+            "gbttBookedArrival": "1421",
+            "gbttBookedDeparture": "1421",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1420",
+            "realtimeArrivalActual": false,
+            "realtimeDeparture": "1421",
+            "realtimeDepartureActual": false,
+            "platform": "2",
+            "platformConfirmed": false,
+            "platformChanged": false,
+            "displayAs": "CALL"
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "BLFR",
+            "crs": "BFR",
+            "description": "London Blackfriars",
+            "gbttBookedArrival": "1423",
+            "gbttBookedDeparture": "1424",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1423",
+            "realtimeArrivalActual": false,
+            "realtimeDeparture": "1424",
+            "realtimeDepartureActual": false,
+            "platform": "1",
+            "platformConfirmed": false,
+            "platformChanged": false,
+            "line": "DSS",
+            "lineConfirmed": false,
+            "displayAs": "CALL"
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "LNDNBDE",
+            "crs": "LBG",
+            "description": "London Bridge",
+            "gbttBookedArrival": "1429",
+            "gbttBookedDeparture": "1430",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1428",
+            "realtimeArrivalActual": false,
+            "realtimeDeparture": "1430",
+            "realtimeDepartureActual": false,
+            "platform": "4",
+            "platformConfirmed": false,
+            "platformChanged": false,
+            "line": "4",
+            "lineConfirmed": false,
+            "displayAs": "CALL"
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "ECROYDN",
+            "crs": "ECR",
+            "description": "East Croydon",
+            "gbttBookedArrival": "1445",
+            "gbttBookedDeparture": "1447",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1444",
+            "realtimeArrivalActual": false,
+            "realtimeDeparture": "1447",
+            "realtimeDepartureActual": false,
+            "platform": "6",
+            "platformConfirmed": false,
+            "platformChanged": false,
+            "path": "SL",
+            "pathConfirmed": false,
+            "displayAs": "CALL"
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "COLSDNS",
+            "crs": "CDS",
+            "description": "Coulsdon South",
+            "gbttBookedArrival": "1455",
+            "gbttBookedDeparture": "1455",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1453",
+            "realtimeArrivalActual": false,
+            "realtimeDeparture": "1455",
+            "realtimeDepartureActual": false,
+            "displayAs": "CALL"
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "MERSTHM",
+            "crs": "MHM",
+            "description": "Merstham",
+            "gbttBookedArrival": "1501",
+            "gbttBookedDeparture": "1501",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1500",
+            "realtimeArrivalActual": false,
+            "realtimeDeparture": "1501",
+            "realtimeDepartureActual": false,
+            "displayAs": "CALL"
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "REDHILL",
+            "crs": "RDH",
+            "description": "Redhill",
+            "gbttBookedArrival": "1505",
+            "gbttBookedDeparture": "1507",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1504",
+            "realtimeArrivalActual": false,
+            "realtimeDeparture": "1507",
+            "realtimeDepartureActual": false,
+            "platform": "3",
+            "platformConfirmed": false,
+            "platformChanged": false,
+            "displayAs": "CALL"
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "HORLEY",
+            "crs": "HOR",
+            "description": "Horley",
+            "gbttBookedArrival": "1513",
+            "gbttBookedDeparture": "1514",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1512",
+            "realtimeArrivalActual": false,
+            "realtimeDeparture": "1514",
+            "realtimeDepartureActual": false,
+            "platform": "2",
+            "platformConfirmed": false,
+            "platformChanged": false,
+            "displayAs": "CALL"
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "GTWK",
+            "crs": "GTW",
+            "description": "Gatwick Airport",
+            "gbttBookedArrival": "1516",
+            "gbttBookedDeparture": "1517",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1516",
+            "realtimeArrivalActual": false,
+            "realtimeDeparture": "1517",
+            "realtimeDepartureActual": false,
+            "platform": "3",
+            "platformConfirmed": false,
+            "platformChanged": false,
+            "path": "SL",
+            "pathConfirmed": false,
+            "displayAs": "CALL"
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "THBDGS",
+            "crs": "TBD",
+            "description": "Three Bridges",
+            "gbttBookedArrival": "1522",
+            "gbttBookedDeparture": "1523",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1521",
+            "realtimeArrivalActual": false,
+            "realtimeDeparture": "1523",
+            "realtimeDepartureActual": false,
+            "platform": "3",
+            "platformConfirmed": false,
+            "platformChanged": false,
+            "displayAs": "CALL"
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "CRAWLEY",
+            "crs": "CRW",
+            "description": "Crawley",
+            "gbttBookedArrival": "1527",
+            "gbttBookedDeparture": "1527",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1526",
+            "realtimeArrivalActual": false,
+            "realtimeDeparture": "1527",
+            "realtimeDepartureActual": false,
+            "displayAs": "CALL"
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "IFIELD",
+            "crs": "IFI",
+            "description": "Ifield",
+            "gbttBookedArrival": "1530",
+            "gbttBookedDeparture": "1530",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1529",
+            "realtimeArrivalActual": false,
+            "realtimeDeparture": "1530",
+            "realtimeDepartureActual": false,
+            "displayAs": "CALL"
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "LHVN",
+            "crs": "LVN",
+            "description": "Littlehaven",
+            "gbttBookedArrival": "1536",
+            "gbttBookedDeparture": "1536",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1535",
+            "realtimeArrivalActual": false,
+            "realtimeDeparture": "1536",
+            "realtimeDepartureActual": false,
+            "displayAs": "CALL"
+        },
+        {
+            "realtimeActivated": true,
+            "tiploc": "HORSHAM",
+            "crs": "HRH",
+            "description": "Horsham",
+            "gbttBookedArrival": "1540",
+            "origin": [
+                {
+                    "tiploc": "PBRO",
+                    "description": "Peterborough",
+                    "workingTime": "125300",
+                    "publicTime": "1253"
+                }
+            ],
+            "destination": [
+                {
+                    "tiploc": "HORSHAM",
+                    "description": "Horsham",
+                    "workingTime": "154000",
+                    "publicTime": "1540"
+                }
+            ],
+            "isCall": true,
+            "isPublicCall": true,
+            "realtimeArrival": "1539",
+            "realtimeArrivalActual": false,
+            "platform": "3",
+            "platformConfirmed": false,
+            "platformChanged": false,
+            "displayAs": "DESTINATION"
+        }
+    ],
+    "realtimeActivated": true,
+    "runningIdentity": "9J35"
+}
