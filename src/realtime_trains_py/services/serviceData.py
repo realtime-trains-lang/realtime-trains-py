@@ -6,9 +6,23 @@ import requests
 
 
 class Service():
-    def __init__():
-        pass
-        ### Class service for returning services to main
+    def __init__(self, train_id, service_uid, operator, origin, destination, all_calling_points, start_time):
+        """
+        train_id: str (Eg 9J35)
+        service_uid: str (Eg G54071)
+        operator: str (Eg Thameslink)
+        origin: str (Eg Peterborough)
+        destination: str (Eg Horsham)
+        all_calling_points: list
+        """
+        self.train_id = train_id
+        self.service_uid = service_uid
+        self.operator = operator
+        self.origin = origin
+        self.destination = destination
+        self.all_calling_points = all_calling_points
+        self.start_time = start_time
+
 
 class ServiceDetails():
     def __init__(self, username: str = None, password: str = None, complexity: str = "s"):

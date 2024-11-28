@@ -85,6 +85,6 @@ def validate_time(time: str) -> bool:
             return False
         
 
-def format_time(time: str):
+def format_time(time: str) -> str:
     new_time = time[0] + time[1] + ":" + time[2] + time[3]
     return new_time

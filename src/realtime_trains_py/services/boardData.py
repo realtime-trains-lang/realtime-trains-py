@@ -13,6 +13,15 @@ class DepartureBoardSimple():
         self.realtime_departure = realtime_departure
         self.service_uid = service_uid
 
+class ArrivalBoardSimple():
+    def __init__(self, gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid):
+        self.gbtt_arrival = gbtt_arrival
+        self.terminus = terminus
+        self.origin = origin
+        self.platform = platform
+        self.realtime_arrival = realtime_arrival
+        self.service_uid = service_uid
+
 class DepartureBoardAdvanced():
     def __init__(self, gbtt_departure, terminus, platform, realtime_departure, service_uid):
         self.gbtt_departure = gbtt_departure
@@ -21,6 +30,16 @@ class DepartureBoardAdvanced():
         self.realtime_departure = realtime_departure
         self.service_uid = service_uid
 
+class ArrivalBoardAdvanced():
+    def __init__(self, gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid):
+        self.gbtt_arrival = gbtt_arrival
+        self.terminus = terminus
+        self.origin = origin
+        self.platform = platform
+        self.realtime_arrival = realtime_arrival
+        self.service_uid = service_uid
+
+        
 class Boards:
     def __init__(self, username: str = None, password: str = None, complexity: str = "s"):
         self.__username = username
@@ -174,8 +193,70 @@ class Boards:
                     pass
                 
                 elif self.__complexity == "s":
-                    # data to be returned
-                    pass
+
+                    arrivals_board: list = []
+                    
+                    services = service_data["services"]
+
+                    for service in services:
+                        destinations = service["locationDetail"]["destination"]
+                        origins = service["locationDetail"]["origin"]
+                        status = service["locationDetail"]["displayAs"]
+
+                        try:
+                            gbtt_arrival = service["locationDetail"]["gbttBookedArrival"]
+
+                        except:
+                            gbtt_arrival = "Unknown"
+
+                        try:
+                            platform = service["locationDetail"]["platform"]
+
+                        except:
+                            platform = "Unknown"
+
+                        try:
+                            realtime_arrival = service["locationDetail"]["realtimeArrival"]
+
+                        except:
+                            realtime_arrival = "Unknown"
+
+                        try:
+                            service_uid = service["serviceUid"]
+
+                        except:
+                            service_uid = "Unknown"
+
+
+                        if status != "CANCELLED_CALL":
+                            if gbtt_arrival == realtime_arrival:
+                                realtime_arrival = "On time"
+                                gbtt_arrival = format_time(gbtt_arrival)
+
+                            elif realtime_arrival == "Unknown":
+                                gbtt_arrival = format_time(gbtt_arrival)
+
+                            else:
+                                realtime_arrival = format_time(realtime_arrival)
+                                realtime_arrival = "Exp " + realtime_arrival
+                                gbtt_arrival = format_time(gbtt_arrival)
+
+                        else:
+                            realtime_arrival = "Cancelled"
+                            gbtt_arrival = format_time(gbtt_arrival)
+
+                        for destination in destinations:
+                            terminus = destination["description"]
+                            #print(terminus)
+                        
+                        for origin in origins:
+                            start_point = origin["description"]
+                            #print(start_point)
+
+                            arrivals_board.append(ArrivalBoardSimple(gbtt_arrival, terminus, start_point, platform, realtime_arrival, service_uid))
+
+                    #print(departure_board)
+                    return arrivals_board
 
 
             elif api_response.status_code == 404:
