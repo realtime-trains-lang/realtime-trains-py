@@ -44,7 +44,7 @@ class ServiceDetails():
                         
                         return_info: str = "Service information added to new file: " + file_name
 
-                    return return_info
+                    print(return_info) 
 
                 
                 elif self.__complexity == "a":

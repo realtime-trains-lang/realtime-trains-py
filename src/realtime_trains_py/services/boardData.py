@@ -39,6 +39,10 @@ class Boards:
                     with open(file_name, 'x', encoding='utf-8') as file:
                         json.dump(service_data, file, ensure_ascii = False, indent = 4)
 
+                        return_info: str = "Board information added to new file: " + file_name
+
+                    print(return_info)
+
                 
                 elif self.__complexity == "a":
                     # data to be returned
@@ -86,7 +90,10 @@ class Boards:
 
                     with open(file_name, 'x', encoding='utf-8') as file:
                         json.dump(service_data, file, ensure_ascii = False, indent = 4)
+                       
+                        return_info: str = "Board information added to new file: " + file_name
 
+                    print(return_info)
                 
                 elif self.__complexity == "a":
                     # data to be returned
