@@ -1,5 +1,6 @@
 from datetime import datetime
 from services.utilities import validate_time, validate_date, format_time
+from tabulate import tabulate
 
 import json
 import requests
@@ -39,7 +40,7 @@ class ArrivalBoardAdvanced():
         self.realtime_arrival = realtime_arrival
         self.service_uid = service_uid
 
-        
+
 class Boards:
     def __init__(self, username: str = None, password: str = None, complexity: str = "s"):
         self.__username = username
@@ -77,7 +78,7 @@ class Boards:
 
                         return_info: str = "Board information added to new file: " + file_name
 
-                    print(return_info)
+                    return return_info
                 
                 elif self.__complexity == "a":
                     pass
@@ -85,14 +86,13 @@ class Boards:
 
                     #services = service_data["services"]
 
-                elif self.__complexity == "s":
-
+                elif self.__complexity == "s.p" or self.__complexity == "s":
                     departure_board: list = []
                     
                     services = service_data["services"]
 
                     for service in services:
-                        destinations = service["locationDetail"]["destination"]
+                        destination = service["locationDetail"]["destination"]
                         status = service["locationDetail"]["displayAs"]
 
                         try:
@@ -137,10 +137,71 @@ class Boards:
                             realtime_departure = "Cancelled"
                             gbtt_departure = format_time(gbtt_departure)
 
-                        for destination in destinations:
-                            terminus = destination["description"]
+                        
+                        terminus = destination.pop()["description"]
 
-                            departure_board.append(DepartureBoardSimple(gbtt_departure, terminus, platform, realtime_departure, service_uid))
+                        departure_board.append([gbtt_departure, terminus, platform, realtime_departure, service_uid])
+
+                    print(tabulate(departure_board, tablefmt = "rounded_grid", headers = ["Booked Departure", "Destination", "Platform", "Booked Departure", "Service UID"]))
+
+                    return "Service data returned successfully"  
+
+                elif self.__complexity == "s.n":
+
+                    departure_board: list = []
+                    
+                    services = service_data["services"]
+
+                    for service in services:
+                        destination = service["locationDetail"]["destination"]
+                        status = service["locationDetail"]["displayAs"]
+
+                        try:
+                            gbtt_departure = service["locationDetail"]["gbttBookedDeparture"]
+
+                        except:
+                            gbtt_departure = "Unknown"
+
+                        try:
+                            platform = service["locationDetail"]["platform"]
+
+                        except:
+                            platform = "Unknown"
+
+                        try:
+                            realtime_departure = service["locationDetail"]["realtimeDeparture"]
+
+                        except:
+                            realtime_departure = "Unknown"
+
+                        try:
+                            service_uid = service["serviceUid"]
+
+                        except:
+                            service_uid = "Unknown"
+
+
+                        if status != "CANCELLED_CALL":
+                            if gbtt_departure == realtime_departure:
+                                realtime_departure = "On time"
+                                gbtt_departure = format_time(gbtt_departure)
+
+                            elif realtime_departure == "Unknown":
+                                gbtt_departure = format_time(gbtt_departure)
+
+                            else:
+                                realtime_departure = format_time(realtime_departure)
+                                realtime_departure = "Exp " + realtime_departure
+                                gbtt_departure = format_time(gbtt_departure)
+
+                        else:
+                            realtime_departure = "Cancelled"
+                            gbtt_departure = format_time(gbtt_departure)
+
+                        
+                        terminus = destination.pop()["description"]
+
+                        departure_board.append(DepartureBoardSimple(gbtt_departure, terminus, platform, realtime_departure, service_uid))
 
                     #print(departure_board)
                     return departure_board  
@@ -186,21 +247,20 @@ class Boards:
                        
                         return_info: str = "Board information added to new file: " + file_name
 
-                    print(return_info)
+                    return return_info
                 
                 elif self.__complexity == "a":
                     # data to be returned
                     pass
                 
-                elif self.__complexity == "s":
-
+                elif self.__complexity == "s.p" or self.__complexity == "s":
                     arrivals_board: list = []
                     
                     services = service_data["services"]
 
                     for service in services:
                         destinations = service["locationDetail"]["destination"]
-                        origins = service["locationDetail"]["origin"]
+                        origin = service["locationDetail"]["origin"]
                         status = service["locationDetail"]["displayAs"]
 
                         try:
@@ -249,11 +309,74 @@ class Boards:
                             terminus = destination["description"]
                             #print(terminus)
                         
-                        for origin in origins:
-                            start_point = origin["description"]
-                            #print(start_point)
+                        start_point = origin.pop()["description"]
 
-                            arrivals_board.append(ArrivalBoardSimple(gbtt_arrival, terminus, start_point, platform, realtime_arrival, service_uid))
+                        arrivals_board.append([gbtt_arrival, terminus, start_point, platform, realtime_arrival, service_uid])
+
+                    print(tabulate(arrivals_board, tablefmt = "rounded_grid", headers = ["Booked Arrival", "Destination", "Origin", "Platform", "Booked Departure", "Service UID"]))
+
+                    return "Service data returned successfully"
+
+                elif self.__complexity == "s.n":
+
+                    arrivals_board: list = []
+                    
+                    services = service_data["services"]
+
+                    for service in services:
+                        destinations = service["locationDetail"]["destination"]
+                        origin = service["locationDetail"]["origin"]
+                        status = service["locationDetail"]["displayAs"]
+
+                        try:
+                            gbtt_arrival = service["locationDetail"]["gbttBookedArrival"]
+
+                        except:
+                            gbtt_arrival = "Unknown"
+
+                        try:
+                            platform = service["locationDetail"]["platform"]
+
+                        except:
+                            platform = "Unknown"
+
+                        try:
+                            realtime_arrival = service["locationDetail"]["realtimeArrival"]
+
+                        except:
+                            realtime_arrival = "Unknown"
+
+                        try:
+                            service_uid = service["serviceUid"]
+
+                        except:
+                            service_uid = "Unknown"
+
+
+                        if status != "CANCELLED_CALL":
+                            if gbtt_arrival == realtime_arrival:
+                                realtime_arrival = "On time"
+                                gbtt_arrival = format_time(gbtt_arrival)
+
+                            elif realtime_arrival == "Unknown":
+                                gbtt_arrival = format_time(gbtt_arrival)
+
+                            else:
+                                realtime_arrival = format_time(realtime_arrival)
+                                realtime_arrival = "Exp " + realtime_arrival
+                                gbtt_arrival = format_time(gbtt_arrival)
+
+                        else:
+                            realtime_arrival = "Cancelled"
+                            gbtt_arrival = format_time(gbtt_arrival)
+
+                        for destination in destinations:
+                            terminus = destination["description"]
+                            #print(terminus)
+                        
+                        start_point = origin.pop()["description"]
+
+                        arrivals_board.append(ArrivalBoardSimple(gbtt_arrival, terminus, start_point, platform, realtime_arrival, service_uid))
 
                     #print(departure_board)
                     return arrivals_board
