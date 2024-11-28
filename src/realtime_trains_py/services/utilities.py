@@ -83,7 +83,8 @@ def validate_time(time: str) -> bool:
             
         else:
             return False
+        
 
-#print(validate_date("2025/02/08"))
-
-#print(validate_time("0000"))
+def format_time(time: str):
+    new_time = time[0] + time[1] + ":" + time[2] + time[3]
+    return new_time

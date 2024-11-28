@@ -1,8 +1,9 @@
-from datetime import datetime, timedelta
-from services.utilities import validate_time, validate_date
+from datetime import datetime
+from services.utilities import validate_time, validate_date, format_time
 
-import requests
 import json
+import requests
+
 
 class Service():
     def __init__():

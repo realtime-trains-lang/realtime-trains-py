@@ -17,10 +17,16 @@ class RealtimeTrainsPy():
         self.__boards = Boards(username = self._username, password = self.__password, complexity = complexity)
 
     def get_departures(self, tiploc: str, filter: str = None, date: str = None, rows: int = None, time: str = None) -> list | str:
-        self.__boards._get_dep_board_details(tiploc = tiploc, filter = filter, date = date, rows = rows, time = time)
+        data = self.__boards._get_dep_board_details(tiploc = tiploc, filter = filter, date = date, rows = rows, time = time)
+
+        return data
 
     def get_arrivals(self, tiploc: str, filter: str = None, date: str = None, rows: int = None, time: str = None) -> list | str:
-        self.__boards._get_arr_board_details(tiploc = tiploc, filter = filter, date = date, rows = rows, time = time)
+        data = self.__boards._get_arr_board_details(tiploc = tiploc, filter = filter, date = date, rows = rows, time = time)
+
+        return data
 
     def get_service(self, service_uid: str, date: str = None, time: str = None) -> Service:
-        self.__services._get_service_details(service_uid = service_uid, date = date, time = time)
+        data = self.__services._get_service_details(service_uid = service_uid, date = date, time = time)
+
+        return data
