@@ -13,12 +13,7 @@ def validate_date(date: str) -> bool:
     
     elif months[int(month)-1] < date_items[2]:
         return False
-    
 
-
-    #print(date_items)
-    ## [29, 11, 2024]
-    
     for i in range(0, 3):
         ## 
         if first_valid_date[i] < date_items[i]:
@@ -37,14 +32,6 @@ def validate_date(date: str) -> bool:
                 validation = False
     
     return validation
-
-
-def get_time_delta(delta: int) -> str:
-    date_delta = str(datetime.now() + timedelta(delta)).split("-")
-    date_delta[2] = (str(date_delta[2]).split(" "))[0]
-
-    return date_delta
-
 
 def validate_time(time: str) -> bool:
     time_data: list = []
@@ -83,7 +70,12 @@ def validate_time(time: str) -> bool:
             
         else:
             return False
-        
+
+def get_time_delta(delta: int) -> str:
+    date_delta = str(datetime.now() + timedelta(delta)).split("-")
+    date_delta[2] = (str(date_delta[2]).split(" "))[0]
+
+    return date_delta
 
 def format_time(time: str) -> str:
     new_time = time[0] + time[1] + ":" + time[2] + time[3]

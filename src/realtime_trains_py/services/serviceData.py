@@ -1,5 +1,5 @@
 from datetime import datetime
-from services.utilities import validate_time, validate_date, format_time
+from services.utilities import validate_date, format_time
 from tabulate import tabulate
 
 import json
@@ -40,17 +40,13 @@ class ServiceDetails():
         self._service_url: str = "https://api.rtt.io/api/v1/json/service/"
 
 
-    def _get_service_details(self, service_uid: str, date: str | None, time: str | None) -> str | list:
+    def _get_service_details(self, service_uid: str, date: str | None) -> str | list:
         if date is None:
             date = self.__date
 
-        if time is None:
-            time = (datetime.now()).strftime("%H%M")
-
-
-        if self.__complexity == "c" or (validate_date(date) and validate_time(time)):
+        if self.__complexity == "c" or validate_date(date):
             search_query = str(self._service_url) + str(service_uid) + "/" + str(date)
-            #print(search_query)
+            print(search_query)
             api_response =  requests.get(search_query, auth=(self.__username, self.__password))
 
             if api_response.status_code == 200:
@@ -67,8 +63,10 @@ class ServiceDetails():
 
                     return return_info 
 
-                
-                elif self.__complexity == "a":
+                elif self.__complexity == "a.p" or self.__complexity == "a":
+                    pass
+
+                elif self.__complexity == "a.n":
                     # data to be returned
                     pass
                 
@@ -123,7 +121,7 @@ class ServiceDetails():
                         all_calling_points.append([stop_name, booked_arrival, realtime_arrival, platform, booked_departure, realtime_departure])
 
                     print(train_id + " (" + service_uid + ") " + start_time + " " + origin + " to " + destination)
-                    print(tabulate(all_calling_points, tablefmt = "rounded_grid", headers = ["Stop Name", "Booked Arrival", "Realtime Arrival", "Platform", "Booked Departure", "Realtime Departure"]))
+                    print(tabulate(all_calling_points, tablefmt = "rounded_grid", headers = ["Stop Name", "Booked Arrival", "Actual Arrival", "Platform", "Booked Departure", "Actual Departure"]))
 
                     return "Service data returned successfully"
 

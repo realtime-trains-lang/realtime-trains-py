@@ -41,7 +41,7 @@ class ArrivalBoardAdvanced():
         self.service_uid = service_uid
 
 
-class Boards:
+class Boards():
     def __init__(self, username: str = None, password: str = None, complexity: str = "s"):
         self.__username = username
         self.__password = password
@@ -52,17 +52,20 @@ class Boards:
 
     def _get_dep_board_details(self, tiploc, filter, rows, time, date: str = None):
         if date is None:
-            date = self.__date
+            new_date = self.__date
 
         if time is None:
             time = (datetime.now()).strftime("%H%M")
 
-        if self.__complexity == "c" or (validate_date(date) and validate_time(time)):
+        if self.__complexity == "c" or (validate_date(new_date) and validate_time(time)):
             if filter != None:
                 search_query = "/json/search/" + str(tiploc) + "/to/<toStation>" + str(filter)
 
-            else:
+            elif date is not None:
                 search_query = "https://api.rtt.io/api/v1/json/search/" + str(tiploc) + "/" + str(date)
+
+            else:
+                search_query = "https://api.rtt.io/api/v1/json/search/" + str(tiploc)
             #print(search_query)
             api_response =  requests.get(search_query, auth=(self.__username, self.__password))
 
@@ -80,16 +83,20 @@ class Boards:
 
                     return return_info
                 
-                elif self.__complexity == "a":
+                elif self.__complexity == "a.p" or self.__complexity == "a":
                     pass
                     #departure_board: str = []
 
                     #services = service_data["services"]
 
+                elif self.__complexity == "a.n":
+                    pass
+
                 elif self.__complexity == "s.p" or self.__complexity == "s":
                     departure_board: list = []
                     
                     services = service_data["services"]
+                    count = 0
 
                     for service in services:
                         destination = service["locationDetail"]["destination"]
@@ -142,15 +149,20 @@ class Boards:
 
                         departure_board.append([gbtt_departure, terminus, platform, realtime_departure, service_uid])
 
+                        count += 1
+                        if count == rows:
+                            break
+
                     print(tabulate(departure_board, tablefmt = "rounded_grid", headers = ["Booked Departure", "Destination", "Platform", "Booked Departure", "Service UID"]))
 
-                    return "Service data returned successfully"  
+                    return "Departure board returned successfully"  
 
                 elif self.__complexity == "s.n":
 
                     departure_board: list = []
                     
                     services = service_data["services"]
+                    count = 0
 
                     for service in services:
                         destination = service["locationDetail"]["destination"]
@@ -203,8 +215,11 @@ class Boards:
 
                         departure_board.append(DepartureBoardSimple(gbtt_departure, terminus, platform, realtime_departure, service_uid))
 
-                    #print(departure_board)
-                    return departure_board  
+                        count += 1
+                        if count == rows:
+                            break
+
+                    return departure_board 
 
 
             elif api_response.status_code == 404:
@@ -221,17 +236,20 @@ class Boards:
 
     def _get_arr_board_details(self, tiploc, filter, rows, time, date: str = None):
         if date is None:
-            date = self.__date
+            new_date = self.__date
 
         if time is None:
-            time = (datetime.now()).strftime("%H%M")
+            new_time = (datetime.now()).strftime("%H%M")
 
-        if self.__complexity == "c" or (validate_date(date) and validate_time(time)):
-            if filter != None:
-                search_query = "/json/search/" + str(tiploc) + "/to/<toStation>" + str(filter)
+        if self.__complexity == "c" or (validate_date(new_date) and validate_time(new_time)):
+            if filter is not None:
+                search_query = "/json/search/" + str(tiploc) + "/to/" + str(filter)
+
+            elif date is not None:
+                search_query = "https://api.rtt.io/api/v1/json/search/" + str(tiploc) + "/" + str(date) + "/arrivals"
 
             else:
-                search_query = "https://api.rtt.io/api/v1/json/search/" + str(tiploc) + "/" + str(date) + "/arrivals"
+                search_query = "https://api.rtt.io/api/v1/json/search/" + str(tiploc) + "/arrivals"
             #print(search_query)
             api_response =  requests.get(search_query, auth=(self.__username, self.__password))
 
@@ -249,18 +267,19 @@ class Boards:
 
                     return return_info
                 
-                elif self.__complexity == "a":
+                elif self.__complexity == "a.p" or self.__complexity == "a":
                     # data to be returned
                     pass
                 
-                elif self.__complexity == "s.p" or self.__complexity == "s":
+                elif self.__complexity == "a.n":
+                    
                     arrivals_board: list = []
                     
                     services = service_data["services"]
 
                     for service in services:
                         destinations = service["locationDetail"]["destination"]
-                        origin = service["locationDetail"]["origin"]
+                        origins = service["locationDetail"]["origin"]
                         status = service["locationDetail"]["displayAs"]
 
                         try:
@@ -309,23 +328,95 @@ class Boards:
                             terminus = destination["description"]
                             #print(terminus)
                         
-                        start_point = origin.pop()["description"]
+                        origin = origins.pop()["description"]
 
-                        arrivals_board.append([gbtt_arrival, terminus, start_point, platform, realtime_arrival, service_uid])
+                        arrivals_board.append(ArrivalBoardSimple(gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid))
+                    
+                    if rows is not None:
+                        return arrivals_board[:rows]
+                    
+                    else:
+                        return arrivals_board
+
+                elif self.__complexity == "s.p" or self.__complexity == "s":
+                    arrivals_board: list = []
+                    
+                    services = service_data["services"]
+                    count = 0
+
+                    for service in services:
+                        destinations = service["locationDetail"]["destination"]
+                        origins = service["locationDetail"]["origin"]
+                        status = service["locationDetail"]["displayAs"]
+
+                        try:
+                            gbtt_arrival = service["locationDetail"]["gbttBookedArrival"]
+
+                        except:
+                            gbtt_arrival = "Unknown"
+
+                        try:
+                            platform = service["locationDetail"]["platform"]
+
+                        except:
+                            platform = "Unknown"
+
+                        try:
+                            realtime_arrival = service["locationDetail"]["realtimeArrival"]
+
+                        except:
+                            realtime_arrival = "Unknown"
+
+                        try:
+                            service_uid = service["serviceUid"]
+
+                        except:
+                            service_uid = "Unknown"
+
+
+                        if status != "CANCELLED_CALL":
+                            if gbtt_arrival == realtime_arrival:
+                                realtime_arrival = "On time"
+                                gbtt_arrival = format_time(gbtt_arrival)
+
+                            elif realtime_arrival == "Unknown":
+                                gbtt_arrival = format_time(gbtt_arrival)
+
+                            else:
+                                realtime_arrival = format_time(realtime_arrival)
+                                realtime_arrival = "Exp " + realtime_arrival
+                                gbtt_arrival = format_time(gbtt_arrival)
+
+                        else:
+                            realtime_arrival = "Cancelled"
+                            gbtt_arrival = format_time(gbtt_arrival)
+
+                        for destination in destinations:
+                            terminus = destination["description"]
+                            #print(terminus)
+                        
+                        origin = origins.pop()["description"]
+
+                        arrivals_board.append([gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid])
+
+                        count += 1
+                        if count == rows:
+                            break
 
                     print(tabulate(arrivals_board, tablefmt = "rounded_grid", headers = ["Booked Arrival", "Destination", "Origin", "Platform", "Booked Departure", "Service UID"]))
 
-                    return "Service data returned successfully"
+                    return "Arrivals board returned successfully"
 
                 elif self.__complexity == "s.n":
 
                     arrivals_board: list = []
                     
                     services = service_data["services"]
+                    count = 0
 
                     for service in services:
                         destinations = service["locationDetail"]["destination"]
-                        origin = service["locationDetail"]["origin"]
+                        origins = service["locationDetail"]["origin"]
                         status = service["locationDetail"]["displayAs"]
 
                         try:
@@ -374,11 +465,14 @@ class Boards:
                             terminus = destination["description"]
                             #print(terminus)
                         
-                        start_point = origin.pop()["description"]
+                        origin = origins.pop()["description"]
 
-                        arrivals_board.append(ArrivalBoardSimple(gbtt_arrival, terminus, start_point, platform, realtime_arrival, service_uid))
+                        arrivals_board.append(ArrivalBoardSimple(gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid))
 
-                    #print(departure_board)
+                        count += 1
+                        if count == rows:
+                            break
+
                     return arrivals_board
 
 
@@ -393,3 +487,9 @@ class Boards:
 
         else: 
             raise ValueError("Invalid date or time. Date or time provided did not meet requirements or fall into the valid date/time range.")
+        
+
+    def _get_station_details(self, tiploc, filter, rows, time, date: str = None) -> list | str:
+        return (self._get_dep_board_details(tiploc = tiploc, filter = filter, rows = rows, time = time, date = date), 
+                self._get_arr_board_details(tiploc = tiploc, filter = filter, rows = rows, time = time, date = date))
+    
