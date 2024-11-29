@@ -42,7 +42,7 @@ class ArrivalBoardAdvanced():
 
 
 class Boards():
-    def __init__(self, username: str = None, password: str = None, complexity: str = "s"):
+    def __init__(self, username: str = None, password: str = None, complexity: str = "s") -> None:
         self.__username = username
         self.__password = password
         self.__complexity = complexity
@@ -50,7 +50,7 @@ class Boards():
 
         self._board_url: str = "https://api.rtt.io/api/v1/json/search/"
 
-    def _get_dep_board_details(self, tiploc, filter, rows, time, date: str = None):
+    def _get_dep_board_details(self, tiploc, filter, rows, time, date: str = None) -> list | str:
         if date is None:
             new_date = self.__date
 
@@ -102,6 +102,7 @@ class Boards():
                     departure_board: list = []
                     
                     services = service_data["services"]
+                    requested_location = service_data["location"]["name"]
                     count = 0
 
                     for service in services:
@@ -159,9 +160,10 @@ class Boards():
                         if count == rows:
                             break
 
+                    print("Departure board for " + requested_location)
                     print(tabulate(departure_board, tablefmt = "rounded_grid", headers = ["Booked Departure", "Destination", "Platform", "Booked Departure", "Service UID"]))
 
-                    return "Departure board returned successfully"  
+                    return "Departure board printed successfully"  
 
                 elif self.__complexity == "s.n":
 
@@ -240,7 +242,7 @@ class Boards():
         else: 
             raise ValueError("Invalid date or time. Date or time provided did not meet requirements or fall into the valid date/time range.")
 
-    def _get_arr_board_details(self, tiploc, filter, rows, time, date: str = None):
+    def _get_arr_board_details(self, tiploc, filter, rows, time, date: str = None) -> list | str:
         if date is None:
             new_date = self.__date
 
@@ -280,14 +282,83 @@ class Boards():
                     return return_info
                 
                 elif self.__complexity == "a.p" or self.__complexity == "a":
-                    # data to be returned
-                    pass
+                    arrivals_board: list = []
+                    
+                    services = service_data["services"]
+                    requested_location = service_data["location"]["name"]
+
+                    count = 0
+
+                    for service in services:
+                        destinations = service["locationDetail"]["destination"]
+                        origins = service["locationDetail"]["origin"]
+                        status = service["locationDetail"]["displayAs"]
+
+                        try:
+                            gbtt_arrival = service["locationDetail"]["gbttBookedArrival"]
+
+                        except:
+                            gbtt_arrival = "Unknown"
+
+                        try:
+                            platform = service["locationDetail"]["platform"]
+
+                        except:
+                            platform = "Unknown"
+
+                        try:
+                            realtime_arrival = service["locationDetail"]["realtimeArrival"]
+
+                        except:
+                            realtime_arrival = "Unknown"
+
+                        try:
+                            service_uid = service["serviceUid"]
+
+                        except:
+                            service_uid = "Unknown"
+
+
+                        if status != "CANCELLED_CALL":
+                            if gbtt_arrival == realtime_arrival:
+                                realtime_arrival = "On time"
+                                gbtt_arrival = format_time(gbtt_arrival)
+
+                            elif realtime_arrival == "Unknown":
+                                gbtt_arrival = format_time(gbtt_arrival)
+
+                            else:
+                                realtime_arrival = format_time(realtime_arrival)
+                                realtime_arrival = "Exp " + realtime_arrival
+                                gbtt_arrival = format_time(gbtt_arrival)
+
+                        else:
+                            realtime_arrival = "Cancelled"
+                            gbtt_arrival = format_time(gbtt_arrival)
+
+                        for destination in destinations:
+                            terminus = destination["description"]
+                            #print(terminus)
+                        
+                        origin = origins.pop()["description"]
+
+                        arrivals_board.append([gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid])
+                    
+                        count += 1
+                        if count == rows:
+                            break
+
+                    print("Arrivals board for " + requested_location)
+                    print(tabulate(arrivals_board, tablefmt = "rounded_grid", headers = ["Booked Arrival", "Destination", "Origin", "Platform", "Booked Departure", "Service UID"]))
+
+                    return "Arrivals board printed successfully"
                 
                 elif self.__complexity == "a.n":
                     
                     arrivals_board: list = []
                     
                     services = service_data["services"]
+                    count = 0
 
                     for service in services:
                         destinations = service["locationDetail"]["destination"]
@@ -344,16 +415,15 @@ class Boards():
 
                         arrivals_board.append(ArrivalBoardSimple(gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid))
                     
-                    if rows is not None:
-                        return arrivals_board[:rows]
-                    
-                    else:
-                        return arrivals_board
+                        count += 1
+                        if count == rows:
+                            break
 
                 elif self.__complexity == "s.p" or self.__complexity == "s":
                     arrivals_board: list = []
                     
                     services = service_data["services"]
+                    requested_location = service_data["location"]["name"]
                     count = 0
 
                     for service in services:
@@ -414,10 +484,11 @@ class Boards():
                         count += 1
                         if count == rows:
                             break
-
+                    
+                    print("Arrivals board for " + requested_location)
                     print(tabulate(arrivals_board, tablefmt = "rounded_grid", headers = ["Booked Arrival", "Destination", "Origin", "Platform", "Booked Departure", "Service UID"]))
 
-                    return "Arrivals board returned successfully"
+                    return "Arrivals board printed successfully"
 
                 elif self.__complexity == "s.n":
 
@@ -500,8 +571,3 @@ class Boards():
         else: 
             raise ValueError("Invalid date or time. Date or time provided did not meet requirements or fall into the valid date/time range.")
         
-
-    def _get_station_details(self, tiploc, filter, rows, time, date: str = None) -> list | str:
-        return (self._get_dep_board_details(tiploc = tiploc, filter = filter, rows = rows, time = time, date = date), 
-                self._get_arr_board_details(tiploc = tiploc, filter = filter, rows = rows, time = time, date = date))
-    

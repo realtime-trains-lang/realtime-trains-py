@@ -10,7 +10,7 @@ class RealtimeTrainsPy():
         else:
             self._username = username
             self.__password = password
-            if complexity.lower() not in ["s", "s.p", "s.n", "a", "a.p", "a.n" "c"]:
+            if complexity.lower() not in ["s", "s.p", "s.n", "a", "a.p", "a.n", "c"]:
                 raise ValueError("Complexity not recognised. Select a valid type.")
         
         self.__services = ServiceDetails(username = self._username, password = self.__password, complexity = complexity.lower())
@@ -62,14 +62,6 @@ class RealtimeTrainsPy():
             `get_arrivals(tiploc = "KNGX", filter = "STEVNGE", date = "2024/11/16", time = "1800", rows = 10)`
         """
         return self.__boards._get_arr_board_details(tiploc = tiploc, filter = filter, date = date, rows = rows, time = time)
-
-
-    def get_station_board(self, tiploc: str, filter: str = None, date: str = None, rows: int = None, time: str = None) -> list | str:
-        """
-        ## BETA feature
-        This method returns information about a specific station.
-        """
-        return self.__boards._get_station_details(tiploc = tiploc, filter = filter, date = date, rows = rows, time = time)
 
     def get_service(self, service_uid: str, date: str = None) -> list | str:
         """

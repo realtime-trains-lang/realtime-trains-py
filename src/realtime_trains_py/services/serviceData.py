@@ -17,7 +17,7 @@ class ServiceSimple():
         self.start_time = start_time
 
 class ServiceAdvanced():
-    def __init__(self, train_id, service_uid, operator, origin, destination, all_calling_points, start_time, end_time, cancelled, cancelled_reason):
+    def __init__(self, train_id, service_uid, operator, origin, destination, all_calling_points, start_time, end_time, power, train_class):
         self.train_id = train_id
         self.service_uid = service_uid
         self.operator = operator
@@ -26,12 +26,12 @@ class ServiceAdvanced():
         self.all_calling_points = all_calling_points
         self.start_time = start_time
         self.end_time = end_time
-        self.cancelled = cancelled
-        self.cancelled_reason = cancelled_reason
+        self.power = power
+        self.train_class = train_class
 
 
 class ServiceDetails():
-    def __init__(self, username: str = None, password: str = None, complexity: str = "s"):
+    def __init__(self, username: str = None, password: str = None, complexity: str = "s") -> None:
         self.__username = username
         self.__password = password
         self.__complexity = complexity
@@ -40,13 +40,13 @@ class ServiceDetails():
         self._service_url: str = "https://api.rtt.io/api/v1/json/service/"
 
 
-    def _get_service_details(self, service_uid: str, date: str | None) -> str | list:
+    def _get_service_details(self, service_uid: str, date: str | None) -> list | str:
         if date is None:
             date = self.__date
 
         if self.__complexity == "c" or validate_date(date):
             search_query = str(self._service_url) + str(service_uid) + "/" + str(date)
-            print(search_query)
+            #print(search_query)
             api_response =  requests.get(search_query, auth=(self.__username, self.__password))
 
             if api_response.status_code == 200:
@@ -64,19 +64,140 @@ class ServiceDetails():
                     return return_info 
 
                 elif self.__complexity == "a.p" or self.__complexity == "a":
-                    pass
+                    train_id = service_data["trainIdentity"]
+                    operator = service_data["atocName"]
+
+                    power_type = service_data["powerType"]
+                    train_class = service_data["trainClass"]
+
+                    origins = service_data["origin"]
+                    for data in origins:
+                        origin = data["description"]
+                        start_time = data["publicTime"]
+                        start_time = format_time(start_time)
+
+                    destinations = service_data["destination"]
+                    for data in destinations:
+                        destination = data["description"]
+                        end_time = data["publicTime"]
+                        end_time = format_time(end_time)
+
+                    calling_points = service_data["locations"]
+                    all_calling_points: list = []
+
+                    for locations in calling_points:
+                        stop_name = locations["description"]
+                        if "realtimeArrival" in locations:
+                            realtime_arrival = locations["realtimeArrival"]
+                            realtime_arrival = format_time(realtime_arrival)
+                        else:
+                            realtime_arrival = ""
+
+                        if "gbttBookedArrival" in locations:
+                            booked_arrival = locations["gbttBookedArrival"]
+                            booked_arrival = format_time(booked_arrival)
+                        else:
+                            booked_arrival = ""
+
+                        if "realtimeDeparture" in locations:
+                            realtime_departure = locations["realtimeDeparture"]
+                            realtime_departure = format_time(realtime_departure)
+                        else:
+                            realtime_departure = ""
+
+                        if "gbttBookedDeparture" in locations:
+                            booked_departure = locations["gbttBookedDeparture"]
+                            booked_departure = format_time(booked_departure)
+                        else:
+                            booked_departure = ""
+
+                        if "platform" in locations:
+                            platform = locations["platform"]
+                        else:
+                            platform = "Unknown"
+
+                        if "line" in locations:
+                            line = locations["line"]
+                        else:
+                            line = "Unknown"
+
+                        all_calling_points.append([stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure])
+
+                    print(train_id + " (" + service_uid + ") \n" + start_time + " " + origin + " to " + destination + ". \nArrival at " + destination + ": " + end_time)
+                    print("Pathed as " + power_type + ": train class " + train_class + ". \nOperated by " + operator) 
+                    print(tabulate(all_calling_points, tablefmt = "rounded_grid", headers = ["Stop Name", "Booked Arrival", "Actual Arrival", "Platform", "Line", "Booked Departure", "Actual Departure"]))
+
+                    return "Service data returned successfully"
 
                 elif self.__complexity == "a.n":
-                    # data to be returned
-                    pass
-                
+                    train_id = service_data["trainIdentity"]
+                    operator = service_data["atocName"]
+                    power_type = service_data["powerType"]
+                    train_class = service_data["trainClass"]
+
+                    origins = service_data["origin"]
+                    for data in origins:
+                        origin = data["description"]
+                        start_time = data["publicTime"]
+                        start_time = format_time(start_time)
+
+                    destinations = service_data["destination"]
+                    for data in destinations:
+                        destination = data["description"]
+                        end_time = data["publicTime"]
+                        end_time = format_time(end_time)
+
+                    calling_points = service_data["locations"]
+                    all_calling_points: list = []
+
+                    for locations in calling_points:
+                        stop_name = locations["description"]
+                        if "realtimeArrival" in locations:
+                            realtime_arrival = locations["realtimeArrival"]
+                            realtime_arrival = format_time(realtime_arrival)
+                        else:
+                            realtime_arrival = ""
+
+                        if "gbttBookedArrival" in locations:
+                            booked_arrival = locations["gbttBookedArrival"]
+                            booked_arrival = format_time(booked_arrival)
+                        else:
+                            booked_arrival = ""
+
+                        if "realtimeDeparture" in locations:
+                            realtime_departure = locations["realtimeDeparture"]
+                            realtime_departure = format_time(realtime_departure)
+                        else:
+                            realtime_departure = ""
+
+                        if "gbttBookedDeparture" in locations:
+                            booked_departure = locations["gbttBookedDeparture"]
+                            booked_departure = format_time(booked_departure)
+                        else:
+                            booked_departure = ""
+
+                        if "platform" in locations:
+                            platform = locations["platform"]
+                        else:
+                            platform = "Unknown"
+
+                        if "line" in locations:
+                            line = locations["line"]
+                        else:
+                            line = "Unknown"
+
+                        all_calling_points.append([stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure])
+
+                    return ServiceAdvanced(train_id, service_uid, operator, origin, destination, all_calling_points, start_time, end_time, power_type, train_class)
+                  
                 elif self.__complexity == "s.p" or self.__complexity == "s":
                     train_id = service_data["trainIdentity"]
                     operator = service_data["atocName"]
 
                     origins = service_data["origin"]
                     origin = origins.pop()["description"]
-                    start_time = "None"
+                    start_time = origins.pop()["publicTime"]
+                    start_time = format_time(start_time)
 
                     destinations = service_data["destination"]
                     destination = destinations.pop()["description"]
@@ -109,9 +230,6 @@ class ServiceDetails():
                             booked_departure = format_time(booked_departure)
                         else:
                             booked_departure = ""
-
-                        if start_time == "None":
-                            start_time = booked_departure
 
                         if "platform" in locations:
                             platform = locations["platform"]
@@ -126,13 +244,13 @@ class ServiceDetails():
                     return "Service data returned successfully"
 
                 elif self.__complexity == "s.n":
-                    
                     train_id = service_data["trainIdentity"]
                     operator = service_data["atocName"]
 
                     origins = service_data["origin"]
                     origin = origins.pop()["description"]
-                    start_time = "None"
+                    start_time = origins.pop()["publicTime"]
+                    start_time = format_time(start_time)
 
                     destinations = service_data["destination"]
                     destination = destinations.pop()["description"]
@@ -165,9 +283,6 @@ class ServiceDetails():
                             booked_departure = format_time(booked_departure)
                         else:
                             booked_departure = ""
-
-                        if start_time == "None":
-                            start_time = booked_departure
 
                         if "platform" in locations:
                             platform = locations["platform"]
