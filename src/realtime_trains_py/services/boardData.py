@@ -1,5 +1,5 @@
 from datetime import datetime
-from services.utilities import validate_time, validate_date, format_time
+from services.utilities import format_time, validate_date, validate_time 
 from tabulate import tabulate
 
 import json
@@ -54,10 +54,16 @@ class Boards():
         if date is None:
             new_date = self.__date
 
-        if time is None:
-            time = (datetime.now()).strftime("%H%M")
+        else:
+            new_date = date
 
-        if self.__complexity == "c" or (validate_date(new_date) and validate_time(time)):
+        if time is None:
+            new_time = (datetime.now()).strftime("%H%M")
+
+        else:
+            new_time = time
+
+        if self.__complexity == "c" or (validate_date(new_date) and validate_time(new_time)):
             if filter != None:
                 search_query = "/json/search/" + str(tiploc) + "/to/<toStation>" + str(filter)
 
@@ -238,8 +244,14 @@ class Boards():
         if date is None:
             new_date = self.__date
 
+        else:
+            new_date = date
+
         if time is None:
             new_time = (datetime.now()).strftime("%H%M")
+
+        else:
+            new_time = time
 
         if self.__complexity == "c" or (validate_date(new_date) and validate_time(new_time)):
             if filter is not None:
