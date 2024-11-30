@@ -23,6 +23,17 @@ class ArrivalBoardSimple():
         self.realtime_arrival = realtime_arrival
         self.service_uid = service_uid
 
+class CombinedBoardSimple():
+    def __init__(self, gbtt_departure, gbtt_arrival, origin, terminus, platform, realtime_departure, realtime_arrival, service_uid):
+        self.gbtt_departure = gbtt_departure
+        self.gbtt_arrival = gbtt_arrival
+        self.origin = origin
+        self.terminus = terminus
+        self.platform = platform
+        self.realtime_departure = realtime_departure
+        self.realtime_arrival = realtime_arrival
+        self.service_uid = service_uid
+
 class DepartureBoardAdvanced():
     def __init__(self, gbtt_departure, terminus, platform, realtime_departure, service_uid):
         self.gbtt_departure = gbtt_departure
@@ -40,6 +51,19 @@ class ArrivalBoardAdvanced():
         self.realtime_arrival = realtime_arrival
         self.service_uid = service_uid
 
+class CombinedBoardAdvanced():
+    def __init__(self, gbtt_departure, gbtt_arrival, origin, terminus, platform, realtime_departure, realtime_arrival, service_uid):
+        self.gbtt_departure = gbtt_departure
+        self.gbtt_arrival = gbtt_arrival
+        self.origin = origin
+        self.terminus = terminus
+        self.platform = platform
+        self.realtime_departure = realtime_departure
+        self.realtime_arrival = realtime_arrival
+        self.service_uid = service_uid
+
+
+########## EXPERIMENTAL BRANCH ##########
 
 class Boards():
     def __init__(self, username: str = None, password: str = None, complexity: str = "s"):
@@ -501,7 +525,62 @@ class Boards():
             raise ValueError("Invalid date or time. Date or time provided did not meet requirements or fall into the valid date/time range.")
         
 
+    # Need something to combine departure and arrival boards based on matching Service UID. Order by time
     def _get_station_details(self, tiploc, filter, rows, time, date: str = None) -> list | str:
-        return (self._get_dep_board_details(tiploc = tiploc, filter = filter, rows = rows, time = time, date = date), 
-                self._get_arr_board_details(tiploc = tiploc, filter = filter, rows = rows, time = time, date = date))
-    
+
+        if self.__complexity == "c":
+            return self._get_dep_board_details(tiploc = tiploc, filter = filter, rows = rows, time = time, date = date), self._get_arr_board_details(tiploc = tiploc, filter = filter, rows = rows, time = time, date = date)
+        
+        elif self.__complexity == "a" or self.__complexity == "a.p":
+            stored_complexity = self.__complexity
+            self.__complexity = "a.n"
+
+        elif self.__complexity == "s" or self.__complexity == "s.p":
+            stored_complexity = self.__complexity
+            self.__complexity = "s.n"
+
+        # Use each method using (comp).n. Compare responses for matching Service UID. If no match, store
+        # Optimisation? -> dict?
+        departure_data = self._get_dep_board_details(tiploc = tiploc, filter = filter, rows = rows, time = time, date = date) 
+        arrival_data = self._get_arr_board_details(tiploc = tiploc, filter = filter, rows = rows, time = time, date = date) 
+
+        self.__complexity = stored_complexity
+
+        departure_uids = []
+        arrival_uids = []
+        combined_board = []
+
+        for departures in departure_data: 
+            departure_uids.append(departures.service_uid)
+
+        for arrivals in arrival_data:
+            arrival_uids.append(arrivals.service_uid)
+
+        for departure in departure_data:
+            for arrival in arrival_data:
+                if departure.service_uid == arrival.service_uid:
+                    if self.__complexity == "s.n":
+                        combined_board.append([departure.gbtt_departure, arrival.gbtt_arrival, arrival.origin, departure.terminus, departure.platform, departure.realtime_departure, arrival.realtime_arrival, departure.service_uid])
+
+                    elif self.__complexity == "a.n":
+                        combined_board.append([departure.gbtt_departure, arrival.gbtt_arrival, arrival.origin, departure.terminus, departure.platform, departure.realtime_departure, arrival.realtime_arrival, departure.service_uid])
+
+                    elif self.__complexity == "s.p" or self.__complexity == "s":
+                        combined_board.append(CombinedBoardSimple(departure.gbtt_departure, arrival.gbtt_arrival, arrival.origin, departure.terminus, departure.platform, departure.realtime_departure, arrival.realtime_arrival, departure.service_uid))
+                        
+                
+                    elif self.__complexity == "a.p" or self.__complexity == "a":
+                        combined_board.append(CombinedBoardAdvanced(departure.gbtt_departure, arrival.gbtt_arrival, arrival.origin, departure.terminus, departure.platform, departure.realtime_departure, arrival.realtime_arrival, departure.service_uid))
+                        
+        if self.__complexity == "s.n":
+            print("Station Board for ", combined_board)
+
+        elif self.__complexity == "a.n":
+            pass
+
+        elif self.__complexity == "s.p" or self.__complexity == "s" or self.__complexity == "a.p" or self.__complexity == "a":
+            pass
+
+        print("Combined Board:", combined_board)
+        #print("Departure UIDs:", departure_uids)
+        #print("Arrival UIDs:", arrival_uids)
