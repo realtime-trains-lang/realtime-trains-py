@@ -68,7 +68,7 @@ class RealtimeTrainsPy():
     def get_station_board(self, tiploc: str, filter: str = None, date: str = None, rows: int = None, time: str = None) -> list | str:
         """
         ## BETA feature
-        This method returns information about a specific station.
+        This method returns a combined departure and arrival board for a specific station.
         """
         return self.__boards._get_station_details(tiploc = tiploc, filter = filter, date = date, rows = rows, time = time)
 

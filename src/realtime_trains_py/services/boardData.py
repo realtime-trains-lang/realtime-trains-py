@@ -528,18 +528,12 @@ class Boards():
         else: 
             raise ValueError("Invalid date or time. Date or time provided did not meet requirements or fall into the valid date/time range.")
         
-
-    # Need something to combine departure and arrival boards based on matching Service UID. Order by time
     def _get_station_details(self, tiploc, filter, rows, time, date: str = None) -> list | str:
 
         if self.__complexity == "c":
             return self._get_dep_board_details(tiploc = tiploc, filter = filter, rows = rows, time = time, date = date), self._get_arr_board_details(tiploc = tiploc, filter = filter, rows = rows, time = time, date = date)
         
-        elif self.__complexity == "a" or self.__complexity == "a.p":
-            stored_complexity = self.__complexity
-            self.__complexity = "a.n"
-
-        elif self.__complexity == "s" or self.__complexity == "s.p":
+        elif self.__complexity == "a" or self.__complexity == "a.p" or self.__complexity == "s" or self.__complexity == "s.p":
             stored_complexity = self.__complexity
             self.__complexity = "s.n"
 
@@ -557,6 +551,7 @@ class Boards():
         arrivals_hold = []
         combined_board = []
         combined_boards = []
+        station_board = []
 
         for departures in departures_data: 
             departure_uids.append(departures.service_uid)
@@ -570,46 +565,46 @@ class Boards():
                     if self.__complexity == "s.p" or self.__complexity == "s":
                         combined_board.append([reformat_time(arrival.gbtt_arrival), 
                                                CombinedBoardSimple(arrival.gbtt_arrival, 
-                                                                  departure.gbtt_departure, 
-                                                                  arrival.origin, 
-                                                                  departure.terminus, 
-                                                                  departure.platform, 
-                                                                  arrival.realtime_arrival, 
-                                                                  departure.realtime_departure, 
-                                                                  departure.service_uid)])
+                                                                   departure.gbtt_departure, 
+                                                                   arrival.origin, 
+                                                                   departure.terminus, 
+                                                                   departure.platform, 
+                                                                   arrival.realtime_arrival, 
+                                                                   departure.realtime_departure, 
+                                                                   departure.service_uid)])
 
                     elif self.__complexity == "a.p" or self.__complexity == "a":
                         combined_board.append([reformat_time(arrival.gbtt_arrival), 
                                                CombinedBoardAdvanced(arrival.gbtt_arrival, 
-                                                                    departure.gbtt_departure, 
-                                                                    arrival.origin, 
-                                                                    departure.terminus, 
-                                                                    departure.platform, 
-                                                                    arrival.realtime_arrival, 
-                                                                    departure.realtime_departure, 
-                                                                    departure.service_uid)])
+                                                                     departure.gbtt_departure, 
+                                                                     arrival.origin, 
+                                                                     departure.terminus, 
+                                                                     departure.platform, 
+                                                                     arrival.realtime_arrival, 
+                                                                     departure.realtime_departure, 
+                                                                     departure.service_uid)])
 
                     elif self.__complexity == "s.n":
                         combined_board.append([reformat_time(arrival.gbtt_arrival),
-                                               CombinedBoardSimple(departure.gbtt_departure, 
-                                                                  arrival.gbtt_arrival, 
-                                                                  arrival.origin, 
-                                                                  departure.terminus, 
-                                                                  departure.platform, 
-                                                                  departure.realtime_departure, 
-                                                                  arrival.realtime_arrival, 
-                                                                  departure.service_uid)])
+                                               CombinedBoardSimple(arrival.gbtt_arrival, 
+                                                                   departure.gbtt_departure, 
+                                                                   arrival.origin, 
+                                                                   departure.terminus, 
+                                                                   departure.platform, 
+                                                                   arrival.realtime_arrival,
+                                                                   departure.realtime_departure, 
+                                                                   departure.service_uid)])
                         
                     elif self.__complexity == "a.n":
                         combined_board.append([reformat_time(arrival.gbtt_arrival),
-                                               CombinedBoardAdvanced(departure.gbtt_departure, 
-                                                                    arrival.gbtt_arrival, 
-                                                                    arrival.origin, 
-                                                                    departure.terminus, 
-                                                                    departure.platform, 
-                                                                    departure.realtime_departure, 
-                                                                    arrival.realtime_arrival, 
-                                                                    departure.service_uid)])
+                                               CombinedBoardAdvanced(arrival.gbtt_arrival,
+                                                                     departure.gbtt_departure, 
+                                                                     arrival.origin, 
+                                                                     departure.terminus, 
+                                                                     departure.platform, 
+                                                                     arrival.realtime_arrival,
+                                                                     departure.realtime_departure, 
+                                                                     departure.service_uid)])
                     arrivals_data.remove(arrival)
                     departures_data.remove(departure)
                 
@@ -621,23 +616,28 @@ class Boards():
 
         combined_board = arrivals_hold + departure_hold + combined_board
 
-        combined_board = remove_dupes(combined_board)
-
-        combined_board = merge_sort(combined_board)  
+        combined_board = merge_sort(remove_dupes(combined_board))
 
         for i in range(len(combined_board)):
             combined_boards.append(combined_board[i][1]) 
 
-        if self.__complexity == "s.p" or self.__complexity == "s":
-            
-            #print("I am broken lol")
+        if self.__complexity == "s.p" or self.__complexity == "s" or self.__complexity == "a.p" or self.__complexity == "a":
+            for att in combined_boards:
+                try:
+                    station_board.append([att.gbtt_arrival, att.gbtt_departure, att.origin, att.terminus, att.platform, att.realtime_arrival, att.realtime_departure, att.service_uid])
+                except:
+                    #try:
+                        #station_board.append(["", att.gbtt_departure, "", att.terminus, att.platform, "", att.realtime_departure, att.service_uid])
+                    #except:
+                        #station_board.append([att.gbtt_arrival, "", att.origin, att.terminus, att.platform, att.realtime_arrival, "", att.service_uid])
+                    pass
+
             print("Station Board for", tiploc)
-            print(tabulate(combined_boards, 
+            print(tabulate(station_board, 
                            tablefmt = "rounded_grid", 
                            headers = ["Booked Arrival", "Booked Departure", "Origin", "Destination", "Platform", "Realtime Arrival", "Realtime Departure", "Service UID"]))
-
-        elif self.__complexity == "a.p" or self.__complexity == "a":
-            pass
+            
+            return "Station board returned successfully."
 
         elif self.__complexity == "s.n" or self.__complexity == "a.n":
             return combined_boards
