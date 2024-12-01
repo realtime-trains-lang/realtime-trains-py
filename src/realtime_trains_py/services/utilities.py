@@ -80,3 +80,49 @@ def get_time_delta(delta: int) -> str:
 def format_time(time: str) -> str:
     new_time = time[0] + time[1] + ":" + time[2] + time[3]
     return new_time
+
+def reformat_time(time: str) -> str:
+    time_data: str = ""
+    time = time.split(":")
+    for i in range(0, 2):
+        time_data += (time[i])
+
+    #print(time_data)
+
+    return time_data
+
+def merge_sort(array: list) -> list:
+    if len(array) <= 1:
+        return array
+    
+    midpoint = len(array) // 2
+    left_half = array[:midpoint]
+    right_half = array[midpoint:]
+
+    left_half = merge_sort(left_half)
+    right_half = merge_sort(right_half)
+
+    return merge(left_half, right_half)
+
+def merge(left: list, right: list) -> list:
+    merged_list = []
+    left_index = 0
+    right_index = 0
+
+    while left_index < len(left) and right_index < len(right):
+        if left[left_index][0] < right[right_index][0]:
+            merged_list.append(left[left_index])
+            left_index += 1
+        else:
+            merged_list.append(right[right_index])
+            right_index += 1
+
+    merged_list.extend(left[left_index:])
+    merged_list.extend(right[right_index:])
+
+    return merged_list
+
+def remove_dupes(data: list) -> list:
+    unique_rows = list(set(tuple(row) for row in data))
+
+    return [list(row) for row in unique_rows]

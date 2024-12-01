@@ -1,5 +1,5 @@
 from datetime import datetime
-from services.utilities import format_time, validate_date, validate_time 
+from services.utilities import format_time, merge_sort, reformat_time, remove_dupes, validate_date, validate_time
 from tabulate import tabulate
 
 import json
@@ -103,8 +103,8 @@ class Boards():
                 service_data = api_response.json()
 
                 if self.__complexity == "c":
-                    split_date = date.split("/")
-                    file_name = "JSONs/" + tiploc + "_on_" + split_date[0] + "." + split_date[1] + "." + split_date[2] + "_arr_board_data.json"
+                    split_date = new_date.split("/")
+                    file_name = "JSONs/" + tiploc + "_on_" + split_date[0] + "." + split_date[1] + "." + split_date[2] + "_dep_board_data.json"
 
                     with open(file_name, 'x', encoding='utf-8') as file:
                         json.dump(service_data, file, ensure_ascii = False, indent = 4)
@@ -126,6 +126,7 @@ class Boards():
                     departure_board: list = []
                     
                     services = service_data["services"]
+                    requested_location = service_data["location"]["name"]
                     count = 0
 
                     for service in services:
@@ -182,7 +183,8 @@ class Boards():
                         count += 1
                         if count == rows:
                             break
-
+                    
+                    print("Departure board for " + requested_location)
                     print(tabulate(departure_board, tablefmt = "rounded_grid", headers = ["Booked Departure", "Destination", "Platform", "Booked Departure", "Service UID"]))
 
                     return "Departure board returned successfully"  
@@ -293,7 +295,7 @@ class Boards():
                 service_data = api_response.json()
 
                 if self.__complexity == "c":
-                    split_date = date.split("/")
+                    split_date = new_date.split("/")
                     file_name = "JSONs/" + tiploc + "_on_" + split_date[0] + "." + split_date[1] + "." + split_date[2] + "_arr_board_data.json"
 
                     with open(file_name, 'x', encoding='utf-8') as file:
@@ -378,6 +380,7 @@ class Boards():
                     arrivals_board: list = []
                     
                     services = service_data["services"]
+                    requested_location = service_data["location"]["name"]
                     count = 0
 
                     for service in services:
@@ -438,7 +441,8 @@ class Boards():
                         count += 1
                         if count == rows:
                             break
-
+                    
+                    print("Arrivals board for " + requested_location)
                     print(tabulate(arrivals_board, tablefmt = "rounded_grid", headers = ["Booked Arrival", "Destination", "Origin", "Platform", "Booked Departure", "Service UID"]))
 
                     return "Arrivals board returned successfully"
@@ -539,48 +543,101 @@ class Boards():
             stored_complexity = self.__complexity
             self.__complexity = "s.n"
 
-        # Use each method using (comp).n. Compare responses for matching Service UID. If no match, store
-        # Optimisation? -> dict?
-        departure_data = self._get_dep_board_details(tiploc = tiploc, filter = filter, rows = rows, time = time, date = date) 
-        arrival_data = self._get_arr_board_details(tiploc = tiploc, filter = filter, rows = rows, time = time, date = date) 
+        departures_data = self._get_dep_board_details(tiploc = tiploc, filter = filter, rows = rows, time = time, date = date) 
+        arrivals_data = self._get_arr_board_details(tiploc = tiploc, filter = filter, rows = rows, time = time, date = date) 
 
-        self.__complexity = stored_complexity
+        try:
+            self.__complexity = stored_complexity
+        except:
+            pass
 
         departure_uids = []
+        departure_hold = []
         arrival_uids = []
+        arrivals_hold = []
         combined_board = []
+        combined_boards = []
 
-        for departures in departure_data: 
+        for departures in departures_data: 
             departure_uids.append(departures.service_uid)
 
-        for arrivals in arrival_data:
+        for arrivals in arrivals_data:
             arrival_uids.append(arrivals.service_uid)
 
-        for departure in departure_data:
-            for arrival in arrival_data:
+        for departure in departures_data:
+            for arrival in arrivals_data:
                 if departure.service_uid == arrival.service_uid:
-                    if self.__complexity == "s.n":
-                        combined_board.append([departure.gbtt_departure, arrival.gbtt_arrival, arrival.origin, departure.terminus, departure.platform, departure.realtime_departure, arrival.realtime_arrival, departure.service_uid])
+                    if self.__complexity == "s.p" or self.__complexity == "s":
+                        combined_board.append([reformat_time(arrival.gbtt_arrival), 
+                                               CombinedBoardSimple(arrival.gbtt_arrival, 
+                                                                  departure.gbtt_departure, 
+                                                                  arrival.origin, 
+                                                                  departure.terminus, 
+                                                                  departure.platform, 
+                                                                  arrival.realtime_arrival, 
+                                                                  departure.realtime_departure, 
+                                                                  departure.service_uid)])
 
-                    elif self.__complexity == "a.n":
-                        combined_board.append([departure.gbtt_departure, arrival.gbtt_arrival, arrival.origin, departure.terminus, departure.platform, departure.realtime_departure, arrival.realtime_arrival, departure.service_uid])
-
-                    elif self.__complexity == "s.p" or self.__complexity == "s":
-                        combined_board.append(CombinedBoardSimple(departure.gbtt_departure, arrival.gbtt_arrival, arrival.origin, departure.terminus, departure.platform, departure.realtime_departure, arrival.realtime_arrival, departure.service_uid))
-                        
-                
                     elif self.__complexity == "a.p" or self.__complexity == "a":
-                        combined_board.append(CombinedBoardAdvanced(departure.gbtt_departure, arrival.gbtt_arrival, arrival.origin, departure.terminus, departure.platform, departure.realtime_departure, arrival.realtime_arrival, departure.service_uid))
+                        combined_board.append([reformat_time(arrival.gbtt_arrival), 
+                                               CombinedBoardAdvanced(arrival.gbtt_arrival, 
+                                                                    departure.gbtt_departure, 
+                                                                    arrival.origin, 
+                                                                    departure.terminus, 
+                                                                    departure.platform, 
+                                                                    arrival.realtime_arrival, 
+                                                                    departure.realtime_departure, 
+                                                                    departure.service_uid)])
+
+                    elif self.__complexity == "s.n":
+                        combined_board.append([reformat_time(arrival.gbtt_arrival),
+                                               CombinedBoardSimple(departure.gbtt_departure, 
+                                                                  arrival.gbtt_arrival, 
+                                                                  arrival.origin, 
+                                                                  departure.terminus, 
+                                                                  departure.platform, 
+                                                                  departure.realtime_departure, 
+                                                                  arrival.realtime_arrival, 
+                                                                  departure.service_uid)])
                         
-        if self.__complexity == "s.n":
-            print("Station Board for ", combined_board)
+                    elif self.__complexity == "a.n":
+                        combined_board.append([reformat_time(arrival.gbtt_arrival),
+                                               CombinedBoardAdvanced(departure.gbtt_departure, 
+                                                                    arrival.gbtt_arrival, 
+                                                                    arrival.origin, 
+                                                                    departure.terminus, 
+                                                                    departure.platform, 
+                                                                    departure.realtime_departure, 
+                                                                    arrival.realtime_arrival, 
+                                                                    departure.service_uid)])
+                    arrivals_data.remove(arrival)
+                    departures_data.remove(departure)
+                
+                else:
+                    if [arrival.gbtt_arrival, arrival] not in arrivals_hold:
+                        arrivals_hold.append([reformat_time(arrival.gbtt_arrival), arrival])
+                    if [departure.gbtt_departure, departure] not in departure_hold:
+                        departure_hold.append([reformat_time(departure.gbtt_departure), departure])
 
-        elif self.__complexity == "a.n":
+        combined_board = arrivals_hold + departure_hold + combined_board
+
+        combined_board = remove_dupes(combined_board)
+
+        combined_board = merge_sort(combined_board)  
+
+        for i in range(len(combined_board)):
+            combined_boards.append(combined_board[i][1]) 
+
+        if self.__complexity == "s.p" or self.__complexity == "s":
+            
+            #print("I am broken lol")
+            print("Station Board for", tiploc)
+            print(tabulate(combined_boards, 
+                           tablefmt = "rounded_grid", 
+                           headers = ["Booked Arrival", "Booked Departure", "Origin", "Destination", "Platform", "Realtime Arrival", "Realtime Departure", "Service UID"]))
+
+        elif self.__complexity == "a.p" or self.__complexity == "a":
             pass
 
-        elif self.__complexity == "s.p" or self.__complexity == "s" or self.__complexity == "a.p" or self.__complexity == "a":
-            pass
-
-        print("Combined Board:", combined_board)
-        #print("Departure UIDs:", departure_uids)
-        #print("Arrival UIDs:", arrival_uids)
+        elif self.__complexity == "s.n" or self.__complexity == "a.n":
+            return combined_boards

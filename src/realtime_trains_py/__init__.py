@@ -11,7 +11,7 @@ class RealtimeTrainsPy():
         else:
             self._username = username
             self.__password = password
-            if complexity.lower() not in ["s", "s.p", "s.n", "a", "a.p", "a.n" "c"]:
+            if complexity.lower() not in ["s", "s.p", "s.n", "a", "a.p", "a.n", "c"]:
                 raise ValueError("Complexity not recognised. Select a valid type.")
         
         self.__services = ServiceDetails(username = self._username, password = self.__password, complexity = complexity.lower())
