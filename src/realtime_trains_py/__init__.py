@@ -1,5 +1,5 @@
-from services.boardData import Boards
-from services.serviceData import ServiceDetails
+from realtime_trains_py.services.board_data import Boards
+from realtime_trains_py.services.service_data import ServiceDetails
 
 
 class RealtimeTrainsPy():

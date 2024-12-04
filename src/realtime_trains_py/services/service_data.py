@@ -1,5 +1,5 @@
 from datetime import datetime
-from services.utilities import format_time, validate_date
+from realtime_trains_py.services.utilities import format_time, validate_date
 from tabulate import tabulate
 
 import json
