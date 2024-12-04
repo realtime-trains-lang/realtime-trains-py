@@ -30,7 +30,7 @@ Using advanced and simple mode, you can optionally select between prettier or no
 
 To install the package, simply run `pip install realtime-trains-py` in your terminal. Alternatively, you can clone, fork or download the [repository](https://github.com/anonymous44401/realtime-trains-py) onto your device. 
 
-Once installed, you can import the package. Place the line `from [tbc] import [tbc]` at the top of your file, or run it directly in your terminal. 
+Once installed, you can import the package. Place the line `from realtime_trains_py import RealtimeTrainsPy` at the top of your file, or run it directly in your terminal. 
 
 > [!IMPORTANT]
 > You need an RTT API account to access this package. You can sign up for free at the [API home page](https://api.rtt.io). 
