@@ -11,7 +11,7 @@ Maintained by [@anonymous44401](https://github.com/anonymous44401)
 
 ## About this package
 
-**Realtime Trains Py** is a python package designed to allow you to access data directly from the Realtime Trains API, in a simple and user-friendly way. The package includes 5 different complexity modes that allow you to customise the data you want to see.
+**realtime-trains-py** is a python package designed to allow you to access data directly from the Realtime Trains API, in a simple and user-friendly way. The package includes 5 different complexity modes that allow you to customise the data you want to see.
 
 This package can be used for anything railway related, whether you're a rail enthusiast or commuter, this package can be used for all your purposes. The package can be used in personal applications or for personal rail data access. 
 
@@ -28,9 +28,20 @@ Using advanced and simple mode, you can optionally select between prettier or no
 
 ## Installation Instructions
 
-To install the package, simply run `pip install realtime-trains-py` in your terminal. Alternatively, you can clone, fork or download the [repository](https://github.com/anonymous44401/realtime-trains-py) onto your device. 
+To install the package, simply run the following command in your terminal:
+```
+$ pip install realtime-trains-py
+``` 
+Alternatively, you can clone, fork or download the [repository](https://github.com/anonymous44401/realtime-trains-py) onto your device. 
 
-Once installed, you can import the package. Place the line `from realtime_trains_py import RealtimeTrainsPy` at the top of your file, or run it directly in your terminal. 
+Once installed, you can import the package. Place the lines below in your file, or you can run them directly in your terminal.
+```python
+from realtime_trains_py import RealtimeTrainsPy
+
+rtt = RealtimeTrainsPy(username = "your_username", password = "your_password", complexity = "c")
+```
+
+Check out the [documentation](https://github.com/anonymous44401/realtime-trains-py/wiki/Home) for more help setting up.
 
 > [!IMPORTANT]
 > You need an RTT API account to access this package. You can sign up for free at the [API home page](https://api.rtt.io). 
@@ -39,13 +50,13 @@ Once installed, you can import the package. Place the line `from realtime_trains
 ## Examples of this package
 
 The example below will return you up to 15 rows on the departure board for London King's Cross at the time you run the program. 
-```
-get_departures_board(tiploc = "KNGX", rows = 15)
+```python
+rtt.get_departures_board(tiploc = "KNGX", rows = 15)
 ```
 
 The example below will return you up to 15 rows on the arrivals board for London King's Cross at the time you run the program. 
-```
-get_arrivals_board(tiploc = "KNGX", rows = 15)
+```python
+rtt.get_arrivals_board(tiploc = "KNGX", rows = 15)
 ```
 
 More in-depth examples can be found on our [GitHub wiki](https://github.com/anonymous44401/realtime-trains-py/wiki/Home). 
@@ -53,4 +64,4 @@ More in-depth examples can be found on our [GitHub wiki](https://github.com/anon
 
 ## License
 
-This package uses an MIT License.
+The **realtime-trains-py** API Wrapper uses an MIT License.

@@ -79,7 +79,7 @@ class Boards():
                 service_data = api_response.json()
 
                 if self.__complexity == "c":
-                    split_date = date.split("/")
+                    split_date = new_date.split("/")
                     file_name = "JSONs/" + tiploc + "_on_" + split_date[0] + "." + split_date[1] + "." + split_date[2] + "_arr_board_data.json"
 
                     with open(file_name, 'x', encoding='utf-8') as file:
@@ -90,13 +90,13 @@ class Boards():
                     return return_info
                 
                 elif self.__complexity == "a.p" or self.__complexity == "a":
-                    pass
+                    raise NotImplementedError("Departure board for advanced (prettier) and advanced complexity not implemented yet.")
                     #departure_board: str = []
 
                     #services = service_data["services"]
 
                 elif self.__complexity == "a.n":
-                    pass
+                    raise NotImplementedError("Departure board for advanced (normal) complexity not implemented yet.")
 
                 elif self.__complexity == "s.p" or self.__complexity == "s":
                     departure_board: list = []
@@ -271,7 +271,7 @@ class Boards():
                 service_data = api_response.json()
 
                 if self.__complexity == "c":
-                    split_date = date.split("/")
+                    split_date = new_date.split("/")
                     file_name = "JSONs/" + tiploc + "_on_" + split_date[0] + "." + split_date[1] + "." + split_date[2] + "_arr_board_data.json"
 
                     with open(file_name, 'x', encoding='utf-8') as file:
