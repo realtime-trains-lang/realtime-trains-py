@@ -55,9 +55,6 @@ class ServiceDetails():
             if api_response.status_code == 200:
                 service_data = api_response.json()
 
-                if service_data["services"] == None:
-                    raise ValueError("No data found.")
-
                 if self.__complexity == "c":
                     split_date = date.split("/")
                     file_name = service_uid + "_on_" + split_date[0] + "." + split_date[1] + "." + split_date[2] + "_service_data.json"
