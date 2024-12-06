@@ -1,5 +1,9 @@
-from realtime_trains_py.services.board_data import Boards
-from realtime_trains_py.services.service_data import ServiceDetails
+try:
+    from realtime_trains_py.services.service_data import ServiceDetails
+    from realtime_trains_py.services.board_data import Boards
+except:
+    from services.service_data import ServiceDetails
+    from services.board_data import Boards
 
 
 class RealtimeTrainsPy():

@@ -1,5 +1,8 @@
 from datetime import datetime
-from realtime_trains_py.services.utilities import format_time, validate_date, validate_time 
+try:
+    from realtime_trains_py.services.utilities import format_time, validate_date, validate_time 
+except:
+    from services.utilities import format_time, validate_date, validate_time 
 from tabulate import tabulate
 
 import json
@@ -64,23 +67,34 @@ class Boards():
             new_time = time
 
         if self.__complexity == "c" or (validate_date(new_date) and validate_time(new_time)):
-            if filter != None:
-                search_query = "/json/search/" + str(tiploc) + "/to/<toStation>" + str(filter)
 
-            elif date is not None:
-                search_query = "https://api.rtt.io/api/v1/json/search/" + str(tiploc) + "/" + str(date)
+            # https://api.rtt.io/api/v1/json/search/SDY/to/SVG
+            
+            search_query = "https://api.rtt.io/api/v1/json/search/" + str(tiploc)
 
-            else:
-                search_query = "https://api.rtt.io/api/v1/json/search/" + str(tiploc)
+            if filter is not None:
+                search_query += "/to/" + str(filter)
+
+            if date is not None:
+                search_query +=  "/" + str(tiploc) + "/" + str(date)
+
+            if time is not None:
+                search_query += "/" + str(date)
+
             #print(search_query)
             api_response =  requests.get(search_query, auth=(self.__username, self.__password))
 
             if api_response.status_code == 200:
                 service_data = api_response.json()
 
+                # print(service_data["services"])
+
+                if service_data["services"] == None:
+                    raise ValueError("No data found.")
+
                 if self.__complexity == "c":
                     split_date = new_date.split("/")
-                    file_name = "JSONs/" + tiploc + "_on_" + split_date[0] + "." + split_date[1] + "." + split_date[2] + "_arr_board_data.json"
+                    file_name = tiploc + "_on_" + split_date[0] + "." + split_date[1] + "." + split_date[2] + "_dep_board_data.json"
 
                     with open(file_name, 'x', encoding='utf-8') as file:
                         json.dump(service_data, file, ensure_ascii = False, indent = 4)
@@ -256,23 +270,33 @@ class Boards():
             new_time = time
 
         if self.__complexity == "c" or (validate_date(new_date) and validate_time(new_time)):
+            search_query = "https://api.rtt.io/api/v1/json/search/" + str(tiploc)
+
             if filter is not None:
-                search_query = "/json/search/" + str(tiploc) + "/to/" + str(filter)
+                search_query += "/to/" + str(filter)
 
-            elif date is not None:
-                search_query = "https://api.rtt.io/api/v1/json/search/" + str(tiploc) + "/" + str(date) + "/arrivals"
+            if date is not None:
+                search_query +=  "/" + str(tiploc) + "/" + str(date)
 
-            else:
-                search_query = "https://api.rtt.io/api/v1/json/search/" + str(tiploc) + "/arrivals"
-            #print(search_query)
+            if time is not None:
+                search_query += "/" + str(date)
+
+            search_query += "/arrivals"
+
+            # print(search_query)
             api_response =  requests.get(search_query, auth=(self.__username, self.__password))
 
             if api_response.status_code == 200:
                 service_data = api_response.json()
 
+                # print(service_data["services"])
+
+                if service_data["services"] == None:
+                    raise ValueError("No data found.")
+
                 if self.__complexity == "c":
                     split_date = new_date.split("/")
-                    file_name = "JSONs/" + tiploc + "_on_" + split_date[0] + "." + split_date[1] + "." + split_date[2] + "_arr_board_data.json"
+                    file_name = tiploc + "_on_" + split_date[0] + "." + split_date[1] + "." + split_date[2] + "_arr_board_data.json"
 
                     with open(file_name, 'x', encoding='utf-8') as file:
                         json.dump(service_data, file, ensure_ascii = False, indent = 4)
