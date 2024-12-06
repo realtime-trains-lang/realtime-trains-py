@@ -76,13 +76,13 @@ class Boards():
                 search_query += "/to/" + str(filter)
 
             if date is not None:
-                search_query +=  "/" + str(tiploc) + "/" + str(date)
+                search_query +=  "/" + str(date)
 
             if time is not None:
-                search_query += "/" + str(date)
+                search_query += "/" + str(time)
 
-            #print(search_query)
-            api_response =  requests.get(search_query, auth=(self.__username, self.__password))
+            # print(search_query)
+            api_response =  requests.get(search_query, auth = (self.__username, self.__password))
 
             if api_response.status_code == 200:
                 service_data = api_response.json()
@@ -96,21 +96,147 @@ class Boards():
                     split_date = new_date.split("/")
                     file_name = tiploc + "_on_" + split_date[0] + "." + split_date[1] + "." + split_date[2] + "_dep_board_data.json"
 
-                    with open(file_name, 'x', encoding='utf-8') as file:
-                        json.dump(service_data, file, ensure_ascii = False, indent = 4)
+                    try:
+                        with open(file_name, 'x', encoding='utf-8') as file:
+                            json.dump(service_data, file, ensure_ascii = False, indent = 4)
 
-                        return_info: str = "Board information added to new file: " + file_name
+                            return_info: str = "Board information added to new file: " + file_name
+
+                    except:
+                        raise Exception("Failed to write to file. Perhaps the file already exists?")
 
                     return return_info
                 
+                ## Advanced complexities will have more info added soon ##
                 elif self.__complexity == "a.p" or self.__complexity == "a":
-                    raise NotImplementedError("Departure board for advanced (prettier) and advanced complexity not implemented yet.")
-                    #departure_board: str = []
+                    departure_board: list = []
+                    
+                    services = service_data["services"]
+                    requested_location = service_data["location"]["name"]
+                    count = 0
 
-                    #services = service_data["services"]
+                    for service in services:
+                        destination = service["locationDetail"]["destination"]
+                        status = service["locationDetail"]["displayAs"]
+
+                        try:
+                            gbtt_departure = service["locationDetail"]["gbttBookedDeparture"]
+
+                        except:
+                            gbtt_departure = "Unknown"
+
+                        try:
+                            platform = service["locationDetail"]["platform"]
+
+                        except:
+                            platform = "Unknown"
+
+                        try:
+                            realtime_departure = service["locationDetail"]["realtimeDeparture"]
+
+                        except:
+                            realtime_departure = "Unknown"
+
+                        try:
+                            service_uid = service["serviceUid"]
+
+                        except:
+                            service_uid = "Unknown"
+
+
+                        if status != "CANCELLED_CALL":
+                            if gbtt_departure == realtime_departure:
+                                realtime_departure = "On time"
+                                gbtt_departure = format_time(gbtt_departure)
+
+                            elif realtime_departure == "Unknown":
+                                gbtt_departure = format_time(gbtt_departure)
+
+                            else:
+                                realtime_departure = format_time(realtime_departure)
+                                realtime_departure = "Exp " + realtime_departure
+                                gbtt_departure = format_time(gbtt_departure)
+
+                        else:
+                            realtime_departure = "Cancelled"
+                            gbtt_departure = format_time(gbtt_departure)
+
+                        
+                        terminus = destination.pop()["description"]
+
+                        departure_board.append([gbtt_departure, terminus, platform, realtime_departure, service_uid])
+
+                        count += 1
+                        if count == rows:
+                            break
+
+                    print("Departure board for " + requested_location)
+                    print(tabulate(departure_board, tablefmt = "rounded_grid", headers = ["Booked Departure", "Destination", "Platform", "Booked Departure", "Service UID"]))
+
+                    return "Departure board printed successfully" 
 
                 elif self.__complexity == "a.n":
-                    raise NotImplementedError("Departure board for advanced (normal) complexity not implemented yet.")
+                    departure_board: list = []
+                    
+                    services = service_data["services"]
+                    count = 0
+
+                    for service in services:
+                        destination = service["locationDetail"]["destination"]
+                        status = service["locationDetail"]["displayAs"]
+
+                        try:
+                            gbtt_departure = service["locationDetail"]["gbttBookedDeparture"]
+
+                        except:
+                            gbtt_departure = "Unknown"
+
+                        try:
+                            platform = service["locationDetail"]["platform"]
+
+                        except:
+                            platform = "Unknown"
+
+                        try:
+                            realtime_departure = service["locationDetail"]["realtimeDeparture"]
+
+                        except:
+                            realtime_departure = "Unknown"
+
+                        try:
+                            service_uid = service["serviceUid"]
+
+                        except:
+                            service_uid = "Unknown"
+
+
+                        if status != "CANCELLED_CALL":
+                            if gbtt_departure == realtime_departure:
+                                realtime_departure = "On time"
+                                gbtt_departure = format_time(gbtt_departure)
+
+                            elif realtime_departure == "Unknown":
+                                gbtt_departure = format_time(gbtt_departure)
+
+                            else:
+                                realtime_departure = format_time(realtime_departure)
+                                realtime_departure = "Exp " + realtime_departure
+                                gbtt_departure = format_time(gbtt_departure)
+
+                        else:
+                            realtime_departure = "Cancelled"
+                            gbtt_departure = format_time(gbtt_departure)
+
+                        
+                        terminus = destination.pop()["description"]
+
+                        departure_board.append(DepartureBoardSimple(gbtt_departure, terminus, platform, realtime_departure, service_uid))
+
+                        count += 1
+                        if count == rows:
+                            break
+
+                    return departure_board 
 
                 elif self.__complexity == "s.p" or self.__complexity == "s":
                     departure_board: list = []
@@ -276,15 +402,15 @@ class Boards():
                 search_query += "/to/" + str(filter)
 
             if date is not None:
-                search_query +=  "/" + str(tiploc) + "/" + str(date)
+                search_query +=  "/" + str(date)
 
             if time is not None:
-                search_query += "/" + str(date)
+                search_query += "/" + str(time)
 
             search_query += "/arrivals"
 
             # print(search_query)
-            api_response =  requests.get(search_query, auth=(self.__username, self.__password))
+            api_response =  requests.get(search_query, auth = (self.__username, self.__password))
 
             if api_response.status_code == 200:
                 service_data = api_response.json()
@@ -298,10 +424,14 @@ class Boards():
                     split_date = new_date.split("/")
                     file_name = tiploc + "_on_" + split_date[0] + "." + split_date[1] + "." + split_date[2] + "_arr_board_data.json"
 
-                    with open(file_name, 'x', encoding='utf-8') as file:
-                        json.dump(service_data, file, ensure_ascii = False, indent = 4)
-                       
-                        return_info: str = "Board information added to new file: " + file_name
+                    try:
+                        with open(file_name, 'x', encoding='utf-8') as file:
+                            json.dump(service_data, file, ensure_ascii = False, indent = 4)
+                        
+                            return_info: str = "Board information added to new file: " + file_name
+
+                    except:
+                        raise Exception("Failed to write to file. Perhaps the file already exists?")
 
                     return return_info
                 

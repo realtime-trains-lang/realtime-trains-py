@@ -50,7 +50,7 @@ class ServiceDetails():
         if self.__complexity == "c" or validate_date(date):
             search_query = str(self._service_url) + str(service_uid) + "/" + str(date)
             #print(search_query)
-            api_response =  requests.get(search_query, auth=(self.__username, self.__password))
+            api_response =  requests.get(search_query, auth = (self.__username, self.__password))
 
             if api_response.status_code == 200:
                 service_data = api_response.json()
@@ -59,10 +59,14 @@ class ServiceDetails():
                     split_date = date.split("/")
                     file_name = service_uid + "_on_" + split_date[0] + "." + split_date[1] + "." + split_date[2] + "_service_data.json"
 
-                    with open(file_name, 'x', encoding='utf-8') as file:
-                        json.dump(service_data, file, ensure_ascii = False, indent = 4)
-                        
-                        return_info: str = "Service information added to new file: " + file_name
+                    try:
+                        with open(file_name, 'x', encoding='utf-8') as file:
+                            json.dump(service_data, file, ensure_ascii = False, indent = 4)
+                            
+                            return_info: str = "Service information added to new file: " + file_name
+
+                    except:
+                        raise Exception("Failed to write to file. Perhaps the file already exists?")
 
                     return return_info 
 
