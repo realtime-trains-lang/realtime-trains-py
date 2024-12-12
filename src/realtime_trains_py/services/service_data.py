@@ -291,7 +291,7 @@ class ServiceDetails():
                                 booked_departure = ""
 
                             if start_time == "None":
-                                start_time = format_time(booked_departure)
+                                start_time = booked_departure
 
                             if "platform" in locations:
                                 platform = locations["platform"]
