@@ -6,21 +6,24 @@ We release updates and patches regularly. Below are the versions of this project
 
 | Version | Supported          |
 |---------|--------------------|
-| 0.x.xax | :white_check_mark: |
+| 1.x.xbx | :white_check_mark: |
+| 0.x.xax | :x:                |
 
 If you are using an unsupported version, please upgrade to a supported version to receive the latest security updates.
 
 ## Reporting a Vulnerability
 
-We take the security of realtime-trains-py seriously. If you discover a security vulnerability, please report it by following the steps below:
+We take the security of the realtime-trains-py package seriously. If you discover a security vulnerability, please report it as soon as possible by emailing us at **[anonymous4401.ad@gmail.com](mailto:anonymous4401.ad@gmail.com)**.
 
-1. **Do not disclose the vulnerability publicly.** 
-2. Email us at **[anonymous4401.ad@gmail.com](mailto:anonymous4401.ad@gmail.com)** with the details of the issue. Include the following information in your report:
+Ensure you include the details of the issue. Include the following information in your report:
    - A detailed description of the vulnerability.
    - Steps to reproduce the issue.
+      - How did you come across the vulnerability?
    - The potential impact or risk.
 
-We aim to acknowledge your report within **3 days** and will provide a more detailed response within **10 working days**. 
+**Do not disclose the vulnerability publicly.** Sharing potential vulnerabilities could lead to exploitation or other adverse consequences.
+
+We aim to acknowledge your report within **3 working days** and will provide a more detailed response within **10 working days**. 
 
 After confirming the issue, we will:
 - Collaborate with you to validate and address the vulnerability.

@@ -170,7 +170,7 @@ class Boards():
                         if count == rows:
                             break
 
-                    print("Departure board for " + requested_location)
+                    print("Departure board for " + requested_location + ". Generated at " + datetime.now().strftime("%H:%M:%S on %d/%m/%y."))
                     print(tabulate(departure_board, tablefmt = "rounded_grid", headers = ["Booked Departure", "Destination", "Platform", "Booked Departure", "Service UID"]))
 
                     return "Departure board printed successfully" 
@@ -300,7 +300,7 @@ class Boards():
                         if count == rows:
                             break
 
-                    print("Departure board for " + requested_location)
+                    print("Departure board for " + requested_location + ". Generated at " + datetime.now().strftime("%H:%M:%S on %d/%m/%y."))
                     print(tabulate(departure_board, tablefmt = "rounded_grid", headers = ["Booked Departure", "Destination", "Platform", "Booked Departure", "Service UID"]))
 
                     return "Departure board printed successfully"  
@@ -502,8 +502,8 @@ class Boards():
                         if count == rows:
                             break
 
-                    print("Arrivals board for " + requested_location)
-                    print(tabulate(arrivals_board, tablefmt = "rounded_grid", headers = ["Booked Arrival", "Destination", "Origin", "Platform", "Booked Departure", "Service UID"]))
+                    print("Arrivals board for " + requested_location + ". Generated at " + datetime.now().strftime("%H:%M:%S on %d/%m/%y."))
+                    print(tabulate(arrivals_board, tablefmt = "rounded_grid", headers = ["Booked Arrival", "Destination", "Origin", "Platform", "Booked Arrival", "Service UID"]))
 
                     return "Arrivals board printed successfully"
                 
@@ -639,8 +639,8 @@ class Boards():
                         if count == rows:
                             break
                     
-                    print("Arrivals board for " + requested_location)
-                    print(tabulate(arrivals_board, tablefmt = "rounded_grid", headers = ["Booked Arrival", "Destination", "Origin", "Platform", "Booked Departure", "Service UID"]))
+                    print("Arrivals board for " + requested_location + ". Generated at " + datetime.now().strftime("%H:%M:%S on %d/%m/%y."))
+                    print(tabulate(arrivals_board, tablefmt = "rounded_grid", headers = ["Booked Arrival", "Destination", "Origin", "Platform", "Booked Arrival", "Service UID"]))
 
                     return "Arrivals board printed successfully"
 
