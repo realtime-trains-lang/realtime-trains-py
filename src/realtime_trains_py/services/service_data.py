@@ -2,10 +2,9 @@ from datetime import datetime
 try:
     from realtime_trains_py.services.utilities import format_time, validate_date
 except:
-    from services.utilities import format_time, validate_date
+    from services.utilities import create_file, format_time, validate_date
 from tabulate import tabulate
 
-import json
 import requests
 
 
@@ -18,6 +17,15 @@ class ServiceSimple():
         self.destination = destination
         self.all_calling_points = all_calling_points
         self.start_time = start_time
+
+class CallingPoints():
+    def __init__(self, stop_name, booked_arrival, realtime_arrival, platform, booked_departure, realtime_departure):
+        self.stop_name = stop_name
+        self.booked_arrival = booked_arrival
+        self.realtime_arrival = realtime_arrival
+        self.platform = platform
+        self.booked_departure = booked_departure
+        self.realtime_departure = realtime_departure
 
 class ServiceAdvanced():
     def __init__(self, train_id, service_uid, operator, origin, destination, all_calling_points, start_time, end_time, power, train_class):
@@ -38,14 +46,13 @@ class ServiceDetails():
         self.__username = username
         self.__password = password
         self.__complexity = complexity
-        self.__date: str = (datetime.now()).strftime("%Y/%m/%d")
 
         self._service_url: str = "https://api.rtt.io/api/v1/json/service/"
 
 
     def _get_service_details(self, service_uid: str, date: str | None) -> list | str:
         if date is None:
-            date = self.__date
+            date = (datetime.now()).strftime("%Y/%m/%d")
 
         if self.__complexity == "c" or validate_date(date):
             search_query = str(self._service_url) + str(service_uid) + "/" + str(date)
@@ -54,24 +61,15 @@ class ServiceDetails():
 
             if api_response.status_code == 200:
                 service_data = api_response.json()
+                
+                if self.__complexity == "c":
+                    split_date = date.split("/")
+                    file_name = service_uid + "_on_" + split_date[0] + "." + split_date[1] + "." + split_date[2] + "_service_data"
 
+                    return create_file(file_name, service_data)    
+                
                 try:
-                    if self.__complexity == "c":
-                        split_date = date.split("/")
-                        file_name = service_uid + "_on_" + split_date[0] + "." + split_date[1] + "." + split_date[2] + "_service_data.json"
-
-                        try:
-                            with open(file_name, 'x', encoding='utf-8') as file:
-                                json.dump(service_data, file, ensure_ascii = False, indent = 4)
-                                
-                                return_info: str = "Service information added to new file: " + file_name
-
-                        except:
-                            raise Exception("Failed to write to file. Perhaps the file already exists?")
-
-                        return return_info 
-
-                    elif self.__complexity == "a.p" or self.__complexity == "a":
+                    if self.__complexity == "a.p" or self.__complexity == "a":
                         train_id = service_data["trainIdentity"]
                         operator = service_data["atocName"]
 
@@ -193,7 +191,7 @@ class ServiceDetails():
                             else:
                                 line = "Unknown"
 
-                            all_calling_points.append([stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure])
+                            all_calling_points.append(CallingPoints(stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure))
 
                         return ServiceAdvanced(train_id, service_uid, operator, origin, destination, all_calling_points, start_time, end_time, power_type, train_class)
                     
@@ -203,8 +201,7 @@ class ServiceDetails():
 
                         origins = service_data["origin"]
                         origin = origins.pop()["description"]
-                        start_time = origins.pop()["publicTime"]
-                        start_time = format_time(start_time)
+                        start_time = "None"
 
                         destinations = service_data["destination"]
                         destination = destinations.pop()["description"]
@@ -237,6 +234,9 @@ class ServiceDetails():
                                 booked_departure = format_time(booked_departure)
                             else:
                                 booked_departure = ""
+
+                            if start_time == "None":
+                                start_time = booked_departure
 
                             if "platform" in locations:
                                 platform = locations["platform"]
@@ -298,7 +298,7 @@ class ServiceDetails():
                             else:
                                 platform = "Unknown"
 
-                            all_calling_points.append([stop_name, booked_arrival, realtime_arrival, platform, booked_departure, realtime_departure])
+                            all_calling_points.append(CallingPoints(stop_name, booked_arrival, realtime_arrival, platform, booked_departure, realtime_departure))
 
                         return ServiceSimple(train_id, service_uid, operator, origin, destination, all_calling_points, start_time)
                 

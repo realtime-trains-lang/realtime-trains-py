@@ -2,10 +2,9 @@ from datetime import datetime
 try:
     from realtime_trains_py.services.utilities import format_time, validate_date, validate_time 
 except:
-    from services.utilities import format_time, validate_date, validate_time 
+    from services.utilities import create_file, format_time, validate_date, validate_time 
 from tabulate import tabulate
 
-import json
 import requests
 
 
@@ -49,13 +48,12 @@ class Boards():
         self.__username = username
         self.__password = password
         self.__complexity = complexity
-        self.__date: str = (datetime.now()).strftime("%Y/%m/%d")
 
         self._board_url: str = "https://api.rtt.io/api/v1/json/search/"
 
     def _get_dep_board_details(self, tiploc, filter, rows, time, date: str = None) -> list | str:
         if date is None:
-            new_date = self.__date
+            new_date = (datetime.now()).strftime("%Y/%m/%d")
 
         else:
             new_date = date
@@ -94,20 +92,10 @@ class Boards():
 
                 if self.__complexity == "c":
                     split_date = new_date.split("/")
-                    file_name = tiploc + "_on_" + split_date[0] + "." + split_date[1] + "." + split_date[2] + "_dep_board_data.json"
+                    file_name = tiploc + "_on_" + split_date[0] + "." + split_date[1] + "." + split_date[2] + "_dep_board_data"
 
-                    try:
-                        with open(file_name, 'x', encoding='utf-8') as file:
-                            json.dump(service_data, file, ensure_ascii = False, indent = 4)
-
-                            return_info: str = "Board information added to new file: " + file_name
-
-                    except:
-                        raise Exception("Failed to write to file. Perhaps the file already exists?")
-
-                    return return_info
+                    return create_file(file_name, service_data)
                 
-                ## Advanced complexities will have more info added soon ##
                 elif self.__complexity == "a.p" or self.__complexity == "a":
                     departure_board: list = []
                     
@@ -116,31 +104,33 @@ class Boards():
                     count = 0
 
                     for service in services:
-                        destination = service["locationDetail"]["destination"]
-                        status = service["locationDetail"]["displayAs"]
+                        location_detail = service["locationDetail"]
+                        destination = location_detail["destination"]
+                        status = location_detail["displayAs"]
 
-                        try:
-                            gbtt_departure = service["locationDetail"]["gbttBookedDeparture"]
 
-                        except:
+                        if "gbttBookedDeparture" in location_detail:
+                            gbtt_departure = location_detail["gbttBookedDeparture"]
+
+                        else:
                             gbtt_departure = "Unknown"
 
-                        try:
-                            platform = service["locationDetail"]["platform"]
+                        if "platform" in location_detail:
+                            platform = location_detail["platform"]
 
-                        except:
+                        else:
                             platform = "Unknown"
 
-                        try:
-                            realtime_departure = service["locationDetail"]["realtimeDeparture"]
+                        if "realtimeDeparture" in location_detail:
+                            realtime_departure = location_detail["realtimeDeparture"]
 
-                        except:
+                        else:
                             realtime_departure = "Unknown"
 
-                        try:
+                        if "serviceUid" in service:
                             service_uid = service["serviceUid"]
 
-                        except:
+                        else:
                             service_uid = "Unknown"
 
 
@@ -182,31 +172,33 @@ class Boards():
                     count = 0
 
                     for service in services:
-                        destination = service["locationDetail"]["destination"]
-                        status = service["locationDetail"]["displayAs"]
+                        location_detail = service["locationDetail"]
+                        destination = location_detail["destination"]
+                        status = location_detail["displayAs"]
 
-                        try:
-                            gbtt_departure = service["locationDetail"]["gbttBookedDeparture"]
 
-                        except:
+                        if "gbttBookedDeparture" in location_detail:
+                            gbtt_departure = location_detail["gbttBookedDeparture"]
+
+                        else:
                             gbtt_departure = "Unknown"
 
-                        try:
-                            platform = service["locationDetail"]["platform"]
+                        if "platform" in location_detail:
+                            platform = location_detail["platform"]
 
-                        except:
+                        else:
                             platform = "Unknown"
 
-                        try:
-                            realtime_departure = service["locationDetail"]["realtimeDeparture"]
+                        if "realtimeDeparture" in location_detail:
+                            realtime_departure = location_detail["realtimeDeparture"]
 
-                        except:
+                        else:
                             realtime_departure = "Unknown"
 
-                        try:
+                        if "serviceUid" in service:
                             service_uid = service["serviceUid"]
 
-                        except:
+                        else:
                             service_uid = "Unknown"
 
 
@@ -246,31 +238,33 @@ class Boards():
                     count = 0
 
                     for service in services:
-                        destination = service["locationDetail"]["destination"]
-                        status = service["locationDetail"]["displayAs"]
+                        location_detail = service["locationDetail"]
+                        destination = location_detail["destination"]
+                        status = location_detail["displayAs"]
 
-                        try:
-                            gbtt_departure = service["locationDetail"]["gbttBookedDeparture"]
 
-                        except:
+                        if "gbttBookedDeparture" in location_detail:
+                            gbtt_departure = location_detail["gbttBookedDeparture"]
+
+                        else:
                             gbtt_departure = "Unknown"
 
-                        try:
-                            platform = service["locationDetail"]["platform"]
+                        if "platform" in location_detail:
+                            platform = location_detail["platform"]
 
-                        except:
+                        else:
                             platform = "Unknown"
 
-                        try:
-                            realtime_departure = service["locationDetail"]["realtimeDeparture"]
+                        if "realtimeDeparture" in location_detail:
+                            realtime_departure = location_detail["realtimeDeparture"]
 
-                        except:
+                        else:
                             realtime_departure = "Unknown"
 
-                        try:
+                        if "serviceUid" in service:
                             service_uid = service["serviceUid"]
 
-                        except:
+                        else:
                             service_uid = "Unknown"
 
 
@@ -313,31 +307,33 @@ class Boards():
                     count = 0
 
                     for service in services:
-                        destination = service["locationDetail"]["destination"]
-                        status = service["locationDetail"]["displayAs"]
+                        location_detail = service["locationDetail"]
+                        destination = location_detail["destination"]
+                        status = location_detail["displayAs"]
 
-                        try:
-                            gbtt_departure = service["locationDetail"]["gbttBookedDeparture"]
 
-                        except:
+                        if "gbttBookedDeparture" in location_detail:
+                            gbtt_departure = location_detail["gbttBookedDeparture"]
+
+                        else:
                             gbtt_departure = "Unknown"
 
-                        try:
-                            platform = service["locationDetail"]["platform"]
+                        if "platform" in location_detail:
+                            platform = location_detail["platform"]
 
-                        except:
+                        else:
                             platform = "Unknown"
 
-                        try:
-                            realtime_departure = service["locationDetail"]["realtimeDeparture"]
+                        if "realtimeDeparture" in location_detail:
+                            realtime_departure = location_detail["realtimeDeparture"]
 
-                        except:
+                        else:
                             realtime_departure = "Unknown"
 
-                        try:
+                        if "serviceUid" in service:
                             service_uid = service["serviceUid"]
 
-                        except:
+                        else:
                             service_uid = "Unknown"
 
 
@@ -384,7 +380,7 @@ class Boards():
 
     def _get_arr_board_details(self, tiploc, filter, rows, time, date: str = None) -> list | str:
         if date is None:
-            new_date = self.__date
+            new_date = (datetime.now()).strftime("%Y/%m/%d")
 
         else:
             new_date = date
@@ -422,18 +418,9 @@ class Boards():
 
                 if self.__complexity == "c":
                     split_date = new_date.split("/")
-                    file_name = tiploc + "_on_" + split_date[0] + "." + split_date[1] + "." + split_date[2] + "_arr_board_data.json"
+                    file_name = tiploc + "_on_" + split_date[0] + "." + split_date[1] + "." + split_date[2] + "_arr_board_data"
 
-                    try:
-                        with open(file_name, 'x', encoding='utf-8') as file:
-                            json.dump(service_data, file, ensure_ascii = False, indent = 4)
-                        
-                            return_info: str = "Board information added to new file: " + file_name
-
-                    except:
-                        raise Exception("Failed to write to file. Perhaps the file already exists?")
-
-                    return return_info
+                    return create_file(file_name, service_data)
                 
                 elif self.__complexity == "a.p" or self.__complexity == "a":
                     arrivals_board: list = []
@@ -444,34 +431,34 @@ class Boards():
                     count = 0
 
                     for service in services:
-                        destinations = service["locationDetail"]["destination"]
-                        origins = service["locationDetail"]["origin"]
-                        status = service["locationDetail"]["displayAs"]
+                        location_detail = service["locationDetail"]
+                        destinations = location_detail["destination"]
+                        origins = location_detail["origin"]
+                        status = location_detail["displayAs"]
 
-                        try:
-                            gbtt_arrival = service["locationDetail"]["gbttBookedArrival"]
+                        if "gbttBookedArrival" in location_detail:
+                            gbtt_arrival = location_detail["gbttBookedArrival"]
 
-                        except:
+                        else:
                             gbtt_arrival = "Unknown"
 
-                        try:
-                            platform = service["locationDetail"]["platform"]
+                        if "platform" in location_detail:
+                            platform = location_detail["platform"]
 
-                        except:
+                        else:
                             platform = "Unknown"
 
-                        try:
-                            realtime_arrival = service["locationDetail"]["realtimeArrival"]
+                        if "realtimeArrival" in location_detail:
+                            realtime_arrival = location_detail["realtimeArrival"]
 
-                        except:
+                        else:
                             realtime_arrival = "Unknown"
 
-                        try:
+                        if "serviceUid" in service:
                             service_uid = service["serviceUid"]
 
-                        except:
+                        else:
                             service_uid = "Unknown"
-
 
                         if status != "CANCELLED_CALL":
                             if gbtt_arrival == realtime_arrival:
@@ -515,32 +502,33 @@ class Boards():
                     count = 0
 
                     for service in services:
-                        destinations = service["locationDetail"]["destination"]
-                        origins = service["locationDetail"]["origin"]
-                        status = service["locationDetail"]["displayAs"]
+                        location_detail = service["locationDetail"]
+                        destinations = location_detail["destination"]
+                        origins = location_detail["origin"]
+                        status = location_detail["displayAs"]
 
-                        try:
-                            gbtt_arrival = service["locationDetail"]["gbttBookedArrival"]
+                        if "gbttBookedArrival" in location_detail:
+                            gbtt_arrival = location_detail["gbttBookedArrival"]
 
-                        except:
+                        else:
                             gbtt_arrival = "Unknown"
 
-                        try:
-                            platform = service["locationDetail"]["platform"]
+                        if "platform" in location_detail:
+                            platform = location_detail["platform"]
 
-                        except:
+                        else:
                             platform = "Unknown"
 
-                        try:
-                            realtime_arrival = service["locationDetail"]["realtimeArrival"]
+                        if "realtimeArrival" in location_detail:
+                            realtime_arrival = location_detail["realtimeArrival"]
 
-                        except:
+                        else:
                             realtime_arrival = "Unknown"
 
-                        try:
+                        if "serviceUid" in service:
                             service_uid = service["serviceUid"]
 
-                        except:
+                        else:
                             service_uid = "Unknown"
 
 
@@ -581,34 +569,34 @@ class Boards():
                     count = 0
 
                     for service in services:
-                        destinations = service["locationDetail"]["destination"]
-                        origins = service["locationDetail"]["origin"]
-                        status = service["locationDetail"]["displayAs"]
+                        location_detail = service["locationDetail"]
+                        destinations = location_detail["destination"]
+                        origins = location_detail["origin"]
+                        status = location_detail["displayAs"]
 
-                        try:
-                            gbtt_arrival = service["locationDetail"]["gbttBookedArrival"]
+                        if "gbttBookedArrival" in location_detail:
+                            gbtt_arrival = location_detail["gbttBookedArrival"]
 
-                        except:
+                        else:
                             gbtt_arrival = "Unknown"
 
-                        try:
-                            platform = service["locationDetail"]["platform"]
+                        if "platform" in location_detail:
+                            platform = location_detail["platform"]
 
-                        except:
+                        else:
                             platform = "Unknown"
 
-                        try:
-                            realtime_arrival = service["locationDetail"]["realtimeArrival"]
+                        if "realtimeArrival" in location_detail:
+                            realtime_arrival = location_detail["realtimeArrival"]
 
-                        except:
+                        else:
                             realtime_arrival = "Unknown"
 
-                        try:
+                        if "serviceUid" in service:
                             service_uid = service["serviceUid"]
 
-                        except:
+                        else:
                             service_uid = "Unknown"
-
 
                         if status != "CANCELLED_CALL":
                             if gbtt_arrival == realtime_arrival:
@@ -652,34 +640,34 @@ class Boards():
                     count = 0
 
                     for service in services:
-                        destinations = service["locationDetail"]["destination"]
-                        origins = service["locationDetail"]["origin"]
-                        status = service["locationDetail"]["displayAs"]
+                        location_detail = service["locationDetail"]
+                        destinations = location_detail["destination"]
+                        origins = location_detail["origin"]
+                        status = location_detail["displayAs"]
 
-                        try:
-                            gbtt_arrival = service["locationDetail"]["gbttBookedArrival"]
+                        if "gbttBookedArrival" in location_detail:
+                            gbtt_arrival = location_detail["gbttBookedArrival"]
 
-                        except:
+                        else:
                             gbtt_arrival = "Unknown"
 
-                        try:
-                            platform = service["locationDetail"]["platform"]
+                        if "platform" in location_detail:
+                            platform = location_detail["platform"]
 
-                        except:
+                        else:
                             platform = "Unknown"
 
-                        try:
-                            realtime_arrival = service["locationDetail"]["realtimeArrival"]
+                        if "realtimeArrival" in location_detail:
+                            realtime_arrival = location_detail["realtimeArrival"]
 
-                        except:
+                        else:
                             realtime_arrival = "Unknown"
 
-                        try:
+                        if "serviceUid" in service:
                             service_uid = service["serviceUid"]
 
-                        except:
+                        else:
                             service_uid = "Unknown"
-
 
                         if status != "CANCELLED_CALL":
                             if gbtt_arrival == realtime_arrival:
