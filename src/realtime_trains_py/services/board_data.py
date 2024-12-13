@@ -713,3 +713,15 @@ class Boards():
         else: 
             raise ValueError("Invalid date or time. Date or time provided did not meet requirements or fall into the valid date/time range.")
         
+    def _get_stat_board_details(self, tiploc, filter, rows, time, date: str = None) -> list | str:
+        if date is None:
+            new_date = (datetime.now()).strftime("%Y/%m/%d")
+
+        else:
+            new_date = date
+
+        if time is None:
+            new_time = (datetime.now()).strftime("%H%M")
+
+        else:
+            new_time = time
