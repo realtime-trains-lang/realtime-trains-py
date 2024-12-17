@@ -120,12 +120,12 @@ class ServiceDetails():
                             if "platform" in locations:
                                 platform = locations["platform"]
                             else:
-                                platform = "Unknown"
+                                platform = "-"
 
                             if "line" in locations:
                                 line = locations["line"]
                             else:
-                                line = "Unknown"
+                                line = "-"
 
                             all_calling_points.append([stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure])
 
@@ -184,12 +184,12 @@ class ServiceDetails():
                             if "platform" in locations:
                                 platform = locations["platform"]
                             else:
-                                platform = "Unknown"
+                                platform = "-"
 
                             if "line" in locations:
                                 line = locations["line"]
                             else:
-                                line = "Unknown"
+                                line = "-"
 
                             all_calling_points.append(CallingPoints(stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure))
 
@@ -241,7 +241,7 @@ class ServiceDetails():
                             if "platform" in locations:
                                 platform = locations["platform"]
                             else:
-                                platform = "Unknown"
+                                platform = "-"
 
                             all_calling_points.append([stop_name, booked_arrival, realtime_arrival, platform, booked_departure, realtime_departure])
 
@@ -296,7 +296,7 @@ class ServiceDetails():
                             if "platform" in locations:
                                 platform = locations["platform"]
                             else:
-                                platform = "Unknown"
+                                platform = "-"
 
                             all_calling_points.append(CallingPoints(stop_name, booked_arrival, realtime_arrival, platform, booked_departure, realtime_departure))
 

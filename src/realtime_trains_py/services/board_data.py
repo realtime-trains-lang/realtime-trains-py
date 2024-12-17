@@ -113,39 +113,36 @@ class Boards():
                             gbtt_departure = location_detail["gbttBookedDeparture"]
 
                         else:
-                            gbtt_departure = "Unknown"
+                            gbtt_departure = "-"
 
                         if "platform" in location_detail:
                             platform = location_detail["platform"]
 
                         else:
-                            platform = "Unknown"
+                            platform = "-"
 
                         if "realtimeDeparture" in location_detail:
                             realtime_departure = location_detail["realtimeDeparture"]
 
                         else:
-                            realtime_departure = "Unknown"
+                            realtime_departure = "-"
 
                         if "serviceUid" in service:
                             service_uid = service["serviceUid"]
 
                         else:
-                            service_uid = "Unknown"
+                            service_uid = "-"
 
 
                         if status != "CANCELLED_CALL":
                             if gbtt_departure == realtime_departure:
                                 realtime_departure = "On time"
-                                gbtt_departure = format_time(gbtt_departure)
-
-                            elif realtime_departure == "Unknown":
-                                gbtt_departure = format_time(gbtt_departure)
 
                             else:
                                 realtime_departure = format_time(realtime_departure)
                                 realtime_departure = "Exp " + realtime_departure
-                                gbtt_departure = format_time(gbtt_departure)
+                            
+                            gbtt_departure = format_time(gbtt_departure)
 
                         else:
                             realtime_departure = "Cancelled"
@@ -181,39 +178,36 @@ class Boards():
                             gbtt_departure = location_detail["gbttBookedDeparture"]
 
                         else:
-                            gbtt_departure = "Unknown"
+                            gbtt_departure = "-"
 
                         if "platform" in location_detail:
                             platform = location_detail["platform"]
 
                         else:
-                            platform = "Unknown"
+                            platform = "-"
 
                         if "realtimeDeparture" in location_detail:
                             realtime_departure = location_detail["realtimeDeparture"]
 
                         else:
-                            realtime_departure = "Unknown"
+                            realtime_departure = "-"
 
                         if "serviceUid" in service:
                             service_uid = service["serviceUid"]
 
                         else:
-                            service_uid = "Unknown"
+                            service_uid = "-"
 
 
                         if status != "CANCELLED_CALL":
                             if gbtt_departure == realtime_departure:
                                 realtime_departure = "On time"
-                                gbtt_departure = format_time(gbtt_departure)
-
-                            elif realtime_departure == "Unknown":
-                                gbtt_departure = format_time(gbtt_departure)
 
                             else:
                                 realtime_departure = format_time(realtime_departure)
                                 realtime_departure = "Exp " + realtime_departure
-                                gbtt_departure = format_time(gbtt_departure)
+                            
+                            gbtt_departure = format_time(gbtt_departure)
 
                         else:
                             realtime_departure = "Cancelled"
@@ -247,39 +241,36 @@ class Boards():
                             gbtt_departure = location_detail["gbttBookedDeparture"]
 
                         else:
-                            gbtt_departure = "Unknown"
+                            gbtt_departure = "-"
 
                         if "platform" in location_detail:
                             platform = location_detail["platform"]
 
                         else:
-                            platform = "Unknown"
+                            platform = "-"
 
                         if "realtimeDeparture" in location_detail:
                             realtime_departure = location_detail["realtimeDeparture"]
 
                         else:
-                            realtime_departure = "Unknown"
+                            realtime_departure = "-"
 
                         if "serviceUid" in service:
                             service_uid = service["serviceUid"]
 
                         else:
-                            service_uid = "Unknown"
+                            service_uid = "-"
 
 
                         if status != "CANCELLED_CALL":
                             if gbtt_departure == realtime_departure:
                                 realtime_departure = "On time"
-                                gbtt_departure = format_time(gbtt_departure)
-
-                            elif realtime_departure == "Unknown":
-                                gbtt_departure = format_time(gbtt_departure)
-
+                            
                             else:
                                 realtime_departure = format_time(realtime_departure)
                                 realtime_departure = "Exp " + realtime_departure
-                                gbtt_departure = format_time(gbtt_departure)
+                            
+                            gbtt_departure = format_time(gbtt_departure)
 
                         else:
                             realtime_departure = "Cancelled"
@@ -316,39 +307,36 @@ class Boards():
                             gbtt_departure = location_detail["gbttBookedDeparture"]
 
                         else:
-                            gbtt_departure = "Unknown"
+                            gbtt_departure = "-"
 
                         if "platform" in location_detail:
                             platform = location_detail["platform"]
 
                         else:
-                            platform = "Unknown"
+                            platform = "-"
 
                         if "realtimeDeparture" in location_detail:
                             realtime_departure = location_detail["realtimeDeparture"]
 
                         else:
-                            realtime_departure = "Unknown"
+                            realtime_departure = "-"
 
                         if "serviceUid" in service:
                             service_uid = service["serviceUid"]
 
                         else:
-                            service_uid = "Unknown"
+                            service_uid = "-"
 
 
                         if status != "CANCELLED_CALL":
                             if gbtt_departure == realtime_departure:
                                 realtime_departure = "On time"
-                                gbtt_departure = format_time(gbtt_departure)
-
-                            elif realtime_departure == "Unknown":
-                                gbtt_departure = format_time(gbtt_departure)
 
                             else:
                                 realtime_departure = format_time(realtime_departure)
                                 realtime_departure = "Exp " + realtime_departure
-                                gbtt_departure = format_time(gbtt_departure)
+                            
+                            gbtt_departure = format_time(gbtt_departure)
 
                         else:
                             realtime_departure = "Cancelled"
@@ -440,38 +428,35 @@ class Boards():
                             gbtt_arrival = location_detail["gbttBookedArrival"]
 
                         else:
-                            gbtt_arrival = "Unknown"
+                            gbtt_arrival = "-"
 
                         if "platform" in location_detail:
                             platform = location_detail["platform"]
 
                         else:
-                            platform = "Unknown"
+                            platform = "-"
 
                         if "realtimeArrival" in location_detail:
                             realtime_arrival = location_detail["realtimeArrival"]
 
                         else:
-                            realtime_arrival = "Unknown"
+                            realtime_arrival = "-"
 
                         if "serviceUid" in service:
                             service_uid = service["serviceUid"]
 
                         else:
-                            service_uid = "Unknown"
+                            service_uid = "-"
 
                         if status != "CANCELLED_CALL":
                             if gbtt_arrival == realtime_arrival:
                                 realtime_arrival = "On time"
-                                gbtt_arrival = format_time(gbtt_arrival)
-
-                            elif realtime_arrival == "Unknown":
-                                gbtt_arrival = format_time(gbtt_arrival)
 
                             else:
                                 realtime_arrival = format_time(realtime_arrival)
                                 realtime_arrival = "Exp " + realtime_arrival
-                                gbtt_arrival = format_time(gbtt_arrival)
+                            
+                            gbtt_arrival = format_time(gbtt_arrival)
 
                         else:
                             realtime_arrival = "Cancelled"
@@ -511,39 +496,36 @@ class Boards():
                             gbtt_arrival = location_detail["gbttBookedArrival"]
 
                         else:
-                            gbtt_arrival = "Unknown"
+                            gbtt_arrival = "-"
 
                         if "platform" in location_detail:
                             platform = location_detail["platform"]
 
                         else:
-                            platform = "Unknown"
+                            platform = "-"
 
                         if "realtimeArrival" in location_detail:
                             realtime_arrival = location_detail["realtimeArrival"]
 
                         else:
-                            realtime_arrival = "Unknown"
+                            realtime_arrival = "-"
 
                         if "serviceUid" in service:
                             service_uid = service["serviceUid"]
 
                         else:
-                            service_uid = "Unknown"
+                            service_uid = "-"
 
 
                         if status != "CANCELLED_CALL":
                             if gbtt_arrival == realtime_arrival:
                                 realtime_arrival = "On time"
-                                gbtt_arrival = format_time(gbtt_arrival)
-
-                            elif realtime_arrival == "Unknown":
-                                gbtt_arrival = format_time(gbtt_arrival)
 
                             else:
                                 realtime_arrival = format_time(realtime_arrival)
                                 realtime_arrival = "Exp " + realtime_arrival
-                                gbtt_arrival = format_time(gbtt_arrival)
+                            
+                            gbtt_arrival = format_time(gbtt_arrival)
 
                         else:
                             realtime_arrival = "Cancelled"
@@ -578,38 +560,35 @@ class Boards():
                             gbtt_arrival = location_detail["gbttBookedArrival"]
 
                         else:
-                            gbtt_arrival = "Unknown"
+                            gbtt_arrival = "-"
 
                         if "platform" in location_detail:
                             platform = location_detail["platform"]
 
                         else:
-                            platform = "Unknown"
+                            platform = "-"
 
                         if "realtimeArrival" in location_detail:
                             realtime_arrival = location_detail["realtimeArrival"]
 
                         else:
-                            realtime_arrival = "Unknown"
+                            realtime_arrival = "-"
 
                         if "serviceUid" in service:
                             service_uid = service["serviceUid"]
 
                         else:
-                            service_uid = "Unknown"
+                            service_uid = "-"
 
                         if status != "CANCELLED_CALL":
                             if gbtt_arrival == realtime_arrival:
                                 realtime_arrival = "On time"
-                                gbtt_arrival = format_time(gbtt_arrival)
-
-                            elif realtime_arrival == "Unknown":
-                                gbtt_arrival = format_time(gbtt_arrival)
 
                             else:
                                 realtime_arrival = format_time(realtime_arrival)
                                 realtime_arrival = "Exp " + realtime_arrival
-                                gbtt_arrival = format_time(gbtt_arrival)
+                            
+                            gbtt_arrival = format_time(gbtt_arrival)
 
                         else:
                             realtime_arrival = "Cancelled"
@@ -649,38 +628,35 @@ class Boards():
                             gbtt_arrival = location_detail["gbttBookedArrival"]
 
                         else:
-                            gbtt_arrival = "Unknown"
+                            gbtt_arrival = "-"
 
                         if "platform" in location_detail:
                             platform = location_detail["platform"]
 
                         else:
-                            platform = "Unknown"
+                            platform = "-"
 
                         if "realtimeArrival" in location_detail:
                             realtime_arrival = location_detail["realtimeArrival"]
 
                         else:
-                            realtime_arrival = "Unknown"
+                            realtime_arrival = "-"
 
                         if "serviceUid" in service:
                             service_uid = service["serviceUid"]
 
                         else:
-                            service_uid = "Unknown"
+                            service_uid = "-"
 
                         if status != "CANCELLED_CALL":
                             if gbtt_arrival == realtime_arrival:
                                 realtime_arrival = "On time"
-                                gbtt_arrival = format_time(gbtt_arrival)
-
-                            elif realtime_arrival == "Unknown":
-                                gbtt_arrival = format_time(gbtt_arrival)
 
                             else:
                                 realtime_arrival = format_time(realtime_arrival)
                                 realtime_arrival = "Exp " + realtime_arrival
-                                gbtt_arrival = format_time(gbtt_arrival)
+                            
+                            gbtt_arrival = format_time(gbtt_arrival)
 
                         else:
                             realtime_arrival = "Cancelled"
