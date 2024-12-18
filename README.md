@@ -15,6 +15,8 @@ Maintained by [@anonymous44401](https://github.com/anonymous44401)
 
 This package can be used for anything railway related, whether you're a rail enthusiast or commuter, this package can be used for all your purposes. The package can be used in personal applications or for personal rail data access. 
 
+This package is not affiliated with Realtime Trains.
+
 ## What can I do with this package?
 This package allows you to access data directly from the Realtime Trains API using one of 5 complexities. Each complexity mode gives you access to different data the API offers. 
 
