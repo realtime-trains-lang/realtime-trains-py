@@ -18,12 +18,22 @@ class ServiceSimple():
         self.all_calling_points = all_calling_points
         self.start_time = start_time
 
-class CallingPoints():
+class CallingPointsSimple():
     def __init__(self, stop_name, booked_arrival, realtime_arrival, platform, booked_departure, realtime_departure):
         self.stop_name = stop_name
         self.booked_arrival = booked_arrival
         self.realtime_arrival = realtime_arrival
         self.platform = platform
+        self.booked_departure = booked_departure
+        self.realtime_departure = realtime_departure
+
+class CallingPointsAdvanced():
+    def __init__(self, stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure):
+        self.stop_name = stop_name
+        self.booked_arrival = booked_arrival
+        self.realtime_arrival = realtime_arrival
+        self.platform = platform
+        self.line = line
         self.booked_departure = booked_departure
         self.realtime_departure = realtime_departure
 
@@ -47,15 +57,13 @@ class ServiceDetails():
         self.__password = password
         self.__complexity = complexity
 
-        self._service_url: str = "https://api.rtt.io/api/v1/json/service/"
-
 
     def _get_service_details(self, service_uid: str, date: str | None) -> list | str:
         if date is None:
             date = (datetime.now()).strftime("%Y/%m/%d")
 
         if self.__complexity == "c" or validate_date(date):
-            search_query = str(self._service_url) + str(service_uid) + "/" + str(date)
+            search_query = "https://api.rtt.io/api/v1/json/service/" + str(service_uid) + "/" + str(date)
             #print(search_query)
             api_response =  requests.get(search_query, auth = (self.__username, self.__password))
 
@@ -79,41 +87,43 @@ class ServiceDetails():
                         origins = service_data["origin"]
                         for data in origins:
                             origin = data["description"]
-                            start_time = data["publicTime"]
-                            start_time = format_time(start_time)
+                            start_time = format_time(data["publicTime"])
 
                         destinations = service_data["destination"]
                         for data in destinations:
                             destination = data["description"]
-                            end_time = data["publicTime"]
-                            end_time = format_time(end_time)
+                            end_time = format_time(data["publicTime"])
 
                         calling_points = service_data["locations"]
                         all_calling_points: list = []
 
                         for locations in calling_points:
                             stop_name = locations["description"]
+                            call_type = locations["displayAs"]
+
                             if "realtimeArrival" in locations:
-                                realtime_arrival = locations["realtimeArrival"]
-                                realtime_arrival = format_time(realtime_arrival)
+                                realtime_arrival = format_time(locations["realtimeArrival"])
                             else:
                                 realtime_arrival = ""
 
+                            if call_type == "CANCELLED_CALL" and realtime_arrival != "":
+                                realtime_arrival = "Cancelled"
+
                             if "gbttBookedArrival" in locations:
-                                booked_arrival = locations["gbttBookedArrival"]
-                                booked_arrival = format_time(booked_arrival)
+                                booked_arrival = format_time(locations["gbttBookedArrival"])
                             else:
                                 booked_arrival = ""
 
                             if "realtimeDeparture" in locations:
-                                realtime_departure = locations["realtimeDeparture"]
-                                realtime_departure = format_time(realtime_departure)
+                                realtime_departure = format_time(locations["realtimeDeparture"])
                             else:
                                 realtime_departure = ""
 
+                            if call_type == "CANCELLED_CALL" and realtime_departure != "":
+                                realtime_departure = "Cancelled"
+
                             if "gbttBookedDeparture" in locations:
-                                booked_departure = locations["gbttBookedDeparture"]
-                                booked_departure = format_time(booked_departure)
+                                booked_departure = format_time(locations["gbttBookedDeparture"])
                             else:
                                 booked_departure = ""
 
@@ -143,41 +153,43 @@ class ServiceDetails():
                         origins = service_data["origin"]
                         for data in origins:
                             origin = data["description"]
-                            start_time = data["publicTime"]
-                            start_time = format_time(start_time)
+                            start_time = format_time(data["publicTime"])
 
                         destinations = service_data["destination"]
                         for data in destinations:
                             destination = data["description"]
-                            end_time = data["publicTime"]
-                            end_time = format_time(end_time)
+                            end_time = format_time(data["publicTime"])
 
                         calling_points = service_data["locations"]
                         all_calling_points: list = []
 
                         for locations in calling_points:
                             stop_name = locations["description"]
+                            call_type = locations["displayAs"]
+
                             if "realtimeArrival" in locations:
-                                realtime_arrival = locations["realtimeArrival"]
-                                realtime_arrival = format_time(realtime_arrival)
+                                realtime_arrival = format_time(locations["realtimeArrival"])
                             else:
                                 realtime_arrival = ""
 
+                            if call_type == "CANCELLED_CALL" and realtime_arrival != "":
+                                realtime_arrival = "Cancelled"
+
                             if "gbttBookedArrival" in locations:
-                                booked_arrival = locations["gbttBookedArrival"]
-                                booked_arrival = format_time(booked_arrival)
+                                booked_arrival = format_time(locations["gbttBookedArrival"])
                             else:
                                 booked_arrival = ""
 
                             if "realtimeDeparture" in locations:
-                                realtime_departure = locations["realtimeDeparture"]
-                                realtime_departure = format_time(realtime_departure)
+                                realtime_departure = format_time(locations["realtimeDeparture"])
                             else:
                                 realtime_departure = ""
 
+                            if call_type == "CANCELLED_CALL" and realtime_departure != "":
+                                realtime_departure = "Cancelled"
+
                             if "gbttBookedDeparture" in locations:
-                                booked_departure = locations["gbttBookedDeparture"]
-                                booked_departure = format_time(booked_departure)
+                                booked_departure = format_time(locations["gbttBookedDeparture"])
                             else:
                                 booked_departure = ""
 
@@ -191,7 +203,7 @@ class ServiceDetails():
                             else:
                                 line = "-"
 
-                            all_calling_points.append(CallingPoints(stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure))
+                            all_calling_points.append(CallingPointsAdvanced(stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure))
 
                         return ServiceAdvanced(train_id, service_uid, operator, origin, destination, all_calling_points, start_time, end_time, power_type, train_class)
                     
@@ -211,27 +223,31 @@ class ServiceDetails():
 
                         for locations in calling_points:
                             stop_name = locations["description"]
+                            call_type = locations["displayAs"]
+
                             if "realtimeArrival" in locations:
-                                realtime_arrival = locations["realtimeArrival"]
-                                realtime_arrival = format_time(realtime_arrival)
+                                realtime_arrival = format_time(locations["realtimeArrival"])
                             else:
                                 realtime_arrival = ""
 
+                            if call_type == "CANCELLED_CALL" and realtime_arrival != "":
+                                realtime_arrival = "Cancelled"
+
                             if "gbttBookedArrival" in locations:
-                                booked_arrival = locations["gbttBookedArrival"]
-                                booked_arrival = format_time(booked_arrival)
+                                booked_arrival = format_time(locations["gbttBookedArrival"])
                             else:
                                 booked_arrival = ""
 
                             if "realtimeDeparture" in locations:
-                                realtime_departure = locations["realtimeDeparture"]
-                                realtime_departure = format_time(realtime_departure)
+                                realtime_departure = format_time(locations["realtimeDeparture"])
                             else:
                                 realtime_departure = ""
 
+                            if call_type == "CANCELLED_CALL" and realtime_departure != "":
+                                realtime_departure = "Cancelled"
+
                             if "gbttBookedDeparture" in locations:
-                                booked_departure = locations["gbttBookedDeparture"]
-                                booked_departure = format_time(booked_departure)
+                                booked_departure = format_time(locations["gbttBookedDeparture"])
                             else:
                                 booked_departure = ""
 
@@ -266,27 +282,31 @@ class ServiceDetails():
 
                         for locations in calling_points:
                             stop_name = locations["description"]
+                            call_type = locations["displayAs"]
+
                             if "realtimeArrival" in locations:
-                                realtime_arrival = locations["realtimeArrival"]
-                                realtime_arrival = format_time(realtime_arrival)
+                                realtime_arrival = format_time(locations["realtimeArrival"])
                             else:
                                 realtime_arrival = ""
 
+                            if call_type == "CANCELLED_CALL" and realtime_arrival != "":
+                                realtime_arrival = "Cancelled"
+
                             if "gbttBookedArrival" in locations:
-                                booked_arrival = locations["gbttBookedArrival"]
-                                booked_arrival = format_time(booked_arrival)
+                                booked_arrival = format_time(locations["gbttBookedArrival"])
                             else:
                                 booked_arrival = ""
 
                             if "realtimeDeparture" in locations:
-                                realtime_departure = locations["realtimeDeparture"]
-                                realtime_departure = format_time(realtime_departure)
+                                realtime_departure = format_time(locations["realtimeDeparture"])
                             else:
                                 realtime_departure = ""
 
+                            if call_type == "CANCELLED_CALL" and realtime_departure != "":
+                                realtime_departure = "Cancelled"
+
                             if "gbttBookedDeparture" in locations:
-                                booked_departure = locations["gbttBookedDeparture"]
-                                booked_departure = format_time(booked_departure)
+                                booked_departure = format_time(locations["gbttBookedDeparture"])
                             else:
                                 booked_departure = ""
 
@@ -298,7 +318,7 @@ class ServiceDetails():
                             else:
                                 platform = "-"
 
-                            all_calling_points.append(CallingPoints(stop_name, booked_arrival, realtime_arrival, platform, booked_departure, realtime_departure))
+                            all_calling_points.append(CallingPointsSimple(stop_name, booked_arrival, realtime_arrival, platform, booked_departure, realtime_departure))
 
                         return ServiceSimple(train_id, service_uid, operator, origin, destination, all_calling_points, start_time)
                 

@@ -49,7 +49,6 @@ class Boards():
         self.__password = password
         self.__complexity = complexity
 
-        self._board_url: str = "https://api.rtt.io/api/v1/json/search/"
 
     def _get_dep_board_details(self, tiploc, filter, rows, time, date: str = None) -> list | str:
         if date is None:
@@ -139,8 +138,7 @@ class Boards():
                                 realtime_departure = "On time"
 
                             else:
-                                realtime_departure = format_time(realtime_departure)
-                                realtime_departure = "Exp " + realtime_departure
+                                realtime_departure = "Exp " + format_time(realtime_departure)
                             
                             gbtt_departure = format_time(gbtt_departure)
 
@@ -204,8 +202,7 @@ class Boards():
                                 realtime_departure = "On time"
 
                             else:
-                                realtime_departure = format_time(realtime_departure)
-                                realtime_departure = "Exp " + realtime_departure
+                                realtime_departure = "Exp " + format_time(realtime_departure)
                             
                             gbtt_departure = format_time(gbtt_departure)
 
@@ -267,8 +264,7 @@ class Boards():
                                 realtime_departure = "On time"
                             
                             else:
-                                realtime_departure = format_time(realtime_departure)
-                                realtime_departure = "Exp " + realtime_departure
+                                realtime_departure = "Exp " + format_time(realtime_departure)
                             
                             gbtt_departure = format_time(gbtt_departure)
 
@@ -333,8 +329,7 @@ class Boards():
                                 realtime_departure = "On time"
 
                             else:
-                                realtime_departure = format_time(realtime_departure)
-                                realtime_departure = "Exp " + realtime_departure
+                                realtime_departure = "Exp " + format_time(realtime_departure)
                             
                             gbtt_departure = format_time(gbtt_departure)
 
