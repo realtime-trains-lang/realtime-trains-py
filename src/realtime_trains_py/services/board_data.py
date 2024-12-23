@@ -137,7 +137,7 @@ class Boards():
                             if gbtt_departure == realtime_departure:
                                 realtime_departure = "On time"
 
-                            else:
+                            elif realtime_departure is not "-":
                                 realtime_departure = "Exp " + format_time(realtime_departure)
                             
                             gbtt_departure = format_time(gbtt_departure)
@@ -201,7 +201,7 @@ class Boards():
                             if gbtt_departure == realtime_departure:
                                 realtime_departure = "On time"
 
-                            else:
+                            elif realtime_departure is not "-":
                                 realtime_departure = "Exp " + format_time(realtime_departure)
                             
                             gbtt_departure = format_time(gbtt_departure)
@@ -263,7 +263,7 @@ class Boards():
                             if gbtt_departure == realtime_departure:
                                 realtime_departure = "On time"
                             
-                            else:
+                            elif realtime_departure is not "-":
                                 realtime_departure = "Exp " + format_time(realtime_departure)
                             
                             gbtt_departure = format_time(gbtt_departure)
@@ -328,7 +328,7 @@ class Boards():
                             if gbtt_departure == realtime_departure:
                                 realtime_departure = "On time"
 
-                            else:
+                            elif realtime_departure is not "-":
                                 realtime_departure = "Exp " + format_time(realtime_departure)
                             
                             gbtt_departure = format_time(gbtt_departure)
@@ -447,9 +447,8 @@ class Boards():
                             if gbtt_arrival == realtime_arrival:
                                 realtime_arrival = "On time"
 
-                            else:
-                                realtime_arrival = format_time(realtime_arrival)
-                                realtime_arrival = "Exp " + realtime_arrival
+                            elif realtime_arrival is not "-":
+                                realtime_arrival = "Exp " + format_time(realtime_arrival)
                             
                             gbtt_arrival = format_time(gbtt_arrival)
 
@@ -516,9 +515,8 @@ class Boards():
                             if gbtt_arrival == realtime_arrival:
                                 realtime_arrival = "On time"
 
-                            else:
-                                realtime_arrival = format_time(realtime_arrival)
-                                realtime_arrival = "Exp " + realtime_arrival
+                            elif realtime_arrival is not "-":
+                                realtime_arrival = "Exp " + format_time(realtime_arrival)
                             
                             gbtt_arrival = format_time(gbtt_arrival)
 
@@ -579,9 +577,8 @@ class Boards():
                             if gbtt_arrival == realtime_arrival:
                                 realtime_arrival = "On time"
 
-                            else:
-                                realtime_arrival = format_time(realtime_arrival)
-                                realtime_arrival = "Exp " + realtime_arrival
+                            elif realtime_arrival is not "-":
+                                realtime_arrival = "Exp " + format_time(realtime_arrival)
                             
                             gbtt_arrival = format_time(gbtt_arrival)
 
@@ -647,9 +644,8 @@ class Boards():
                             if gbtt_arrival == realtime_arrival:
                                 realtime_arrival = "On time"
 
-                            else:
-                                realtime_arrival = format_time(realtime_arrival)
-                                realtime_arrival = "Exp " + realtime_arrival
+                            elif realtime_arrival is not "-":
+                                realtime_arrival = "Exp " + format_time(realtime_arrival)
                             
                             gbtt_arrival = format_time(gbtt_arrival)
 
