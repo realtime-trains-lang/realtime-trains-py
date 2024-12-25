@@ -113,7 +113,5 @@ def create_file(name: str, contents):
             # Insert data into file
             json.dump(contents, file, ensure_ascii = False, indent = 4)
 
-            return "Data added to new file: " + file_name 
-
     else:
         raise Exception("Failed to write to file. Perhaps the file already exists?")

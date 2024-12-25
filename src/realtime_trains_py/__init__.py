@@ -63,7 +63,6 @@ class RealtimeTrainsPy():
         """
         return self.__boards._get_dep_board_details(tiploc = tiploc, filter = filter, date = date, rows = rows, time = time)
     
-
     def get_arrivals(self, tiploc: str, filter: str = None, date: str = None, rows: int = None, time: str = None) -> list | str:
         """
         **tiploc** *(required)*
