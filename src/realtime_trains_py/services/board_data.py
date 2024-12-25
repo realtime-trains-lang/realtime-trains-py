@@ -49,7 +49,6 @@ class Boards():
         self.__password = password
         self.__complexity = complexity
 
-
     def _get_dep_board_details(self, tiploc, filter, rows, time, date: str = None) -> list | str:
         if date is None:
             new_date = (datetime.now()).strftime("%Y/%m/%d")
@@ -729,16 +728,16 @@ class Boards():
                     return "Departures and arrivals saved to files: " + dep_file_name + arr_file_name
 
                 elif self.__complexity == "a.p" or self.__complexity == "a":
-                    raise NotImplementedError
+                    raise NotImplementedError("This complexity doesn't support this method yet.")
 
                 elif self.__complexity == "a.n":
-                    raise NotImplementedError
+                    raise NotImplementedError("This complexity doesn't support this method yet.")
 
                 elif self.__complexity == "s.p" or self.__complexity == "s":
-                    raise NotImplementedError
+                    raise NotImplementedError("This complexity doesn't support this method yet.")
 
                 elif self.__complexity == "s.n":
-                    raise NotImplementedError
+                    raise NotImplementedError("This complexity doesn't support this method yet.")
 
             elif dep_api_response.status_code == 404 or arr_api_response == 404:
                 raise ValueError("An unexpected error occurred. Status codes:", dep_api_response.status_code, arr_api_response.status_code)

@@ -108,6 +108,27 @@ class RealtimeTrainsPy():
     
     def get_station(self, tiploc: str, filter: str = None, date: str = None, rows: int = None, time: str = None) -> list | str:
         """
-        Docs soon
+        ## This feature is only available for complex mode
+
+        **tiploc** *(required)*
+
+            A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the station.
+
+        **filter** *(optional)*
+            A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the filter station.
+
+        **date** *(optional)*
+            A string representing the date in the format YYYY/MM/DD.
+
+        **rows** *(optional)*
+            An integer representing the maximum number of rows to return. (Only available for simple and advanced complexity.)
+
+        **time** *(optional)*
+            A string representing the time in the format HHMM. 
+
+        ### Example data
+        ```python
+        get_station(tiploc = "KNGX", filter = "STEVNGE", date = "2024/11/16", time = "1800", rows = 10)
+        ```
         """
         return self.__boards._get_stat_board_details(tiploc = tiploc, filter = filter, date = date, rows = rows, time = time)
