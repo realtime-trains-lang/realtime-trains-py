@@ -58,9 +58,9 @@ class RealtimeTrainsPy():
 
         ### Examples
         ```python
-        get_station(tiploc = "KNGX", filter = "STEVNGE", date = "2024/11/16", time = "1800", rows = 10)
+        get_departures(tiploc = "KNGX", filter = "STEVNGE", date = "2024/11/16", time = "1800", rows = 10)
 
-        get_station(tiploc = "YORK", date = "2024/11/16", time = "1800")
+        get_departures(tiploc = "YORK", date = "2024/11/16", time = "1800")
         ```
         """
         return self.__boards._get_dep_board_details(tiploc = tiploc, filter = filter, date = date, rows = rows, time = time)
@@ -87,9 +87,9 @@ class RealtimeTrainsPy():
 
         ### Examples
         ```python
-        get_station(tiploc = "KNGX", filter = "STEVNGE", date = "2024/11/16", time = "1800", rows = 10)
+        get_arrivals(tiploc = "KNGX", filter = "STEVNGE", date = "2024/11/16", time = "1800", rows = 10)
 
-        get_station(tiploc = "YORK", date = "2024/11/16", time = "1800")
+        get_arrivals(tiploc = "YORK", date = "2024/11/16", time = "1800")
         ```
         """
         return self.__boards._get_arr_board_details(tiploc = tiploc, filter = filter, date = date, rows = rows, time = time)
