@@ -1,11 +1,12 @@
+import requests
+
 from datetime import datetime
+from tabulate import tabulate
+
 try:
     from realtime_trains_py.services.utilities import format_time, validate_date, validate_time 
 except:
     from services.utilities import create_file, format_time, validate_date, validate_time 
-from tabulate import tabulate
-
-import requests
 
 
 class DepartureBoardSimple():

@@ -1,9 +1,9 @@
 try:
-    from realtime_trains_py.services.service_data import ServiceDetails
     from realtime_trains_py.services.board_data import Boards
+    from realtime_trains_py.services.service_data import ServiceDetails
 except:
-    from services.service_data import ServiceDetails
     from services.board_data import Boards
+    from services.service_data import ServiceDetails
 
 
 class RealtimeTrainsPy():

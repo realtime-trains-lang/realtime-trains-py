@@ -1,11 +1,12 @@
+import requests
+
 from datetime import datetime
+from tabulate import tabulate
+
 try:
     from realtime_trains_py.services.utilities import format_time, validate_date
 except:
     from services.utilities import create_file, format_time, validate_date
-from tabulate import tabulate
-
-import requests
 
 
 class ServiceSimple():
@@ -78,249 +79,16 @@ class ServiceDetails():
                 
                 try:
                     if self.__complexity == "a.p" or self.__complexity == "a":
-                        train_id = service_data["trainIdentity"]
-                        operator = service_data["atocName"]
-
-                        power_type = service_data["powerType"]
-                        train_class = service_data["trainClass"]
-
-                        origins = service_data["origin"]
-                        for data in origins:
-                            origin = data["description"]
-                            start_time = format_time(data["publicTime"])
-
-                        destinations = service_data["destination"]
-                        for data in destinations:
-                            destination = data["description"]
-                            end_time = format_time(data["publicTime"])
-
-                        calling_points = service_data["locations"]
-                        all_calling_points: list = []
-
-                        for locations in calling_points:
-                            stop_name = locations["description"]
-                            call_type = locations["displayAs"]
-
-                            if "realtimeArrival" in locations:
-                                realtime_arrival = format_time(locations["realtimeArrival"])
-                            else:
-                                realtime_arrival = ""
-
-                            if call_type == "CANCELLED_CALL" and realtime_arrival != "":
-                                realtime_arrival = "Cancelled"
-
-                            if "gbttBookedArrival" in locations:
-                                booked_arrival = format_time(locations["gbttBookedArrival"])
-                            else:
-                                booked_arrival = ""
-
-                            if "realtimeDeparture" in locations:
-                                realtime_departure = format_time(locations["realtimeDeparture"])
-                            else:
-                                realtime_departure = ""
-
-                            if call_type == "CANCELLED_CALL" and realtime_departure != "":
-                                realtime_departure = "Cancelled"
-
-                            if "gbttBookedDeparture" in locations:
-                                booked_departure = format_time(locations["gbttBookedDeparture"])
-                            else:
-                                booked_departure = ""
-
-                            if "platform" in locations:
-                                platform = locations["platform"]
-                            else:
-                                platform = "-"
-
-                            if "line" in locations:
-                                line = locations["line"]
-                            else:
-                                line = "-"
-
-                            all_calling_points.append([stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure])
-
-                        print(train_id + " (" + service_uid + ") \n" + start_time + " " + origin + " to " + destination + ". \nArrival at " + destination + ": " + end_time + ". \nPathed as " + power_type + ": train class " + train_class + ". \nOperated by " + operator + ". \nGenerated at " + datetime.now().strftime("%H:%M:%S on %d/%m/%y.")) 
-                        print(tabulate(all_calling_points, tablefmt = "rounded_grid", headers = ["Stop Name", "Booked Arrival", "Actual Arrival", "Platform", "Line", "Booked Departure", "Actual Departure"]))
-
-                        return "Service data returned successfully"
+                        return self.__advanced_prettier(service_data, service_uid)
 
                     elif self.__complexity == "a.n":
-                        train_id = service_data["trainIdentity"]
-                        operator = service_data["atocName"]
-                        power_type = service_data["powerType"]
-                        train_class = service_data["trainClass"]
-
-                        origins = service_data["origin"]
-                        for data in origins:
-                            origin = data["description"]
-                            start_time = format_time(data["publicTime"])
-
-                        destinations = service_data["destination"]
-                        for data in destinations:
-                            destination = data["description"]
-                            end_time = format_time(data["publicTime"])
-
-                        calling_points = service_data["locations"]
-                        all_calling_points: list = []
-
-                        for locations in calling_points:
-                            stop_name = locations["description"]
-                            call_type = locations["displayAs"]
-
-                            if "realtimeArrival" in locations:
-                                realtime_arrival = format_time(locations["realtimeArrival"])
-                            else:
-                                realtime_arrival = ""
-
-                            if call_type == "CANCELLED_CALL" and realtime_arrival != "":
-                                realtime_arrival = "Cancelled"
-
-                            if "gbttBookedArrival" in locations:
-                                booked_arrival = format_time(locations["gbttBookedArrival"])
-                            else:
-                                booked_arrival = ""
-
-                            if "realtimeDeparture" in locations:
-                                realtime_departure = format_time(locations["realtimeDeparture"])
-                            else:
-                                realtime_departure = ""
-
-                            if call_type == "CANCELLED_CALL" and realtime_departure != "":
-                                realtime_departure = "Cancelled"
-
-                            if "gbttBookedDeparture" in locations:
-                                booked_departure = format_time(locations["gbttBookedDeparture"])
-                            else:
-                                booked_departure = ""
-
-                            if "platform" in locations:
-                                platform = locations["platform"]
-                            else:
-                                platform = "-"
-
-                            if "line" in locations:
-                                line = locations["line"]
-                            else:
-                                line = "-"
-
-                            all_calling_points.append(CallingPointsAdvanced(stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure))
-
-                        return ServiceAdvanced(train_id, service_uid, operator, origin, destination, all_calling_points, start_time, end_time, power_type, train_class)
+                        return self.__advanced_normal(service_data, service_uid)
                     
                     elif self.__complexity == "s.p" or self.__complexity == "s":
-                        train_id = service_data["trainIdentity"]
-                        operator = service_data["atocName"]
-
-                        origins = service_data["origin"]
-                        origin = origins.pop()["description"]
-                        start_time = "None"
-
-                        destinations = service_data["destination"]
-                        destination = destinations.pop()["description"]
-
-                        calling_points = service_data["locations"]
-                        all_calling_points: list = []
-
-                        for locations in calling_points:
-                            stop_name = locations["description"]
-                            call_type = locations["displayAs"]
-
-                            if "realtimeArrival" in locations:
-                                realtime_arrival = format_time(locations["realtimeArrival"])
-                            else:
-                                realtime_arrival = ""
-
-                            if call_type == "CANCELLED_CALL" and realtime_arrival != "":
-                                realtime_arrival = "Cancelled"
-
-                            if "gbttBookedArrival" in locations:
-                                booked_arrival = format_time(locations["gbttBookedArrival"])
-                            else:
-                                booked_arrival = ""
-
-                            if "realtimeDeparture" in locations:
-                                realtime_departure = format_time(locations["realtimeDeparture"])
-                            else:
-                                realtime_departure = ""
-
-                            if call_type == "CANCELLED_CALL" and realtime_departure != "":
-                                realtime_departure = "Cancelled"
-
-                            if "gbttBookedDeparture" in locations:
-                                booked_departure = format_time(locations["gbttBookedDeparture"])
-                            else:
-                                booked_departure = ""
-
-                            if start_time == "None":
-                                start_time = booked_departure
-
-                            if "platform" in locations:
-                                platform = locations["platform"]
-                            else:
-                                platform = "-"
-
-                            all_calling_points.append([stop_name, booked_arrival, realtime_arrival, platform, booked_departure, realtime_departure])
-
-                        print(train_id + " (" + service_uid + ") " + start_time + " " + origin + " to " + destination + ". Generated at " + datetime.now().strftime("%H:%M:%S on %d/%m/%y."))
-                        print(tabulate(all_calling_points, tablefmt = "rounded_grid", headers = ["Stop Name", "Booked Arrival", "Actual Arrival", "Platform", "Booked Departure", "Actual Departure"]))
-
-                        return "Service data returned successfully"
+                        return self.__simple_prettier(service_data, service_uid)
 
                     elif self.__complexity == "s.n":
-                        train_id = service_data["trainIdentity"]
-                        operator = service_data["atocName"]
-
-                        origins = service_data["origin"]
-                        origin = origins.pop()["description"]
-                        start_time = "None"
-
-                        destinations = service_data["destination"]
-                        destination = destinations.pop()["description"]
-
-                        calling_points = service_data["locations"]
-                        all_calling_points: list = []
-
-                        for locations in calling_points:
-                            stop_name = locations["description"]
-                            call_type = locations["displayAs"]
-
-                            if "realtimeArrival" in locations:
-                                realtime_arrival = format_time(locations["realtimeArrival"])
-                            else:
-                                realtime_arrival = ""
-
-                            if call_type == "CANCELLED_CALL" and realtime_arrival != "":
-                                realtime_arrival = "Cancelled"
-
-                            if "gbttBookedArrival" in locations:
-                                booked_arrival = format_time(locations["gbttBookedArrival"])
-                            else:
-                                booked_arrival = ""
-
-                            if "realtimeDeparture" in locations:
-                                realtime_departure = format_time(locations["realtimeDeparture"])
-                            else:
-                                realtime_departure = ""
-
-                            if call_type == "CANCELLED_CALL" and realtime_departure != "":
-                                realtime_departure = "Cancelled"
-
-                            if "gbttBookedDeparture" in locations:
-                                booked_departure = format_time(locations["gbttBookedDeparture"])
-                            else:
-                                booked_departure = ""
-
-                            if start_time == "None":
-                                start_time = booked_departure
-
-                            if "platform" in locations:
-                                platform = locations["platform"]
-                            else:
-                                platform = "-"
-
-                            all_calling_points.append(CallingPointsSimple(stop_name, booked_arrival, realtime_arrival, platform, booked_departure, realtime_departure))
-
-                        return ServiceSimple(train_id, service_uid, operator, origin, destination, all_calling_points, start_time)
+                        return self.__simple_normal(service_data, service_uid)
                 
                 except:
                     raise Exception("An error occurred while fetching service data.")
@@ -335,3 +103,413 @@ class ServiceDetails():
                 raise ConnectionRefusedError("Failed to connect to the RTT API server. Try again in a few minutes. Status code:", api_response.status_code)
         else:
             raise ValueError("Invalid date or time. Date or time provided did not meet requirements or fall into the valid date/time range.")
+
+    def __advanced_normal(self, service_data, service_uid) -> None | str | ServiceAdvanced:
+        service_type = service_data["serviceType"]
+
+        if service_type == "train":
+            train_id = service_data["trainIdentity"]
+            operator = service_data["atocName"]
+            
+            if "powerType" in service_data:
+                power_type = service_data["powerType"]
+            else:
+                power_type = "unknown"
+
+            if "trainClass" in service_data:
+                train_class = service_data["trainClass"]
+            else:
+                train_class = "unknown"
+
+            origins = service_data["origin"]
+            for data in origins:
+                origin = data["description"]
+                start_time = format_time(data["publicTime"])
+
+            destinations = service_data["destination"]
+            for data in destinations:
+                destination = data["description"]
+                end_time = format_time(data["publicTime"])
+
+            calling_points = service_data["locations"]
+            all_calling_points: list = []
+
+            for locations in calling_points:
+                stop_name = locations["description"]
+                call_type = locations["displayAs"]
+
+                if "realtimeArrival" in locations:
+                    realtime_arrival = format_time(locations["realtimeArrival"])
+                else:
+                    realtime_arrival = ""
+
+                if call_type == "CANCELLED_CALL" and realtime_arrival != "":
+                    realtime_arrival = "Cancelled"
+
+                if "gbttBookedArrival" in locations:
+                    booked_arrival = format_time(locations["gbttBookedArrival"])
+                else:
+                    booked_arrival = ""
+
+                if "realtimeDeparture" in locations:
+                    realtime_departure = format_time(locations["realtimeDeparture"])
+                else:
+                    realtime_departure = ""
+
+                if call_type == "CANCELLED_CALL" and realtime_departure != "":
+                    realtime_departure = "Cancelled"
+
+                if "gbttBookedDeparture" in locations:
+                    booked_departure = format_time(locations["gbttBookedDeparture"])
+                else:
+                    booked_departure = ""
+
+                if "platform" in locations:
+                    platform = locations["platform"]
+                else:
+                    platform = "-"
+
+                if "line" in locations:
+                    line = locations["line"]
+                else:
+                    line = "-"
+
+                all_calling_points.append(CallingPointsAdvanced(stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure))
+
+            return ServiceAdvanced(train_id, service_uid, operator, origin, destination, all_calling_points, start_time, end_time, power_type, train_class)
+        
+        elif service_type == "bus":
+            train_id = service_data["trainIdentity"]
+            operator = service_data["atocName"]
+
+            origins = service_data["origin"]
+            for data in origins:
+                origin = data["description"]
+                start_time = format_time(data["publicTime"])
+
+            destinations = service_data["destination"]
+            for data in destinations:
+                destination = data["description"]
+                end_time = format_time(data["publicTime"])
+
+            calling_points = service_data["locations"]
+            all_calling_points: list = []
+
+            for locations in calling_points:
+                stop_name = locations["description"]
+                call_type = locations["displayAs"]
+
+                if "realtimeArrival" in locations:
+                    realtime_arrival = format_time(locations["realtimeArrival"])
+                else:
+                    realtime_arrival = ""
+
+                if call_type == "CANCELLED_CALL" and realtime_arrival != "":
+                    realtime_arrival = "Cancelled"
+
+                if "gbttBookedArrival" in locations:
+                    booked_arrival = format_time(locations["gbttBookedArrival"])
+                else:
+                    booked_arrival = ""
+
+                if "realtimeDeparture" in locations:
+                    realtime_departure = format_time(locations["realtimeDeparture"])
+                else:
+                    realtime_departure = ""
+
+                if call_type == "CANCELLED_CALL" and realtime_departure != "":
+                    realtime_departure = "Cancelled"
+
+                if "gbttBookedDeparture" in locations:
+                    booked_departure = format_time(locations["gbttBookedDeparture"])
+                else:
+                    booked_departure = ""
+
+                all_calling_points.append(CallingPointsAdvanced(stop_name, booked_arrival, realtime_arrival, "BUS", "-", booked_departure, realtime_departure))
+
+            return ServiceAdvanced(train_id, service_uid, operator, origin, destination, all_calling_points, start_time, end_time, "BUS", "BUS")
+        
+        else:
+            raise Exception("An error occurred while fetching service data.")
+        
+    def __advanced_prettier(self, service_data, service_uid) -> None | str:
+        service_type = service_data["serviceType"]
+
+        if service_type == "train":
+            train_id = service_data["trainIdentity"]
+            operator = service_data["atocName"]
+
+            if "powerType" in service_data:
+                power_type = service_data["powerType"]
+            else:
+                power_type = "unknown"
+
+            if "trainClass" in service_data:
+                train_class = service_data["trainClass"]
+            else:
+                train_class = "unknown"
+
+            origins = service_data["origin"]
+            for data in origins:
+                origin = data["description"]
+                start_time = format_time(data["publicTime"])
+
+            destinations = service_data["destination"]
+            for data in destinations:
+                destination = data["description"]
+
+            calling_points = service_data["locations"]
+            all_calling_points: list = []
+
+            for locations in calling_points:
+                stop_name = locations["description"]
+                call_type = locations["displayAs"]
+
+                if "realtimeArrival" in locations:
+                    realtime_arrival = format_time(locations["realtimeArrival"])
+                else:
+                    realtime_arrival = ""
+
+                if call_type == "CANCELLED_CALL" and realtime_arrival != "":
+                    realtime_arrival = "Cancelled"
+
+                if "gbttBookedArrival" in locations:
+                    booked_arrival = format_time(locations["gbttBookedArrival"])
+                else:
+                    booked_arrival = ""
+
+                if "realtimeDeparture" in locations:
+                    realtime_departure = format_time(locations["realtimeDeparture"])
+                else:
+                    realtime_departure = ""
+
+                if call_type == "CANCELLED_CALL" and realtime_departure != "":
+                    realtime_departure = "Cancelled"
+
+                if "gbttBookedDeparture" in locations:
+                    booked_departure = format_time(locations["gbttBookedDeparture"])
+                else:
+                    booked_departure = ""
+
+                if "platform" in locations:
+                    platform = locations["platform"]
+                else:
+                    platform = "-"
+
+                if "line" in locations:
+                    line = locations["line"]
+                else:
+                    line = "-"
+
+                all_calling_points.append([stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure])
+
+            print(f"{train_id} ({service_uid}) \n  {start_time} {origin} to {destination} \n  Pathed as {power_type}: train class {train_class} \n  Operated by {operator} \n\n  Generated at {datetime.now().strftime("%H:%M:%S on %d/%m/%y.")}")
+
+            print(tabulate(
+                all_calling_points, 
+                tablefmt = "rounded_grid", 
+                headers = ["Stop Name", 
+                            "Booked Arrival", 
+                            "Actual Arrival", 
+                            "Platform", 
+                            "Line", 
+                            "Booked Departure", 
+                            "Actual Departure"]
+                )
+            )
+
+            return "Service data returned successfully"
+
+        elif service_type == "bus":
+            train_id = service_data["trainIdentity"]
+            operator = service_data["atocName"]
+
+            origins = service_data["origin"]
+            for data in origins:
+                origin = data["description"]
+                start_time = format_time(data["publicTime"])
+
+            destinations = service_data["destination"]
+            for data in destinations:
+                destination = data["description"]
+
+            calling_points = service_data["locations"]
+            all_calling_points: list = []
+
+            for locations in calling_points:
+                stop_name = locations["description"]
+                call_type = locations["displayAs"]
+
+                if "realtimeArrival" in locations:
+                    realtime_arrival = format_time(locations["realtimeArrival"])
+                else:
+                    realtime_arrival = ""
+
+                if call_type == "CANCELLED_CALL" and realtime_arrival != "":
+                    realtime_arrival = "Cancelled"
+
+                if "gbttBookedArrival" in locations:
+                    booked_arrival = format_time(locations["gbttBookedArrival"])
+                else:
+                    booked_arrival = ""
+
+                if "realtimeDeparture" in locations:
+                    realtime_departure = format_time(locations["realtimeDeparture"])
+                else:
+                    realtime_departure = ""
+
+                if call_type == "CANCELLED_CALL" and realtime_departure != "":
+                    realtime_departure = "Cancelled"
+
+                if "gbttBookedDeparture" in locations:
+                    booked_departure = format_time(locations["gbttBookedDeparture"])
+                else:
+                    booked_departure = ""
+
+                all_calling_points.append([stop_name, booked_arrival, realtime_arrival, "BUS", "-", booked_departure, realtime_departure])
+
+            print(f"{train_id} ({service_uid}) \n  {start_time} {origin} to {destination} \n  Pathed as BUS: train class BUS \n  Operated by {operator} \n\n  Generated at {datetime.now().strftime("%H:%M:%S on %d/%m/%y.")}")
+
+            print(tabulate(
+                all_calling_points, 
+                tablefmt = "rounded_grid", 
+                headers = ["Stop Name", 
+                            "Booked Arrival", 
+                            "Actual Arrival", 
+                            "Platform", 
+                            "Line", 
+                            "Booked Departure", 
+                            "Actual Departure"]
+                )
+            )
+
+            return "Service data returned successfully"
+
+        else:
+            raise Exception("An error occurred while fetching service data.")
+        
+    def __simple_normal(self, service_data, service_uid) -> ServiceSimple:
+        train_id = service_data["trainIdentity"]
+        operator = service_data["atocName"]
+
+        origins = service_data["origin"]
+        origin = origins.pop()["description"]
+        start_time = "None"
+
+        destinations = service_data["destination"]
+        destination = destinations.pop()["description"]
+
+        calling_points = service_data["locations"]
+        all_calling_points: list = []
+
+        for locations in calling_points:
+            stop_name = locations["description"]
+            call_type = locations["displayAs"]
+
+            if "realtimeArrival" in locations:
+                realtime_arrival = format_time(locations["realtimeArrival"])
+            else:
+                realtime_arrival = ""
+
+            if call_type == "CANCELLED_CALL" and realtime_arrival != "":
+                realtime_arrival = "Cancelled"
+
+            if "gbttBookedArrival" in locations:
+                booked_arrival = format_time(locations["gbttBookedArrival"])
+            else:
+                booked_arrival = ""
+
+            if "realtimeDeparture" in locations:
+                realtime_departure = format_time(locations["realtimeDeparture"])
+            else:
+                realtime_departure = ""
+
+            if call_type == "CANCELLED_CALL" and realtime_departure != "":
+                realtime_departure = "Cancelled"
+
+            if "gbttBookedDeparture" in locations:
+                booked_departure = format_time(locations["gbttBookedDeparture"])
+            else:
+                booked_departure = ""
+
+            if start_time == "None":
+                start_time = booked_departure
+
+            if "platform" in locations:
+                platform = locations["platform"]
+            else:
+                platform = "-"
+
+            all_calling_points.append(CallingPointsSimple(stop_name, booked_arrival, realtime_arrival, platform, booked_departure, realtime_departure))
+
+        return ServiceSimple(train_id, service_uid, operator, origin, destination, all_calling_points, start_time)
+
+    def __simple_prettier(self, service_data, service_uid) -> str:
+        train_id = service_data["trainIdentity"]
+        operator = service_data["atocName"]
+
+        origins = service_data["origin"]
+        origin = origins.pop()["description"]
+        start_time = "None"
+
+        destinations = service_data["destination"]
+        destination = destinations.pop()["description"]
+
+        calling_points = service_data["locations"]
+        all_calling_points: list = []
+
+        for locations in calling_points:
+            stop_name = locations["description"]
+            call_type = locations["displayAs"]
+
+            if "realtimeArrival" in locations:
+                realtime_arrival = format_time(locations["realtimeArrival"])
+            else:
+                realtime_arrival = ""
+
+            if call_type == "CANCELLED_CALL" and realtime_arrival != "":
+                realtime_arrival = "Cancelled"
+
+            if "gbttBookedArrival" in locations:
+                booked_arrival = format_time(locations["gbttBookedArrival"])
+            else:
+                booked_arrival = ""
+
+            if "realtimeDeparture" in locations:
+                realtime_departure = format_time(locations["realtimeDeparture"])
+            else:
+                realtime_departure = ""
+
+            if call_type == "CANCELLED_CALL" and realtime_departure != "":
+                realtime_departure = "Cancelled"
+
+            if "gbttBookedDeparture" in locations:
+                booked_departure = format_time(locations["gbttBookedDeparture"])
+            else:
+                booked_departure = ""
+
+            if start_time == "None":
+                start_time = booked_departure
+
+            if "platform" in locations:
+                platform = locations["platform"]
+            else:
+                platform = "-"
+
+            all_calling_points.append([stop_name, booked_arrival, realtime_arrival, platform, booked_departure, realtime_departure])
+
+        print(f"{train_id} ({service_uid}) {start_time} {origin} to {destination}. \n Operated by {operator}. \n\n Generated at {datetime.now().strftime("%H:%M:%S on %d/%m/%y.")}")
+        
+        print(tabulate(
+            all_calling_points, 
+            tablefmt = "rounded_grid", 
+            headers = ["Stop Name", 
+                        "Booked Arrival", 
+                        "Actual Arrival", 
+                        "Platform", 
+                        "Booked Departure", 
+                        "Actual Departure"]
+            )
+        )
+
+        return "Service data returned successfully"
