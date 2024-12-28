@@ -53,12 +53,12 @@ You need an account for the Realtime Trains API to use this package. You can sig
 
 The example below will return you up to 15 rows on the departure board for London King's Cross at the time you run the program. 
 ```python
-rtt.get_departures_board(tiploc = "KNGX", rows = 15)
+rtt.get_departures(tiploc = "KNGX", rows = 15)
 ```
 
 The example below will return you up to 15 rows on the arrivals board for London King's Cross at the time you run the program. 
 ```python
-rtt.get_arrivals_board(tiploc = "KNGX", rows = 15)
+rtt.get_arrivals(tiploc = "KNGX", rows = 15)
 ```
 
 More in-depth examples can be found on our [GitHub wiki](https://github.com/anonymous44401/realtime-trains-py/wiki/Home). 
