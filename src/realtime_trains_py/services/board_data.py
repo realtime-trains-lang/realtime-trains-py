@@ -184,7 +184,7 @@ class Boards():
                 # Print the departure info
                 print(f"Departure board for {requested_location}. Generated at {datetime.now().strftime("%H:%M:%S on %d/%m/%y")}.")
                 # Print the table
-                print(tabulate(departure_board, tablefmt = "rounded_grid", headers = ["Booked Departure", "Destination", "Platform", "Booked Departure", "Service UID"]))
+                print(tabulate(departure_board, tablefmt = "rounded_grid", headers = ["Booked Departure", "Destination", "Platform", "Actual Departure", "Service UID"]))
 
                 return "Departure board printed successfully" 
 
@@ -402,7 +402,7 @@ class Boards():
                 # Print the arrival info
                 print("Arrivals board for " + requested_location + ". Generated at " + datetime.now().strftime("%H:%M:%S on %d/%m/%y."))
                 # Print the table
-                print(tabulate(arrivals_board, tablefmt = "rounded_grid", headers = ["Booked Arrival", "Destination", "Origin", "Platform", "Booked Arrival", "Service UID"]))
+                print(tabulate(arrivals_board, tablefmt = "rounded_grid", headers = ["Booked Arrival", "Destination", "Origin", "Platform", "Actual Arrival", "Service UID"]))
 
                 return "Arrivals board printed successfully"
             
