@@ -1,6 +1,6 @@
 [project]
 name = "realtime-trains-py"
-version = "1.1.10b1"
+version = "2025.1.0"
 authors = [
   { name="anonymous44401", email="anonymous4401.ad@gmail.com" },
 ]
@@ -12,7 +12,7 @@ classifiers = [
     "Programming Language :: Python",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
 ]
 
 [project.urls]

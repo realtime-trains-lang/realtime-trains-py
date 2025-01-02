@@ -11,7 +11,7 @@ except:
 
 
 # Class for Simple Departures Board
-class DepartureBoardSimple():
+class DepartureBoard():
     def __init__(self, gbtt_departure, terminus, platform, realtime_departure, service_uid):
         self.gbtt_departure = gbtt_departure
         self.terminus = terminus
@@ -20,7 +20,7 @@ class DepartureBoardSimple():
         self.service_uid = service_uid
 
 # CLass for Simple Arrivals Board
-class ArrivalBoardSimple():
+class ArrivalBoard():
     def __init__(self, gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid):
         self.gbtt_arrival = gbtt_arrival
         self.terminus = terminus
@@ -28,26 +28,6 @@ class ArrivalBoardSimple():
         self.platform = platform
         self.realtime_arrival = realtime_arrival
         self.service_uid = service_uid
-
-# Class for Advanced Departures Board
-class DepartureBoardAdvanced():
-    def __init__(self, gbtt_departure, terminus, platform, realtime_departure, service_uid):
-        self.gbtt_departure = gbtt_departure
-        self.terminus = terminus
-        self.platform = platform
-        self.realtime_departure = realtime_departure
-        self.service_uid = service_uid
-
-# Class for Advanced Arrivals Board
-class ArrivalBoardAdvanced():
-    def __init__(self, gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid):
-        self.gbtt_arrival = gbtt_arrival
-        self.terminus = terminus
-        self.origin = origin
-        self.platform = platform
-        self.realtime_arrival = realtime_arrival
-        self.service_uid = service_uid
-
 
 class Boards():
     def __init__(self, username: str = None, password: str = None, complexity: str = "s") -> None:
@@ -253,7 +233,7 @@ class Boards():
                     terminus = (location_detail["destination"]).pop()["description"]
 
                     # Append new DepartureBoardSimple service details  
-                    departure_board.append(DepartureBoardSimple(gbtt_departure, terminus, platform, realtime_departure, service_uid))
+                    departure_board.append(DepartureBoard(gbtt_departure, terminus, platform, realtime_departure, service_uid))
 
                     # Add one to count
                     count += 1
@@ -473,7 +453,7 @@ class Boards():
                     origin = (location_detail["origin"]).pop()["description"]
 
                     # Append new ArrivalBoardSimple service details  
-                    arrivals_board.append(ArrivalBoardSimple(gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid))
+                    arrivals_board.append(ArrivalBoard(gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid))
                 
                     # Add one to count
                     count += 1
