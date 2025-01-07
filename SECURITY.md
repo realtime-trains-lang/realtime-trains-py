@@ -6,6 +6,7 @@ We release updates and patches regularly. Below are the versions of this project
 
 | Version | Supported          |
 |---------|--------------------|
+| 2025.x.x | :white_check_mark: |
 | 1.x.xbx | :white_check_mark: |
 | 0.x.xax | :x:                |
 
