@@ -714,7 +714,7 @@ class Boards():
             raise ValueError("Invalid date or time. Date or time provided did not meet requirements or fall into the valid date/time range.")
         
     def _get_stat_board_details(self, tiploc, filter, rows, time, date: str = None) -> list | str:
-        if self.__complexity in ["s", "s.n", "s.p"]:
+        if self.__complexity in ["a", "a.p", "s", "s.n", "s.p"]:
             raise NotImplementedError
         
         if date is None:
@@ -915,5 +915,8 @@ class Boards():
 
         return service_uid, ArrivalBoardSimple(gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid)
     
-    def __create_simple_service(self, service):
+    def __create_dep_sim_service(self, service):
+        pass
+
+    def __create_arr_sim_service(self, service):
         pass
