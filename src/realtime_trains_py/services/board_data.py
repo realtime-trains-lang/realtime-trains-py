@@ -714,6 +714,9 @@ class Boards():
             raise ValueError("Invalid date or time. Date or time provided did not meet requirements or fall into the valid date/time range.")
         
     def _get_stat_board_details(self, tiploc, filter, rows, time, date: str = None) -> list | str:
+        if self.__complexity in ["s", "s.n", "s.p"]:
+            raise NotImplementedError
+        
         if date is None:
             new_date = (datetime.now()).strftime("%Y/%m/%d")
 
@@ -761,16 +764,35 @@ class Boards():
 
                     return "Departures and arrivals saved to files: " + dep_file_name + arr_file_name
 
-                elif self.__complexity == "a.p" or self.__complexity == "a":
-                    raise NotImplementedError
+                elif self.__complexity.startswith("a"):                
+                    # Create new boards
+                    arrival_board = []
+                    departure_board = []
+                    combined_board = []
 
-                elif self.__complexity == "a.n":
-                    raise NotImplementedError
+                    # Iterate over each service and append it to the departure board
+                    for dep_service in departures_data["services"]:
+                        departure_board.append(self.__create_dep_adv_service(dep_service))
 
-                elif self.__complexity == "s.p" or self.__complexity == "s":
-                    raise NotImplementedError
+                    # Iterate over each service and append it to the arrival board
+                    for arr_service in arrivals_data["services"]:
+                        arrival_board.append(self.__create_arr_adv_service(arr_service))
 
-                elif self.__complexity == "s.n":
+                    # Iterate over each att in departures
+                    for departures in departure_board:
+                        # Iterate over each att in arrivals
+                        for arrivals in arrival_board:
+                            # If the values at position 0 are equal, append it to the combined board
+                            if departures[0] == arrivals[0]:
+                                combined_board.append(arrivals[1])
+
+                                # Delete the matching values from each board
+                                departure_board.remove(departures)
+                                arrival_board.remove(arrivals)
+
+                    return combined_board
+
+                elif self.__complexity.startswith("s"):
                     raise NotImplementedError
 
             elif dep_api_response.status_code == 404 or arr_api_response == 404:
@@ -784,3 +806,114 @@ class Boards():
 
         else:
             raise ValueError("Invalid date or time. Date or time provided did not meet requirements or fall into the valid date/time range.")
+
+    def __create_dep_adv_service(self, service):
+        location_detail = service["locationDetail"]
+        destination = location_detail["destination"]
+        status = location_detail["displayAs"]
+
+
+        if "gbttBookedDeparture" in location_detail:
+            gbtt_departure = location_detail["gbttBookedDeparture"]
+
+        else:
+            gbtt_departure = "Unknown"
+
+        if "platform" in location_detail:
+            platform = location_detail["platform"]
+
+        else:
+            platform = "Unknown"
+
+        if "realtimeDeparture" in location_detail:
+            realtime_departure = location_detail["realtimeDeparture"]
+
+        else:
+            realtime_departure = "Unknown"
+
+        if "serviceUid" in service:
+            service_uid = service["serviceUid"]
+
+        else:
+            service_uid = "Unknown"
+
+
+        if status != "CANCELLED_CALL":
+            if gbtt_departure == realtime_departure:
+                realtime_departure = "On time"
+                gbtt_departure = format_time(gbtt_departure)
+
+            elif realtime_departure == "Unknown":
+                gbtt_departure = format_time(gbtt_departure)
+
+            else:
+                realtime_departure = format_time(realtime_departure)
+                realtime_departure = "Exp " + realtime_departure
+                gbtt_departure = format_time(gbtt_departure)
+
+        else:
+            realtime_departure = "Cancelled"
+            gbtt_departure = format_time(gbtt_departure)
+
+        
+        terminus = destination.pop()["description"]
+
+        return service_uid, DepartureBoardSimple(gbtt_departure, terminus, platform, realtime_departure, service_uid)
+
+    def __create_arr_adv_service(self, service):
+        location_detail = service["locationDetail"]
+        destinations = location_detail["destination"]
+        origins = location_detail["origin"]
+        status = location_detail["displayAs"]
+
+        if "gbttBookedArrival" in location_detail:
+            gbtt_arrival = location_detail["gbttBookedArrival"]
+
+        else:
+            gbtt_arrival = "Unknown"
+
+        if "platform" in location_detail:
+            platform = location_detail["platform"]
+
+        else:
+            platform = "Unknown"
+
+        if "realtimeArrival" in location_detail:
+            realtime_arrival = location_detail["realtimeArrival"]
+
+        else:
+            realtime_arrival = "Unknown"
+
+        if "serviceUid" in service:
+            service_uid = service["serviceUid"]
+
+        else:
+            service_uid = "Unknown"
+
+
+        if status != "CANCELLED_CALL":
+            if gbtt_arrival == realtime_arrival:
+                realtime_arrival = "On time"
+                gbtt_arrival = format_time(gbtt_arrival)
+
+            elif realtime_arrival == "Unknown":
+                gbtt_arrival = format_time(gbtt_arrival)
+
+            else:
+                realtime_arrival = format_time(realtime_arrival)
+                realtime_arrival = "Exp " + realtime_arrival
+                gbtt_arrival = format_time(gbtt_arrival)
+
+        else:
+            realtime_arrival = "Cancelled"
+            gbtt_arrival = format_time(gbtt_arrival)
+
+        for destination in destinations:
+            terminus = destination["description"]
+        
+        origin = origins.pop()["description"]
+
+        return service_uid, ArrivalBoardSimple(gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid)
+    
+    def __create_simple_service(self, service):
+        pass
