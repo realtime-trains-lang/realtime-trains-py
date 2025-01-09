@@ -1,10 +1,10 @@
-# Import classes from board_data and service_data
+# Import classes from boards and services
 try:
-    from realtime_trains_py.services.board_data import Boards
-    from realtime_trains_py.services.service_data import ServiceAdvanced, ServiceSimple, ServiceDetails
+    from services.boards import Boards
+    from services.services import ServiceAdvanced, ServiceSimple, ServiceDetails
 except:
-    from services.board_data import Boards
-    from services.service_data import ServiceAdvanced, ServiceSimple, ServiceDetails
+    from services.boards import Boards
+    from services.services import ServiceAdvanced, ServiceSimple, ServiceDetails
 
 
 class RealtimeTrainsPy():
@@ -22,7 +22,7 @@ class RealtimeTrainsPy():
 
         ## Example
         ```python
-        rtt = RealtimeTrainsPy(complexity = "s", username = "a_username", password = "1234567890")
+        rtt = RealtimeTrainsPy(complexity = "s", username = "<a_username>", password = "<a_password>")
         ```
         """
         # Check if the username and password have been entered
