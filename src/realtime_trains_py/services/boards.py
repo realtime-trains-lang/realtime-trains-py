@@ -10,7 +10,7 @@ except:
     from services.utilities import create_file, format_time, validate_date, validate_time
 
 
-# Class for Simple Departures Board
+# Class for Departures Board
 class DepartureBoard():
     def __init__(self, gbtt_departure, terminus, platform, realtime_departure, service_uid):
         self.gbtt_departure = gbtt_departure
@@ -19,7 +19,7 @@ class DepartureBoard():
         self.realtime_departure = realtime_departure
         self.service_uid = service_uid
 
-# CLass for Simple Arrivals Board
+# CLass for Arrivals Board
 class ArrivalBoard():
     def __init__(self, gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid):
         self.gbtt_arrival = gbtt_arrival
@@ -552,10 +552,19 @@ class Boards():
                         # If the values at position 0 are equal, append it to the combined board
                         if departures[0] == arrivals[0]:
                             combined_board.append(arrivals[1])
+                            break
+                
+                # Append the remaining values to the combined board
+                for arrival in arrival_board:
+                    combined_board.append(arrival[1])
 
-                            # Delete the matching values from each board
-                            departure_board.remove(departures)
-                            arrival_board.remove(arrivals)
+                # Append the remaining values to the combined board
+                for departure in departure_board:
+                    combined_board.append(departure[1]) 
+
+                # Clear the old boards
+                arrival_board.clear()
+                departure_board.clear()
 
                 return combined_board
 
