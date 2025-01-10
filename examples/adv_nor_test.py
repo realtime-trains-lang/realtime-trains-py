@@ -27,7 +27,7 @@ for arrivals in arrivals_at_norwich:
 #### EXAMPLE 2 ####
 
 # Query for getting the next 10 departures from Hull around 10:00 UTC on 10th January 2025
-departures_at_hull = rtt.get_departures(tiploc="HULL", date="2025/01/10", time="1000", rows=15)
+departures_at_hull = rtt.get_departures(tiploc="HULL", date="2025/01/10", time="1000", rows=10)
 
 for departures in departures_at_hull:
     print(f"{departures.service_uid} | {departures.gbtt_departure} | {departures.origin} to {departures.terminus}")
