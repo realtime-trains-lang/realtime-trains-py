@@ -25,7 +25,7 @@ def validate_date(date: str) -> bool:
 
 def validate_time(time: str) -> bool:
     # Check if the regex pattern was found
-    if re.search("([01][0-9]|2[0-3]):([0-5][0-9])", format_time(time)) != None:
+    if re.search("([01][0-9]|2[0-3])([0-5][0-9])", format_time(time)) != None:
         # If found, return True
         return True
     else:
