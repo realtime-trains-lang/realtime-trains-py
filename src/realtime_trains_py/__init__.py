@@ -123,7 +123,7 @@ class RealtimeTrainsPy():
     
     def get_station(self, tiploc: str, filter: str = None, date: str = None, rows: int = None, time: str = None) -> list | str:
         """
-        ## This feature is only available for complex mode
+        ## This feature is only available for complex mode and advanced (normal) mode.
 
         ### tiploc (required)
 

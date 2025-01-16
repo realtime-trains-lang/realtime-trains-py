@@ -32,15 +32,6 @@ def validate_time(time: str) -> bool:
         # If not found, return False
         return False
 
-def get_time_delta(delta: int) -> str:
-    # Get the timedelta and add it to the date now        v split the time delta
-    date_delta = str(datetime.now() + timedelta(delta)).split("-")
-
-    # Get only the day from the last value
-    date_delta[2] = (str(date_delta[2]).split(" "))[0]
-
-    return date_delta
-
 def format_time(time: str) -> str:
     # Get the first 4 values and add a : in the middle
     return f"{time[0]}{time[1]}:{time[2]}{time[3]}"
