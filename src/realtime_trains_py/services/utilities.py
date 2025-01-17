@@ -2,35 +2,33 @@ import json
 import os, os.path
 import re
 
-from datetime import datetime, timedelta 
-
 
 def validate_uid(uid: str) -> bool:
     # Check if the regex pattern was found
     if re.search("[A-Z][0-9]{5}", uid) != None:
         # If found, return True
         return True
-    else:
-        # If not found, return False
-        return False
+    
+    # If not found, return False
+    return False
 
 def validate_date(date: str) -> bool:
     # Check if the regex pattern was found
     if re.search("[1-9][0-9][0-9]{2}/([0][1-9]|[1][0-2])/([1-2][0-9]|[0][1-9]|[3][0-1])", date) != None:
         # If found, return True
         return True
-    else:
-        # If not found, return False
-        return False
+    
+    # If not found, return False
+    return False
 
 def validate_time(time: str) -> bool:
     # Check if the regex pattern was found
     if re.search("([01][0-9]|2[0-3])([0-5][0-9])", format_time(time)) != None:
         # If found, return True
         return True
-    else:
-        # If not found, return False
-        return False
+    
+    # If not found, return False
+    return False
 
 def format_time(time: str) -> str:
     # Get the first 4 values and add a : in the middle

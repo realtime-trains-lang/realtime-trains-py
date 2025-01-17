@@ -11,7 +11,7 @@ class RealtimeTrainsPy():
     def __init__(self, complexity = "s", username: str = None, password: str = None) -> None: 
         """
         ## Initialize realtime_trains_py.
-        ### complexity (optional)
+        ### complexity (optional) [not case-sensitive]
             A string representing the complexity level of the data. The default is "s".
         
         ### username (required)
