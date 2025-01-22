@@ -8,7 +8,7 @@ except:
 
 
 class RealtimeTrainsPy():
-    def __init__(self, complexity = "s", username: str = None, password: str = None) -> None: 
+    def __init__(self, complexity: str = "s", username: str = None, password: str = None) -> None: 
         """
         ## Initialize realtime_trains_py.
         ### complexity (optional) [not case-sensitive]

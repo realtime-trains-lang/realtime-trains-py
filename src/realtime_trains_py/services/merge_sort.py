@@ -1,7 +1,6 @@
-def merge_sort(arr):
+def merge_sort(arr) -> list:
     # If the length is 1 or less, return the array
-    if len(arr) <= 1:
-        return arr
+    if len(arr) <= 1: return arr
     
     # Get the centre
     centre = len(arr)//2
@@ -16,7 +15,7 @@ def merge_sort(arr):
     # Return the sorted array
     return merge(sorted_l, sorted_r)
 
-def merge(left, right):
+def merge(left, right) -> list:
     # New result list
     result = []
     # Set counts to 0

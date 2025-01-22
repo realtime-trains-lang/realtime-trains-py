@@ -14,7 +14,7 @@ except:
 
 # Class for Departures Board
 class DepartureBoard():
-    def __init__(self, gbtt_departure, terminus, platform, realtime_departure, service_uid):
+    def __init__(self, gbtt_departure, terminus, platform, realtime_departure, service_uid) -> None:
         self.gbtt_departure = gbtt_departure
         self.terminus = terminus
         self.platform = platform
@@ -23,7 +23,7 @@ class DepartureBoard():
 
 # CLass for Arrivals Board
 class ArrivalBoard():
-    def __init__(self, gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid):
+    def __init__(self, gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid) -> None:
         self.gbtt_arrival = gbtt_arrival
         self.terminus = terminus
         self.origin = origin

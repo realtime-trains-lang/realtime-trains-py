@@ -10,7 +10,7 @@ except:
 
 # CLass for Station Board
 class StationBoardDetails():
-    def __init__(self, gbtt_arrival, gbtt_departure, terminus, origin, platform, realtime_arrival, realtime_departure, service_uid):
+    def __init__(self, gbtt_arrival, gbtt_departure, terminus, origin, platform, realtime_arrival, realtime_departure, service_uid) -> None:
         self.gbtt_arrival = gbtt_arrival
         self.gbtt_departure = gbtt_departure
         self.terminus = terminus
@@ -21,7 +21,7 @@ class StationBoardDetails():
         self.service_uid = service_uid
 
 class NewStationBoard():
-    def __init__(self, departure_data, arrival_data):
+    def __init__(self, departure_data, arrival_data) -> None:
         # Create new boards
         arrival_board = []
         departure_board = []
@@ -68,7 +68,7 @@ class NewStationBoard():
         arrival_board.clear()
         departure_board.clear()
 
-    def __extract_times(self):
+    def __extract_times(self) -> None:
         # Create a temporary new board
         new_board = []
 
@@ -86,13 +86,13 @@ class NewStationBoard():
 
         self.combined_board = new_board
 
-    def _create_station_board(self):
+    def _create_station_board(self) -> list:
         self.__extract_times()
 
         return merge_sort(self.combined_board)
 
 class CreateBoardDetails():
-    def _create_dep_service(self, service):
+    def _create_dep_service(self, service) -> tuple:
         location_detail = service["locationDetail"] # Details of the location
         status = location_detail["displayAs"] # Status of service
 
@@ -148,7 +148,7 @@ class CreateBoardDetails():
         # Return the service UID and Departure Board 
         return service_uid, StationBoardDetails("", gbtt_departure, terminus, "", platform, "", realtime_departure, service_uid)
 
-    def _create_arr_service(self, service):
+    def _create_arr_service(self, service) -> tuple:
         location_detail = service["locationDetail"] # Details of the location
         status = location_detail["displayAs"] # Status of service
 
