@@ -17,18 +17,25 @@ def merge_sort(arr):
     return merge(sorted_l, sorted_r)
 
 def merge(left, right):
+    # New result list
     result = []
+    # Set counts to 0
     count_l = count_r = 0
 
     while count_l < len(left) and count_r < len(right):
         if left[count_l] < right[count_r]:
+            # If left item is less than right item, append left to the result
             result.append(left[count_l])
+            # Increment count
             count_l += 1
 
         else:
+            # Append right to the result
             result.append(right[count_r])
+            # Increment count
             count_r += 1
 
+    # Extend both lists
     result.extend(left[count_l:])
     result.extend(right[count_r:])
 
