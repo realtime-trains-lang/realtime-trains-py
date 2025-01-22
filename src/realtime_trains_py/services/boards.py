@@ -5,10 +5,10 @@ from tabulate import tabulate
 
 # Import functions from utilities
 try:
-    from realtime_trains_py.services.stat_boards import AdvancedStationBoard, SimpleStationBoard
+    from realtime_trains_py.services.stat_boards import NewStationBoard
     from realtime_trains_py.services.utilities import create_file, format_time, validate_date, validate_time
 except:
-    from services.stat_boards import AdvancedStationBoard, SimpleStationBoard
+    from services.stat_boards import NewStationBoard
     from services.utilities import create_file, format_time, validate_date, validate_time
 
 
@@ -475,7 +475,7 @@ class Boards():
             raise Exception(f"Failed to connect to the RTT API server. Try again in a few minutes. Status code: {api_response.status_code}")
 
     def _get_stat_board_details(self, tiploc, search_filter, rows, time, date: str = None) -> list | str:
-        # Check if the complexity is valid
+        # Check if the complexity is valid TEMPORARY
         if self.__complexity in ["a", "a.p", "s", "s.n", "s.p"]:
             raise NotImplementedError
 
@@ -533,23 +533,18 @@ class Boards():
 
                 return f"Departures and arrivals saved to files: \n  {dep_file_name} \n  {arr_file_name}"
 
-            elif self.__complexity.startswith("a"):                
-                # Create new boards
-                advanced_board = AdvancedStationBoard(departures_data, arrivals_data)
-                match self.__complexity:
-                    case "a":
-                        raise NotImplementedError("This complexity doesn't support this method yet.")
-                    
-                    case "a.p":
-                        raise NotImplementedError("This complexity doesn't support this method yet.")
-                    
-                    case "a.n":
-                        return advanced_board._create_station_board()
-                    
+            # Create the station board
+            new_boards = NewStationBoard(departures_data, arrivals_data)
+            board = new_boards._create_station_board()
+            # print(board)
 
-            elif self.__complexity.startswith("s"):
-                raise NotImplementedError("This complexity doesn't support this method yet.")
-
+            match self.__complexity:
+                case "a", "a.p", "s", "s.p":
+                    raise NotImplementedError("This complexity doesn't support this method yet.")
+                
+                case "a.n", "s.n":
+                    return board             
+        
         elif dep_api_response.status_code == 404 or arr_api_response == 404:
             # Raise an error if either status codes are 404 (Not found)
             raise Exception(f"The data you requested could not be found. Status codes: {dep_api_response.status_code} {arr_api_response.status_code}")

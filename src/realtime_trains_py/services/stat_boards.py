@@ -1,33 +1,41 @@
+from datetime import time
+
 # Import functions from utilities
 try:
-    from realtime_trains_py.services.utilities import create_file, format_time, validate_date, validate_time
+    from realtime_trains_py.services.merge_sort import merge_sort
+    from realtime_trains_py.services.utilities import format_time
 except:
-    from services.utilities import create_file, format_time, validate_date, validate_time
+    from services.merge_sort import merge_sort
+    from services.utilities import format_time
 
 # CLass for Station Board
-class StationBoard():
-    def __init__(self, gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid):
+class StationBoardDetails():
+    def __init__(self, gbtt_arrival, gbtt_departure, terminus, origin, platform, realtime_arrival, realtime_departure, service_uid):
         self.gbtt_arrival = gbtt_arrival
+        self.gbtt_departure = gbtt_departure
         self.terminus = terminus
         self.origin = origin
         self.platform = platform
         self.realtime_arrival = realtime_arrival
+        self.realtime_departure = realtime_departure
         self.service_uid = service_uid
 
-class AdvancedStationBoard():
+class NewStationBoard():
     def __init__(self, departure_data, arrival_data):
         # Create new boards
         arrival_board = []
         departure_board = []
         self.combined_board = []
 
+        # Create a new Station Board Creator
+        board_creator = CreateBoardDetails()
         # Iterate over each service and append it to the departure board
         for dep_service in departure_data["services"]:
-            departure_board.append(self.__create_dep_adv_service(dep_service))
+            departure_board.append(board_creator._create_dep_service(dep_service))
 
         # Iterate over each service and append it to the arrival board
         for arr_service in arrival_data["services"]:
-            arrival_board.append(self.__create_arr_adv_service(arr_service))
+            arrival_board.append(board_creator._create_arr_service(arr_service))
 
         # Iterate over each att in departures
         for departures in departure_board:
@@ -35,7 +43,17 @@ class AdvancedStationBoard():
             for arrivals in arrival_board:
                 # If the values at position 0 are equal, append it to the combined board
                 if departures[0] == arrivals[0]:
+                    arrivals[1].realtime_departure = departures[1].realtime_departure
+                    arrivals[1].gbtt_departure = departures[1].gbtt_departure
                     self.combined_board.append(arrivals[1])
+                    # print(arrivals[1].gbtt_arrival,
+                    #       arrivals[1].gbtt_departure,
+                    #       arrivals[1].terminus,
+                    #       arrivals[1].origin,
+                    #       arrivals[1].platform,
+                    #       arrivals[1].realtime_arrival,
+                    #       arrivals[1].realtime_departure,
+                    #       arrivals[1].service_uid)
                     break
         
         # Append the remaining values to the combined board
@@ -50,16 +68,38 @@ class AdvancedStationBoard():
         arrival_board.clear()
         departure_board.clear()
 
-    def _create_station_board(self):
-        pass
+    def __extract_times(self):
+        # Create a temporary new board
+        new_board = []
 
-    def __create_dep_adv_service(self, service):
+        # Iterate over each item in the board
+        for item in self.combined_board:  
+            # If a gbtt_departure       
+            print(item, item.gbtt_departure, item.gbtt_arrival)    
+            if item.gbtt_departure == "":
+                d = item.gbtt_arrival
+                new_board.append([d, item])
+
+            else:
+                a = item.gbtt_departure
+                new_board.append([a, item])
+
+        self.combined_board = new_board
+
+    def _create_station_board(self):
+        self.__extract_times()
+
+        return merge_sort(self.combined_board)
+
+class CreateBoardDetails():
+    def _create_dep_service(self, service):
         location_detail = service["locationDetail"] # Details of the location
         status = location_detail["displayAs"] # Status of service
 
         # Check if booked departure is in location detail
         if "gbttBookedDeparture" in location_detail:
             gbtt_departure = location_detail["gbttBookedDeparture"]
+        
         else:
             gbtt_departure = ""
 
@@ -95,23 +135,20 @@ class AdvancedStationBoard():
             elif realtime_departure != "-":
                 realtime_departure = f"Exp {format_time(realtime_departure)}"
             
-            # Format the gbtt departure
-            gbtt_departure = format_time(gbtt_departure)
-
         else:
             # Set the realtime departure to cancelled
             realtime_departure = "Cancelled"
-            # Format the gbtt departure
-            gbtt_departure = format_time(gbtt_departure)
-
+        
+        # Format the gbtt departure
+        gbtt_departure = format_time(gbtt_departure)
         
         # Pop the terminus
         terminus = (location_detail["destination"]).pop()["description"]
 
         # Return the service UID and Departure Board 
-        return service_uid, StationBoard(gbtt_departure, terminus, "", platform, realtime_departure, service_uid)
+        return service_uid, StationBoardDetails("", gbtt_departure, terminus, "", platform, "", realtime_departure, service_uid)
 
-    def __create_arr_adv_service(self, service):
+    def _create_arr_service(self, service):
         location_detail = service["locationDetail"] # Details of the location
         status = location_detail["displayAs"] # Status of service
 
@@ -151,17 +188,14 @@ class AdvancedStationBoard():
 
             # If the realtime arrival isn't null, format and add Exp
             elif realtime_arrival != "-":
-                realtime_arrival = "Exp " + format_time(realtime_arrival)
-            
-            # Format the gbtt arrival
-            gbtt_arrival = format_time(gbtt_arrival)
+                realtime_arrival = f"Exp {format_time(realtime_arrival)}"
 
         else:
             # Set the realtime arrival to cancelled
             realtime_arrival = "Cancelled"
-            # Format the gbtt arrival
-            gbtt_arrival = format_time(gbtt_arrival)
-
+            
+        # Format the gbtt arrival
+        gbtt_arrival = format_time(gbtt_arrival)
         # Pop the terminus
         terminus = (location_detail["destination"]).pop()["description"]
         
@@ -169,12 +203,4 @@ class AdvancedStationBoard():
         origin = (location_detail["origin"]).pop()["description"]
 
         # Return the service UID and Arrival Board 
-        return service_uid, StationBoard(gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid)
-
-
-class SimpleStationBoard():
-    def __create_dep_sim_service(self, service):
-        pass
-
-    def __create_arr_sim_service(self, service):
-        pass
+        return service_uid, StationBoardDetails(gbtt_arrival, "", terminus, origin, platform, realtime_arrival, "", service_uid)

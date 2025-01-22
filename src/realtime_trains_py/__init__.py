@@ -30,16 +30,22 @@ class RealtimeTrainsPy():
             # If at least one is missing, raise an error
             raise ValueError("Missing authentication details. Both username and password must be provided. Not all required fields were provided.")
 
-        self._username = username
-        self.__password = password
-
         # Check if selected complexity is valid
         if complexity.lower() not in ["s", "s.p", "s.n", "a", "a.p", "a.n", "c"]:
             # If complexity is not in the valid range, raise an error
             raise ValueError("Complexity not recognised. Select a valid type.")
         
-        self.__services = ServiceDetails(username = self._username, password = self.__password, complexity = complexity.lower())
-        self.__boards = Boards(username = self._username, password = self.__password, complexity = complexity.lower())
+        self.__services = ServiceDetails(
+            username = username,
+            password = password,
+            complexity = complexity.lower()
+        )
+        
+        self.__boards = Boards(
+            username = username, 
+            password = password, 
+            complexity = complexity.lower()
+        )
 
     def get_departures(self, tiploc: str, filter: str = None, date: str = None, rows: int = None, time: str = None) -> list | str:
         """
@@ -68,7 +74,7 @@ class RealtimeTrainsPy():
         get_departures(tiploc = "YORK", date = "2024/11/16", time = "1800")
         ```
         """
-        return self.__boards._get_dep_board_details(tiploc = tiploc, search_filter = filter, date = date, rows = rows, time = time)
+        return self.__boards._get_dep_board_details(tiploc = tiploc.upper(), search_filter = filter.upper(), date = date, rows = rows, time = time)
 
     def get_arrivals(self, tiploc: str, filter: str = None, date: str = None, rows: int = None, time: str = None) -> list | str:
         """
@@ -97,7 +103,7 @@ class RealtimeTrainsPy():
         get_arrivals(tiploc = "YORK", date = "2024/11/16", time = "1800")
         ```
         """
-        return self.__boards._get_arr_board_details(tiploc = tiploc, search_filter = filter, date = date, rows = rows, time = time)
+        return self.__boards._get_arr_board_details(tiploc = tiploc.upper(), search_filter = filter.upper(), date = date, rows = rows, time = time)
 
     def get_service(self, service_uid: str, date: str = None) -> ServiceAdvanced | ServiceSimple | str:
         """
@@ -119,7 +125,7 @@ class RealtimeTrainsPy():
         get_service(service_uid = "G26171")
         ```
         """
-        return self.__services._get_service_details(service_uid = service_uid, date = date)
+        return self.__services._get_service_details(service_uid = service_uid.upper(), date = date)
     
     def get_station(self, tiploc: str, filter: str = None, date: str = None, rows: int = None, time: str = None) -> list | str:
         """
@@ -148,4 +154,4 @@ class RealtimeTrainsPy():
         get_station(tiploc = "YORK", date = "2024/11/16", time = "1800")
         ```
         """
-        return self.__boards._get_stat_board_details(tiploc = tiploc, search_filter = filter, date = date, rows = rows, time = time)
+        return self.__boards._get_stat_board_details(tiploc = tiploc.upper(), search_filter = filter.upper(), date = date, rows = rows, time = time)
