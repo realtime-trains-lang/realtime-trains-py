@@ -4,11 +4,12 @@
 
 We release updates and patches regularly. Below are the versions of this project that are actively supported and maintained:
 
-| Version | Supported          |
-|---------|--------------------|
-| 2025.x.x | :white_check_mark: |
-| 1.x.xbx | :white_check_mark: |
-| 0.x.xax | :x:                |
+| Version    | Supported          |
+|--------- --|--------------------|
+| 2025.x.x   | :white_check_mark: |
+| 2025.x.xbx | :white_check_mark: |
+| 1.x.xbx    | :x:                |
+| 0.x.xax    | :x:                |
 
 If you are using an unsupported version, please upgrade to a supported version to receive the latest security updates.
 
