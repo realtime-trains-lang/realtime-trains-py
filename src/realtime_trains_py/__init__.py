@@ -2,15 +2,22 @@
 try:
     from services.boards import Boards
     from services.services import ServiceDetailsAdvanced, ServiceDetailsSimple, ServiceDetails
+    from services.utilities import connection_authorised
 except:
     from services.boards import Boards
     from services.services import ServiceDetailsAdvanced, ServiceDetailsSimple, ServiceDetails
+    from services.utilities import connection_authorised
 
 
 # The RealtimeTrainsPy class
 class RealtimeTrainsPy():
     # Initialise the class
-    def __init__(self, complexity: str="s", username: str=None, password: str=None) -> None: 
+    def __init__(
+        self, 
+        complexity: str="s", 
+        username: str=None, 
+        password: str=None
+    ) -> None: 
         """
         ## Initialize realtime_trains_py.
         ### complexity (optional) [not case-sensitive]
@@ -27,10 +34,13 @@ class RealtimeTrainsPy():
         rtt = RealtimeTrainsPy(complexity = "s", username = "<a_username>", password = "<a_password>")
         ```
         """
-        # Check if the username and password have been entered
+        # Check if the username and password have been provided
         if username == None or password == None:
             # If at least one is missing, raise an error
-            raise ValueError("Missing authentication details (401). Both username and password must be provided. Not all required fields were provided.")
+            raise ValueError("Missing authentication details (400). Both username and password must be provided. Not all required fields were provided.")
+        
+        if not connection_authorised(username=username, password=password):
+            raise PermissionError("Couldn't verify your username or password (401). Check your details and try again.")
 
         # Check if selected complexity is valid
         if complexity.lower() not in ["s", "s.p", "s.n", "a", "a.p", "a.n", "c"]:
