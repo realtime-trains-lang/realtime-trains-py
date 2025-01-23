@@ -38,19 +38,26 @@ class RealtimeTrainsPy():
             raise ValueError("Complexity not recognised (400). Select a valid type.")
         
         self.__services = ServiceDetails(
-            username = username,
-            password = password,
-            complexity = complexity.lower()
+            username=username,
+            password=password,
+            complexity=complexity.lower()
         )
         
         self.__boards = Boards(
-            username = username, 
-            password = password, 
-            complexity = complexity.lower()
+            username=username, 
+            password=password, 
+            complexity=complexity.lower()
         )
 
-    # Get the departures for {tiploc}, given {filter} on {date}, at around {time}. Provide {rows} rows
-    def get_departures(self, tiploc: str, filter: str = None, date: str = None, rows: int = None, time: str = None) -> list | str:
+    # Get the departures for {tiploc}, given {filter} on {date}, at around {time}. Provide up to {rows} rows
+    def get_departures(
+        self,
+        tiploc: str,
+        filter: str=None,
+        date: str=None,
+        rows: int=None,
+        time: str=None
+    ) -> list | str:
         """
         ## Parameters
 
@@ -77,10 +84,17 @@ class RealtimeTrainsPy():
         get_departures(tiploc = "YORK", date = "2024/11/16", time = "1800")
         ```
         """
-        return self.__boards._get_dep_board_details(tiploc = tiploc.upper(), search_filter = filter, date = date, rows = rows, time = time)
+        return self.__boards._get_dep_board_details(tiploc=tiploc.upper(), search_filter=filter, date=date, rows=rows, time=time)
 
-    # Get the arrivals for {tiploc}, given {filter} on {date}, at around {time}. Provide {rows} rows
-    def get_arrivals(self, tiploc: str, filter: str = None, date: str = None, rows: int = None, time: str = None) -> list | str:
+    # Get the arrivals for {tiploc}, given {filter} on {date}, at around {time}. Provide up to {rows} rows
+    def get_arrivals(
+        self, 
+        tiploc: str, 
+        filter: str=None, 
+        date: str=None, 
+        rows: int=None, 
+        time: str=None
+    ) -> list | str:
         """
         ## Parameters
 
@@ -107,10 +121,14 @@ class RealtimeTrainsPy():
         get_arrivals(tiploc = "YORK", date = "2024/11/16", time = "1800")
         ```
         """
-        return self.__boards._get_arr_board_details(tiploc = tiploc.upper(), search_filter = filter, date = date, rows = rows, time = time)
+        return self.__boards._get_arr_board_details(tiploc=tiploc.upper(), search_filter=filter, date=date, rows=rows, time=time)
 
     # Get the service info for {service_uid} on {date}
-    def get_service(self, service_uid: str, date: str = None) -> ServiceDetailsAdvanced | ServiceDetailsSimple | str:
+    def get_service(
+        self, 
+        service_uid: str, 
+        date: str=None
+    ) -> ServiceDetailsAdvanced | ServiceDetailsSimple | str:
         """
         ## Parameters
 
@@ -130,10 +148,17 @@ class RealtimeTrainsPy():
         get_service(service_uid = "G26171")
         ```
         """
-        return self.__services._get_service_details(service_uid = service_uid.upper(), date = date)
+        return self.__services._get_service_details(service_uid=service_uid.upper(), date=date)
     
-    # Get the departures and arrivals for {tiploc}, given {filter} on {date}, at around {time}. Provide {rows} rows
-    def get_station(self, tiploc: str, filter: str = None, date: str = None, rows: int = None, time: str = None) -> list | str:
+    # Get the departures and arrivals for {tiploc}, given {filter} on {date}, at around {time}. Provide up to {rows} rows
+    def get_station(
+        self, 
+        tiploc: str, 
+        filter: str=None, 
+        date: str=None, 
+        rows: int=None, 
+        time: str=None#
+    ) -> list | str:
         """
         ## This feature is only available for complex mode and advanced (normal) mode.
 
@@ -160,4 +185,4 @@ class RealtimeTrainsPy():
         get_station(tiploc = "YORK", date = "2024/11/16", time = "1800")
         ```
         """
-        return self.__boards._get_stat_board_details(tiploc = tiploc.upper(), search_filter = filter, date = date, rows = rows, time = time)
+        return self.__boards._get_stat_board_details(tiploc=tiploc.upper(), search_filter=filter, date=date, rows=rows, time=time)

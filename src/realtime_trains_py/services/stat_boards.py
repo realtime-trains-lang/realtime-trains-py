@@ -106,7 +106,7 @@ class NewStationBoard():
         self.combined_board = new_board
 
     # Create the new board
-    def _create_station_board(self, rows) -> list:
+    def _create_station_board(self, rows: int=None) -> list:
         # Get the times out
         self.__extract_times()
 

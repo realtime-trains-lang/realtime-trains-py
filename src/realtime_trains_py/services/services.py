@@ -62,13 +62,13 @@ class CallingPointAdvanced():
 
 # Class for getting and creating service details
 class ServiceDetails():
-    def __init__(self, username: str = None, password: str = None, complexity: str = "s") -> None:
+    def __init__(self, username: str=None, password: str=None, complexity: str="s") -> None:
         self.__username = username
         self.__password = password
         self.__complexity = complexity
 
     # Get the service details
-    def _get_service_details(self, service_uid: str, date: str = None) -> ServiceDetailsAdvanced | ServiceDetailsSimple | str:
+    def _get_service_details(self, service_uid: str, date: str=None) -> ServiceDetailsAdvanced | ServiceDetailsSimple | str:
         if not validate_uid(service_uid):
             # Check if the Service UID is valid. If not, raise an error 
             raise ValueError("Invalid Service UID (400). The service UID provided did not meet requirements or fall into the valid range.")

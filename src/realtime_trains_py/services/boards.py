@@ -34,12 +34,12 @@ class ArrivalBoardDetails():
 
 # Class for creating and returning departure, arrival and station boards
 class Boards():
-    def __init__(self, username: str = None, password: str = None, complexity: str = "s") -> None:
+    def __init__(self, username: str=None, password: str=None, complexity: str="s") -> None:
         self.__username = username
         self.__password = password
         self.__complexity = complexity
 
-    def _get_dep_board_details(self, tiploc: str, search_filter: str = None, rows: int = None, time: str = None, date: str = None) -> list | str: 
+    def _get_dep_board_details(self, tiploc: str, search_filter: str=None, rows: int=None, time: str=None, date: str=None) -> list | str: 
         # If a date is provided and it isn't valid, raise an error
         if date is not None and not validate_date(date):
             raise ValueError("Invalid date (400). The date provided did not meet requirements or fall into the valid date range.")
@@ -64,7 +64,7 @@ class Boards():
             search_query += f"/{time}"
 
         # Get the api response using the auth details provided
-        api_response =  requests.get(search_query, auth = (self.__username, self.__password))
+        api_response =  requests.get(search_query, auth=(self.__username, self.__password))
 
         if api_response.status_code == 200:
             # If the status code is 200, convert the response to json
@@ -257,7 +257,7 @@ class Boards():
             # Raise an error for any other status codes
             raise Exception(f"Failed to connect to the RTT API server ({api_response.status_code}). Try again in a few minutes.")
 
-    def _get_arr_board_details(self, tiploc: str, search_filter: str = None, rows: int = None, time: str = None, date: str = None) -> list | str:       
+    def _get_arr_board_details(self, tiploc: str, search_filter: str=None, rows: int=None, time: str=None, date: str=None) -> list | str:       
         # If a date is provided and it isn't valid, raise an error
         if date is not None and not validate_date(date):
             raise ValueError("Invalid date (400). The date provided did not meet requirements or fall into the valid date range.")
@@ -475,7 +475,7 @@ class Boards():
             # Raise an error for any other status codes
             raise Exception(f"Failed to connect to the RTT API server ({api_response.status_code}). Try again in a few minutes.")
 
-    def _get_stat_board_details(self, tiploc, search_filter, rows, time, date: str = None) -> list | str:
+    def _get_stat_board_details(self, tiploc: str, search_filter: str=None, rows: int=None, time: str=None, date: str=None) -> list | str:
         # If a date is provided and it isn't valid, raise an error
         if date is not None and not validate_date(date):
             raise ValueError("Invalid date (400). The date provided did not meet requirements or fall into the valid date range.")
