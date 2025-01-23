@@ -1,3 +1,4 @@
+# Import libraries
 import requests
 
 from datetime import datetime
@@ -5,14 +6,16 @@ from tabulate import tabulate
 
 # Import functions from utilities
 try:
+    from realtime_trains_py.services.stat_boards import NewStationBoard
     from realtime_trains_py.services.utilities import create_file, format_time, validate_date, validate_time
 except:
+    from services.stat_boards import NewStationBoard
     from services.utilities import create_file, format_time, validate_date, validate_time
 
 
 # Class for Departures Board
 class DepartureBoard():
-    def __init__(self, gbtt_departure, terminus, platform, realtime_departure, service_uid):
+    def __init__(self, gbtt_departure, terminus, platform, realtime_departure, service_uid) -> None:
         self.gbtt_departure = gbtt_departure
         self.terminus = terminus
         self.platform = platform
@@ -21,7 +24,7 @@ class DepartureBoard():
 
 # CLass for Arrivals Board
 class ArrivalBoard():
-    def __init__(self, gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid):
+    def __init__(self, gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid) -> None:
         self.gbtt_arrival = gbtt_arrival
         self.terminus = terminus
         self.origin = origin
@@ -50,7 +53,7 @@ class Boards():
 
         # If a search filter was provided, append it to the search_query
         if search_filter is not None:
-            search_query += f"/to/{search_filter}"
+            search_query += f"/to/{search_filter.upper()}"
 
         # If a date was provided, append it to the search_query
         if date is not None:
@@ -268,7 +271,7 @@ class Boards():
 
         # If a search filter was provided, append it to the search_query
         if search_filter is not None:
-            search_query += f"/to/{search_filter}"
+            search_query += f"/to/{search_filter.upper()}"
 
         # If a date was provided, append it to the search_query
         if date is not None:
@@ -473,10 +476,6 @@ class Boards():
             raise Exception(f"Failed to connect to the RTT API server. Try again in a few minutes. Status code: {api_response.status_code}")
 
     def _get_stat_board_details(self, tiploc, search_filter, rows, time, date: str = None) -> list | str:
-        # Check if the complexity is valid
-        if self.__complexity in ["a", "a.p", "s", "s.n", "s.p"]:
-            raise NotImplementedError
-
         # If a date is provided and it isn't valid, raise an error
         if date is not None and not validate_date(date):
             raise ValueError("Invalid date. The date provided did not meet requirements or fall into the valid date range.")
@@ -490,7 +489,7 @@ class Boards():
 
         # If a search filter was provided, append it to the search_query
         if search_filter is not None:
-            search_query += f"/to/{search_filter}"
+            search_query += f"/to/{search_filter.upper()}"
 
         # If a date was provided, append it to the search_query
         if date is not None:
@@ -531,46 +530,30 @@ class Boards():
 
                 return f"Departures and arrivals saved to files: \n  {dep_file_name} \n  {arr_file_name}"
 
-            elif self.__complexity.startswith("a"):                
-                # Create new boards
-                arrival_board = []
-                departure_board = []
-                combined_board = []
+            # Create the station board
+            new_boards = NewStationBoard(departures_data, arrivals_data)
+            board = new_boards._create_station_board()
+            # print(board)
 
-                # Iterate over each service and append it to the departure board
-                for dep_service in departures_data["services"]:
-                    departure_board.append(self.__create_dep_adv_service(dep_service))
-
-                # Iterate over each service and append it to the arrival board
-                for arr_service in arrivals_data["services"]:
-                    arrival_board.append(self.__create_arr_adv_service(arr_service))
-
-                # Iterate over each att in departures
-                for departures in departure_board:
-                    # Iterate over each att in arrivals
-                    for arrivals in arrival_board:
-                        # If the values at position 0 are equal, append it to the combined board
-                        if departures[0] == arrivals[0]:
-                            combined_board.append(arrivals[1])
-                            break
+            match self.__complexity:
+                case "s":
+                    return new_boards._output_formatted_board() 
                 
-                # Append the remaining values to the combined board
-                for arrival in arrival_board:
-                    combined_board.append(arrival[1])
-
-                # Append the remaining values to the combined board
-                for departure in departure_board:
-                    combined_board.append(departure[1]) 
-
-                # Clear the old boards
-                arrival_board.clear()
-                departure_board.clear()
-
-                return combined_board
-
-            elif self.__complexity.startswith("s"):
-                raise NotImplementedError("This complexity doesn't support this method yet.")
-
+                case "s.p":
+                    return new_boards._output_formatted_board() 
+                
+                case "s.n":
+                    return board
+                
+                case "a":
+                    return new_boards._output_formatted_board() 
+                    
+                case "a.p":
+                    return new_boards._output_formatted_board() 
+                    
+                case "a.n":
+                    return board             
+        
         elif dep_api_response.status_code == 404 or arr_api_response == 404:
             # Raise an error if either status codes are 404 (Not found)
             raise Exception(f"The data you requested could not be found. Status codes: {dep_api_response.status_code} {arr_api_response.status_code}")
@@ -582,127 +565,3 @@ class Boards():
         else:
             # Raise an error for any other status codes
             raise Exception(f"Failed to connect to the RTT API server. Try again in a few minutes. Status codes {dep_api_response.status_code} {arr_api_response.status_code}")
-
-    def __create_dep_adv_service(self, service):
-        location_detail = service["locationDetail"] # Details of the location
-        status = location_detail["displayAs"] # Status of service
-
-        # Check if booked departure is in location detail
-        if "gbttBookedDeparture" in location_detail:
-            gbtt_departure = location_detail["gbttBookedDeparture"]
-        else:
-            gbtt_departure = ""
-
-        # Check if platform is in location detail
-        if "platform" in location_detail:
-            platform = location_detail["platform"]
-
-        else:
-            platform = "-"
-
-        # Check if realtime departure is in location detail
-        if "realtimeDeparture" in location_detail:
-            realtime_departure = location_detail["realtimeDeparture"]
-
-        else:
-            realtime_departure = "-"
-
-        # Check if service UID is in location detail
-        if "serviceUid" in service:
-            service_uid = service["serviceUid"]
-
-        else:
-            service_uid = "-"
-
-
-        # Check if the status isn't cancelled
-        if status != "CANCELLED_CALL":
-            # If the gbtt departure and realtime departure are equal, set realtime departure to On Time
-            if gbtt_departure == realtime_departure:
-                realtime_departure = "On time"
-
-            # If the realtime departure isn't null, format and add Exp
-            elif realtime_departure != "-":
-                realtime_departure = f"Exp {format_time(realtime_departure)}"
-            
-            # Format the gbtt departure
-            gbtt_departure = format_time(gbtt_departure)
-
-        else:
-            # Set the realtime departure to cancelled
-            realtime_departure = "Cancelled"
-            # Format the gbtt departure
-            gbtt_departure = format_time(gbtt_departure)
-
-        
-        # Pop the terminus
-        terminus = (location_detail["destination"]).pop()["description"]
-
-        # Return the service UID and Departure Board 
-        return service_uid, DepartureBoard(gbtt_departure, terminus, platform, realtime_departure, service_uid)
-
-    def __create_arr_adv_service(self, service):
-        location_detail = service["locationDetail"] # Details of the location
-        status = location_detail["displayAs"] # Status of service
-
-        # Check if booked arrival is in location detail
-        if "gbttBookedArrival" in location_detail:
-            gbtt_arrival = location_detail["gbttBookedArrival"]
-
-        else:
-            gbtt_arrival = "-"
-
-        # Check if platform is in location detail
-        if "platform" in location_detail:
-            platform = location_detail["platform"]
-
-        else:
-            platform = "-"
-
-        # Check if realtime arrival is in location detail
-        if "realtimeArrival" in location_detail:
-            realtime_arrival = location_detail["realtimeArrival"]
-
-        else:
-            realtime_arrival = "-"
-
-        # Check if service UID is in location detail
-        if "serviceUid" in service:
-            service_uid = service["serviceUid"]
-
-        else:
-            service_uid = "-"
-
-        # Check if the status isn't cancelled
-        if status != "CANCELLED_CALL":
-            # If the gbtt arrival and realtime arrival are equal, set realtime arrival to On Time
-            if gbtt_arrival == realtime_arrival:
-                realtime_arrival = "On time"
-
-            # If the realtime arrival isn't null, format and add Exp
-            elif realtime_arrival != "-":
-                realtime_arrival = "Exp " + format_time(realtime_arrival)
-            
-            # Format the gbtt arrival
-            gbtt_arrival = format_time(gbtt_arrival)
-
-        else:
-            # Set the realtime arrival to cancelled
-            realtime_arrival = "Cancelled"
-            # Format the gbtt arrival
-            gbtt_arrival = format_time(gbtt_arrival)
-
-        # Pop the terminus
-        terminus = (location_detail["destination"]).pop()["description"]
-        
-        # Pop the origin
-        origin = (location_detail["origin"]).pop()["description"]
-
-        # Return the service UID and Arrival Board 
-        return service_uid, ArrivalBoard(gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid)
-    
-    def __create_dep_sim_service(self, service):
-        pass
-
-    def __create_arr_sim_service(self, service):
-        pass

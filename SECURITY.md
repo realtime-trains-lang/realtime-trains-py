@@ -32,7 +32,7 @@ After confirming the issue, we will:
 
 ## Security Updates
 
-We will post updates about resolved security vulnerabilities in the **[releases](https://github.com/anonymous44401/realtime-trains-py/releases)** section of this repository.
+We will post updates about resolved security vulnerabilities in the **[releases](https://github.com/realtime-trains-lang/realtime-trains-py/releases)** section of this repository.
 
 ## Scope
 

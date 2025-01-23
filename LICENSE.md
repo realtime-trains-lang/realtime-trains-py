@@ -2,7 +2,7 @@ MIT License
 
 
 
-Copyright (c) [2025] [anonymous44401]
+Copyright (c) [2025] [realtime-trains-lang]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

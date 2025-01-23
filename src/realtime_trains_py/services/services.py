@@ -1,7 +1,8 @@
+# Import libraries
 import requests
 
 from datetime import datetime
-from tabulate import tabulate
+from tabulate import tabulate 
 
 # Import functions from utilities
 try:
@@ -12,7 +13,7 @@ except:
 
 # Simple version of the service
 class ServiceSimple():
-    def __init__(self, train_id, service_uid, operator, origin, destination, all_calling_points, start_time):
+    def __init__(self, train_id, service_uid, operator, origin, destination, all_calling_points, start_time) -> None:
         self.train_id = train_id
         self.service_uid = service_uid
         self.operator = operator
@@ -23,7 +24,7 @@ class ServiceSimple():
 
 # Simple version of calling points
 class CallingPointsSimple():
-    def __init__(self, stop_name, booked_arrival, realtime_arrival, platform, booked_departure, realtime_departure):
+    def __init__(self, stop_name, booked_arrival, realtime_arrival, platform, booked_departure, realtime_departure) -> None:
         self.stop_name = stop_name
         self.booked_arrival = booked_arrival
         self.realtime_arrival = realtime_arrival
@@ -33,7 +34,7 @@ class CallingPointsSimple():
 
 # Advanced version of the service
 class ServiceAdvanced():
-    def __init__(self, train_id, service_uid, operator, origin, destination, all_calling_points, start_time, end_time, power, train_class):
+    def __init__(self, train_id, service_uid, operator, origin, destination, all_calling_points, start_time, end_time, power, train_class) -> None:
         self.train_id = train_id
         self.service_uid = service_uid
         self.operator = operator
@@ -47,7 +48,7 @@ class ServiceAdvanced():
 
 # Advanced version of calling points
 class CallingPointsAdvanced():
-    def __init__(self, stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure):
+    def __init__(self, stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure) -> None:
         self.stop_name = stop_name
         self.booked_arrival = booked_arrival
         self.realtime_arrival = realtime_arrival
@@ -56,6 +57,8 @@ class CallingPointsAdvanced():
         self.booked_departure = booked_departure
         self.realtime_departure = realtime_departure
 
+
+# TODO: Add separate adv + sim classes 
 
 class ServiceDetails():
     def __init__(self, username: str = None, password: str = None, complexity: str = "s") -> None:
