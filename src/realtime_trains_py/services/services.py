@@ -1,7 +1,8 @@
+# Import libraries
 import requests
 
 from datetime import datetime
-from tabulate import tabulate
+from tabulate import tabulate 
 
 # Import functions from utilities
 try:

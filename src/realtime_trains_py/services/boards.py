@@ -1,3 +1,4 @@
+# Import libraries
 import requests
 
 from datetime import datetime
@@ -52,7 +53,7 @@ class Boards():
 
         # If a search filter was provided, append it to the search_query
         if search_filter is not None:
-            search_query += f"/to/{search_filter}"
+            search_query += f"/to/{search_filter.upper()}"
 
         # If a date was provided, append it to the search_query
         if date is not None:
@@ -270,7 +271,7 @@ class Boards():
 
         # If a search filter was provided, append it to the search_query
         if search_filter is not None:
-            search_query += f"/to/{search_filter}"
+            search_query += f"/to/{search_filter.upper()}"
 
         # If a date was provided, append it to the search_query
         if date is not None:
@@ -475,10 +476,6 @@ class Boards():
             raise Exception(f"Failed to connect to the RTT API server. Try again in a few minutes. Status code: {api_response.status_code}")
 
     def _get_stat_board_details(self, tiploc, search_filter, rows, time, date: str = None) -> list | str:
-        # Check if the complexity is valid TEMPORARY
-        if self.__complexity in ["a", "a.p", "s", "s.n", "s.p"]:
-            raise NotImplementedError
-
         # If a date is provided and it isn't valid, raise an error
         if date is not None and not validate_date(date):
             raise ValueError("Invalid date. The date provided did not meet requirements or fall into the valid date range.")
@@ -492,7 +489,7 @@ class Boards():
 
         # If a search filter was provided, append it to the search_query
         if search_filter is not None:
-            search_query += f"/to/{search_filter}"
+            search_query += f"/to/{search_filter.upper()}"
 
         # If a date was provided, append it to the search_query
         if date is not None:
@@ -539,10 +536,22 @@ class Boards():
             # print(board)
 
             match self.__complexity:
-                case "a", "a.p", "s", "s.p":
-                    raise NotImplementedError("This complexity doesn't support this method yet.")
+                case "s":
+                    return new_boards._output_formatted_board() 
                 
-                case "a.n", "s.n":
+                case "s.p":
+                    return new_boards._output_formatted_board() 
+                
+                case "s.n":
+                    return board
+                
+                case "a":
+                    return new_boards._output_formatted_board() 
+                    
+                case "a.p":
+                    return new_boards._output_formatted_board() 
+                    
+                case "a.n":
                     return board             
         
         elif dep_api_response.status_code == 404 or arr_api_response == 404:

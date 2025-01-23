@@ -7,7 +7,9 @@ except:
     from services.services import ServiceAdvanced, ServiceSimple, ServiceDetails
 
 
+# The RealtimeTrainsPy class
 class RealtimeTrainsPy():
+    # Initialise the class
     def __init__(self, complexity: str = "s", username: str = None, password: str = None) -> None: 
         """
         ## Initialize realtime_trains_py.
@@ -47,6 +49,7 @@ class RealtimeTrainsPy():
             complexity = complexity.lower()
         )
 
+    # Get the departures for {tiploc}, given {filter} on {date}, at around {time}. Provide {rows} rows
     def get_departures(self, tiploc: str, filter: str = None, date: str = None, rows: int = None, time: str = None) -> list | str:
         """
         ## Parameters
@@ -74,8 +77,9 @@ class RealtimeTrainsPy():
         get_departures(tiploc = "YORK", date = "2024/11/16", time = "1800")
         ```
         """
-        return self.__boards._get_dep_board_details(tiploc = tiploc.upper(), search_filter = filter.upper(), date = date, rows = rows, time = time)
+        return self.__boards._get_dep_board_details(tiploc = tiploc.upper(), search_filter = filter, date = date, rows = rows, time = time)
 
+    # Get the arrivals for {tiploc}, given {filter} on {date}, at around {time}. Provide {rows} rows
     def get_arrivals(self, tiploc: str, filter: str = None, date: str = None, rows: int = None, time: str = None) -> list | str:
         """
         ## Parameters
@@ -103,8 +107,9 @@ class RealtimeTrainsPy():
         get_arrivals(tiploc = "YORK", date = "2024/11/16", time = "1800")
         ```
         """
-        return self.__boards._get_arr_board_details(tiploc = tiploc.upper(), search_filter = filter.upper(), date = date, rows = rows, time = time)
+        return self.__boards._get_arr_board_details(tiploc = tiploc.upper(), search_filter = filter, date = date, rows = rows, time = time)
 
+    # Get the service info for {service_uid} on {date}
     def get_service(self, service_uid: str, date: str = None) -> ServiceAdvanced | ServiceSimple | str:
         """
         ## Parameters
@@ -127,6 +132,7 @@ class RealtimeTrainsPy():
         """
         return self.__services._get_service_details(service_uid = service_uid.upper(), date = date)
     
+    # Get the departures and arrivals for {tiploc}, given {filter} on {date}, at around {time}. Provide {rows} rows
     def get_station(self, tiploc: str, filter: str = None, date: str = None, rows: int = None, time: str = None) -> list | str:
         """
         ## This feature is only available for complex mode and advanced (normal) mode.
@@ -154,4 +160,4 @@ class RealtimeTrainsPy():
         get_station(tiploc = "YORK", date = "2024/11/16", time = "1800")
         ```
         """
-        return self.__boards._get_stat_board_details(tiploc = tiploc.upper(), search_filter = filter.upper(), date = date, rows = rows, time = time)
+        return self.__boards._get_stat_board_details(tiploc = tiploc.upper(), search_filter = filter, date = date, rows = rows, time = time)
