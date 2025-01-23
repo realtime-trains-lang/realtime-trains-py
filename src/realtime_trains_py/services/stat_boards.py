@@ -106,7 +106,7 @@ class NewStationBoard():
         self.combined_board = new_board
 
     # Create the new board
-    def _create_station_board(self) -> list:
+    def _create_station_board(self, rows) -> list:
         # Get the times out
         self.__extract_times()
 
@@ -114,8 +114,14 @@ class NewStationBoard():
         combined_board = merge_sort(self.combined_board)
         self.combined_board.clear()
 
+        count = 0 # Set count to 0
+
         for service in combined_board:
             self.combined_board.append(service[1])
+
+            count += 1
+            if count == rows:
+                break
 
         # Return the combined board
         return self.combined_board

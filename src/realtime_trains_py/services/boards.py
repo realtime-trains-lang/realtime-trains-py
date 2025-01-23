@@ -14,7 +14,7 @@ except:
 
 
 # Class for Departures Board
-class DepartureBoard():
+class DepartureBoardDetails():
     def __init__(self, gbtt_departure, terminus, platform, realtime_departure, service_uid) -> None:
         self.gbtt_departure = gbtt_departure
         self.terminus = terminus
@@ -23,7 +23,7 @@ class DepartureBoard():
         self.service_uid = service_uid
 
 # CLass for Arrivals Board
-class ArrivalBoard():
+class ArrivalBoardDetails():
     def __init__(self, gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid) -> None:
         self.gbtt_arrival = gbtt_arrival
         self.terminus = terminus
@@ -32,6 +32,7 @@ class ArrivalBoard():
         self.realtime_arrival = realtime_arrival
         self.service_uid = service_uid
 
+# Class for creating and returning departure, arrival and station boards
 class Boards():
     def __init__(self, username: str = None, password: str = None, complexity: str = "s") -> None:
         self.__username = username
@@ -236,7 +237,7 @@ class Boards():
                     terminus = (location_detail["destination"]).pop()["description"]
 
                     # Append new DepartureBoardSimple service details  
-                    departure_board.append(DepartureBoard(gbtt_departure, terminus, platform, realtime_departure, service_uid))
+                    departure_board.append(DepartureBoardDetails(gbtt_departure, terminus, platform, realtime_departure, service_uid))
 
                     # Add one to count
                     count += 1
@@ -454,7 +455,7 @@ class Boards():
                     origin = (location_detail["origin"]).pop()["description"]
 
                     # Append new ArrivalBoardSimple service details  
-                    arrivals_board.append(ArrivalBoard(gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid))
+                    arrivals_board.append(ArrivalBoardDetails(gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid))
                 
                     # Add one to count
                     count += 1
@@ -532,7 +533,7 @@ class Boards():
 
             # Create the station board
             new_boards = NewStationBoard(departures_data, arrivals_data)
-            board = new_boards._create_station_board()
+            board = new_boards._create_station_board(rows)
             # print(board)
 
             match self.__complexity:

@@ -1,10 +1,10 @@
 # Import classes from boards and services
 try:
     from services.boards import Boards
-    from services.services import ServiceAdvanced, ServiceSimple, ServiceDetails
+    from services.services import ServiceDetailsAdvanced, ServiceDetailsSimple, ServiceDetails
 except:
     from services.boards import Boards
-    from services.services import ServiceAdvanced, ServiceSimple, ServiceDetails
+    from services.services import ServiceDetailsAdvanced, ServiceDetailsSimple, ServiceDetails
 
 
 # The RealtimeTrainsPy class
@@ -110,7 +110,7 @@ class RealtimeTrainsPy():
         return self.__boards._get_arr_board_details(tiploc = tiploc.upper(), search_filter = filter, date = date, rows = rows, time = time)
 
     # Get the service info for {service_uid} on {date}
-    def get_service(self, service_uid: str, date: str = None) -> ServiceAdvanced | ServiceSimple | str:
+    def get_service(self, service_uid: str, date: str = None) -> ServiceDetailsAdvanced | ServiceDetailsSimple | str:
         """
         ## Parameters
 
