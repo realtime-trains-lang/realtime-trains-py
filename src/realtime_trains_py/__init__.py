@@ -30,12 +30,12 @@ class RealtimeTrainsPy():
         # Check if the username and password have been entered
         if username == None or password == None:
             # If at least one is missing, raise an error
-            raise ValueError("Missing authentication details. Both username and password must be provided. Not all required fields were provided.")
+            raise ValueError("Missing authentication details (401). Both username and password must be provided. Not all required fields were provided.")
 
         # Check if selected complexity is valid
         if complexity.lower() not in ["s", "s.p", "s.n", "a", "a.p", "a.n", "c"]:
             # If complexity is not in the valid range, raise an error
-            raise ValueError("Complexity not recognised. Select a valid type.")
+            raise ValueError("Complexity not recognised (400). Select a valid type.")
         
         self.__services = ServiceDetails(
             username = username,
