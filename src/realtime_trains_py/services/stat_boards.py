@@ -106,7 +106,7 @@ class NewStationBoard():
         self.combined_board = new_board
 
     # Create the new board
-    def _create_station_board(self) -> list:
+    def _create_station_board(self, rows: int=None) -> list:
         # Get the times out
         self.__extract_times()
 
@@ -114,8 +114,14 @@ class NewStationBoard():
         combined_board = merge_sort(self.combined_board)
         self.combined_board.clear()
 
+        count = 0 # Set count to 0
+
         for service in combined_board:
             self.combined_board.append(service[1])
+
+            count += 1
+            if count == rows:
+                break
 
         # Return the combined board
         return self.combined_board
@@ -201,8 +207,12 @@ class CreateBoardDetails():
         # Pop the terminus
         terminus = (location_detail["destination"]).pop()["description"]
 
+        # Pop the origin
+        origin = (location_detail["origin"]).pop()["description"]
+
+
         # Return the service UID and Departure Board 
-        return service_uid, StationBoardDetails("", gbtt_departure, terminus, "", platform, "", realtime_departure, service_uid)
+        return service_uid, StationBoardDetails("", gbtt_departure, terminus, origin, platform, "", realtime_departure, service_uid)
 
     # Create the arrivals service info
     def _create_arr_service(self, service) -> tuple:
@@ -253,6 +263,7 @@ class CreateBoardDetails():
             
         # Format the gbtt arrival
         gbtt_arrival = format_time(gbtt_arrival)
+
         # Pop the terminus
         terminus = (location_detail["destination"]).pop()["description"]
         

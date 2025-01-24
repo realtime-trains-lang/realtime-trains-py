@@ -5,7 +5,7 @@ Maintained and managed by members of [realtime-trains-lang](https://github.com/r
 ![PyPI](https://img.shields.io/pypi/v/realtime-trains-py) ![License](https://img.shields.io/github/license/realtime-trains-lang/realtime-trains-py) ![Issues](https://img.shields.io/github/issues/realtime-trains-lang/realtime-trains-py)
 
 
-### View our [latest release](https://github.com/realtime-trains-lang/realtime-trains-py/releases)
+### View our [release notes](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Release-Notes)
 
 [Documentation](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Home)
 

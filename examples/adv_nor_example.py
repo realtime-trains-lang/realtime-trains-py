@@ -2,8 +2,8 @@ from realtime_trains_py import RealtimeTrainsPy
 
 # Initialise RealtimeTrainsPy
 rtt = RealtimeTrainsPy(
-    username="YOUR_USERNAME",
-    password="YOUR_PASSWORD",
+    username="YOUR_USERNAME", # <----- CHANGE ME
+    password="YOUR_PASSWORD", # <----- CHANGE ME
     complexity="a.n"
 )
 

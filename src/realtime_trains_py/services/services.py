@@ -12,18 +12,18 @@ except:
 
 
 # Simple version of the service
-class ServiceSimple():
-    def __init__(self, train_id, service_uid, operator, origin, destination, all_calling_points, start_time) -> None:
+class ServiceDetailsSimple():
+    def __init__(self, train_id, service_uid, operator, origin, destination, calling_points, start_time) -> None:
         self.train_id = train_id
         self.service_uid = service_uid
         self.operator = operator
         self.origin = origin
         self.destination = destination
-        self.all_calling_points = all_calling_points
+        self.calling_points = calling_points
         self.start_time = start_time
 
 # Simple version of calling points
-class CallingPointsSimple():
+class CallingPointSimple():
     def __init__(self, stop_name, booked_arrival, realtime_arrival, platform, booked_departure, realtime_departure) -> None:
         self.stop_name = stop_name
         self.booked_arrival = booked_arrival
@@ -33,21 +33,21 @@ class CallingPointsSimple():
         self.realtime_departure = realtime_departure
 
 # Advanced version of the service
-class ServiceAdvanced():
-    def __init__(self, train_id, service_uid, operator, origin, destination, all_calling_points, start_time, end_time, power, train_class) -> None:
+class ServiceDetailsAdvanced():
+    def __init__(self, train_id, service_uid, operator, origin, destination, calling_points, start_time, end_time, power, train_class) -> None:
         self.train_id = train_id
         self.service_uid = service_uid
         self.operator = operator
         self.origin = origin
         self.destination = destination
-        self.all_calling_points = all_calling_points
+        self.calling_points = calling_points
         self.start_time = start_time
         self.end_time = end_time
         self.power = power
         self.train_class = train_class
 
 # Advanced version of calling points
-class CallingPointsAdvanced():
+class CallingPointAdvanced():
     def __init__(self, stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure) -> None:
         self.stop_name = stop_name
         self.booked_arrival = booked_arrival
@@ -60,21 +60,22 @@ class CallingPointsAdvanced():
 
 # TODO: Add separate adv + sim classes 
 
+# Class for getting and creating service details
 class ServiceDetails():
-    def __init__(self, username: str = None, password: str = None, complexity: str = "s") -> None:
+    def __init__(self, username: str=None, password: str=None, complexity: str="s") -> None:
         self.__username = username
         self.__password = password
         self.__complexity = complexity
 
     # Get the service details
-    def _get_service_details(self, service_uid: str, date: str | None) -> ServiceAdvanced | ServiceSimple | str:
+    def _get_service_details(self, service_uid: str, date: str=None) -> ServiceDetailsAdvanced | ServiceDetailsSimple | str:
         if not validate_uid(service_uid):
             # Check if the Service UID is valid. If not, raise an error 
-            raise ValueError("Invalid Service UID. The service UID provided did not meet requirements or fall into the valid range.")
+            raise ValueError("Invalid Service UID (400). The service UID provided did not meet requirements or fall into the valid range.")
         
         if date is not None and not validate_date(date):
             # If a date is provided and it isn't valid, raise an error
-            raise ValueError("Invalid date. The date provided did not meet requirements or fall into the valid date range.")
+            raise ValueError("Invalid date (400). The date provided did not meet requirements or fall into the valid date range.")
         
         elif date is None:
             # If a date isn't provided, set the date to be now
@@ -117,22 +118,22 @@ class ServiceDetails():
             
             except:
                 # If an item couldn't be found, raise an error
-                raise Exception("An error occurred while fetching service data. This is likely because the API response didn't provide the desired data.")
+                raise Exception("An error occurred while fetching service data (404). This is likely because the API response didn't provide the desired data.")
         
         elif api_response.status_code == 404:
             # Raise an error if either status codes are 404 (Not found)
-            raise Exception(f"The data you requested could not be found. Status codes: {api_response.status_code}")
+            raise Exception("The data you requested could not be found (404).")
         
         elif api_response.status_code == 401 or api_response.status_code == 403:
             # Raise an error if either status codes are 401 (Unauthorised) or 403 (Forbidden)
-            raise Exception(f"Access blocked: check your credentials. Status code: {api_response.status_code}")
+            raise Exception(f"Access blocked: check your credentials ({api_response.status_code}).")
 
         else:
             # Raise an error for any other status codes
-            raise Exception(f"Failed to connect to the RTT API server. Try again in a few minutes. Status code: {api_response.status_code}")
+            raise Exception(f"Failed to connect to the RTT API server ({api_response.status_code}). Try again in a few minutes.")
 
     # Advanced Normal
-    def __advanced_normal(self, service_data, service_uid) -> None | ServiceAdvanced | str:
+    def __advanced_normal(self, service_data, service_uid) -> None | ServiceDetailsAdvanced | str:
         service_type = service_data["serviceType"] # Type of service
 
         # Check for the type of service
@@ -161,7 +162,7 @@ class ServiceDetails():
                 end_time = format_time(data["publicTime"]) # Set the end time
 
             # Create a new calling points list
-            all_calling_points: list = []
+            calling_points: list = []
 
             for locations in service_data["locations"]:
                 stop_name = locations["description"] # Set the stop name
@@ -216,9 +217,9 @@ class ServiceDetails():
                     line = "-"
 
                 # Append new CallingPointsAdvanced to the all calling points list
-                all_calling_points.append(CallingPointsAdvanced(stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure))
+                calling_points.append(CallingPointAdvanced(stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure))
 
-            return ServiceAdvanced(train_id, service_uid, operator, origin, destination, all_calling_points, start_time, end_time, power_type, train_class)
+            return ServiceDetailsAdvanced(train_id, service_uid, operator, origin, destination, calling_points, start_time, end_time, power_type, train_class)
         
         elif service_type == "bus":
             train_id = service_data["trainIdentity"] # Get the train ID
@@ -233,7 +234,7 @@ class ServiceDetails():
                 end_time = format_time(data["publicTime"]) # Set the end time
 
             # Create a new calling points list
-            all_calling_points: list = []
+            calling_points: list = []
 
             for locations in service_data["locations"]:
                 stop_name = locations["description"] # Set the stop name
@@ -275,12 +276,12 @@ class ServiceDetails():
                 else:
                     booked_departure = ""
 
-                all_calling_points.append(CallingPointsAdvanced(stop_name, booked_arrival, realtime_arrival, "BUS", "-", booked_departure, realtime_departure))
+                calling_points.append(CallingPointAdvanced(stop_name, booked_arrival, realtime_arrival, "BUS", "-", booked_departure, realtime_departure))
 
-            return ServiceAdvanced(train_id, service_uid, operator, origin, destination, all_calling_points, start_time, end_time, "BUS", "BUS")
+            return ServiceDetailsAdvanced(train_id, service_uid, operator, origin, destination, calling_points, start_time, end_time, "BUS", "BUS")
         
         else:
-            raise Exception("The service type of this service wasn't recognised.")
+            raise Exception("The service type of this service wasn't recognised (501).")
         
     # Advanced Prettier
     def __advanced_prettier(self, service_data, service_uid) -> None | str:
@@ -311,7 +312,7 @@ class ServiceDetails():
                 destination = data["description"] # Set the destination
 
             # Create a new calling points list
-            all_calling_points: list = []
+            calling_points: list = []
 
             for locations in service_data["locations"]:
                 stop_name = locations["description"] # Set the stop name
@@ -366,14 +367,14 @@ class ServiceDetails():
                     line = "-"
 
                 # Append the details of the calling point to the all calling points list
-                all_calling_points.append([stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure])
+                calling_points.append([stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure])
 
             # Print the service details 
             print(f"{train_id} ({service_uid}) \n  {start_time} {origin} to {destination} \n  Pathed as {power_type}: train class {train_class} \n  Operated by {operator} \n\n  Generated at {datetime.now().strftime("%H:%M:%S on %d/%m/%y.")}")
 
             # Print the table for the service
             print(tabulate(
-                all_calling_points, 
+                calling_points, 
                 tablefmt = "rounded_grid", 
                 headers = ["Stop Name", 
                             "Booked Arrival", 
@@ -399,7 +400,7 @@ class ServiceDetails():
                 destination = data["description"] # Set the destination
 
             # Create a new calling points list
-            all_calling_points: list = []
+            calling_points: list = []
 
             for locations in service_data["locations"]:
                 stop_name = locations["description"] # Set the stop name
@@ -442,14 +443,14 @@ class ServiceDetails():
                     booked_departure = ""
 
                 # Append the details of the calling point to the all calling points list
-                all_calling_points.append([stop_name, booked_arrival, realtime_arrival, "BUS", "-", booked_departure, realtime_departure])
+                calling_points.append([stop_name, booked_arrival, realtime_arrival, "BUS", "-", booked_departure, realtime_departure])
 
             # Print the service details 
             print(f"{train_id} ({service_uid}) \n  {start_time} {origin} to {destination} \n  Pathed as BUS: train class BUS \n  Operated by {operator} \n\n  Generated at {datetime.now().strftime("%H:%M:%S on %d/%m/%y.")}")
 
             # Print the table for the service
             print(tabulate(
-                all_calling_points, 
+                calling_points, 
                 tablefmt = "rounded_grid", 
                 headers = ["Stop Name", 
                             "Booked Arrival", 
@@ -464,10 +465,10 @@ class ServiceDetails():
             return "Service data returned successfully"
 
         else:
-            raise Exception("The service type of this service wasn't recognised.")
+            raise Exception("The service type of this service wasn't recognised (501).")
         
     # Simple Normal
-    def __simple_normal(self, service_data, service_uid) -> ServiceSimple:
+    def __simple_normal(self, service_data, service_uid) -> ServiceDetailsSimple:
         train_id = service_data["trainIdentity"] # Get the train ID
         operator = service_data["atocName"] # Get the operator
 
@@ -479,7 +480,7 @@ class ServiceDetails():
         destination = (service_data["destination"]).pop()["description"]
 
         # Create a new calling points list
-        all_calling_points: list = []
+        calling_points: list = []
 
         for locations in service_data["locations"]:
             stop_name = locations["description"] # Set the stop name
@@ -533,9 +534,9 @@ class ServiceDetails():
                 platform = "-"
 
             # Append new CallingPointsAdvanced to the all calling points list
-            all_calling_points.append(CallingPointsSimple(stop_name, booked_arrival, realtime_arrival, platform, booked_departure, realtime_departure))
+            calling_points.append(CallingPointSimple(stop_name, booked_arrival, realtime_arrival, platform, booked_departure, realtime_departure))
 
-        return ServiceSimple(train_id, service_uid, operator, origin, destination, all_calling_points, start_time)
+        return ServiceDetailsSimple(train_id, service_uid, operator, origin, destination, calling_points, start_time)
 
     # Simple Prettier
     def __simple_prettier(self, service_data, service_uid) -> str:
@@ -550,7 +551,7 @@ class ServiceDetails():
         destination = (service_data["destination"]).pop()["description"]
 
         # Create a new calling points list
-        all_calling_points: list = []
+        calling_points: list = []
 
         for locations in service_data["locations"]:
             stop_name = locations["description"] # Set the stop name
@@ -603,14 +604,14 @@ class ServiceDetails():
             else:
                 platform = "-"
 
-            all_calling_points.append([stop_name, booked_arrival, realtime_arrival, platform, booked_departure, realtime_departure])
+            calling_points.append([stop_name, booked_arrival, realtime_arrival, platform, booked_departure, realtime_departure])
 
         # Print the service details 
         print(f"{train_id} ({service_uid}) {start_time} {origin} to {destination}. \n Operated by {operator}. \n\n Generated at {datetime.now().strftime("%H:%M:%S on %d/%m/%y.")}")
         
         # Print the table for the service
         print(tabulate(
-            all_calling_points, 
+            calling_points, 
             tablefmt = "rounded_grid", 
             headers = ["Stop Name", 
                         "Booked Arrival", 
