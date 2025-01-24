@@ -207,8 +207,12 @@ class CreateBoardDetails():
         # Pop the terminus
         terminus = (location_detail["destination"]).pop()["description"]
 
+        # Pop the origin
+        origin = (location_detail["origin"]).pop()["description"]
+
+
         # Return the service UID and Departure Board 
-        return service_uid, StationBoardDetails("", gbtt_departure, terminus, "", platform, "", realtime_departure, service_uid)
+        return service_uid, StationBoardDetails("", gbtt_departure, terminus, origin, platform, "", realtime_departure, service_uid)
 
     # Create the arrivals service info
     def _create_arr_service(self, service) -> tuple:
@@ -259,6 +263,7 @@ class CreateBoardDetails():
             
         # Format the gbtt arrival
         gbtt_arrival = format_time(gbtt_arrival)
+
         # Pop the terminus
         terminus = (location_detail["destination"]).pop()["description"]
         
