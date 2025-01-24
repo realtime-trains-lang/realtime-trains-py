@@ -22,6 +22,7 @@ class ServiceDetailsSimple():
         self.calling_points = calling_points
         self.start_time = start_time
 
+
 # Simple version of calling points
 class CallingPointSimple():
     def __init__(self, stop_name, booked_arrival, realtime_arrival, platform, booked_departure, realtime_departure) -> None:
@@ -31,6 +32,7 @@ class CallingPointSimple():
         self.platform = platform
         self.booked_departure = booked_departure
         self.realtime_departure = realtime_departure
+
 
 # Advanced version of the service
 class ServiceDetailsAdvanced():
@@ -46,6 +48,7 @@ class ServiceDetailsAdvanced():
         self.power = power
         self.train_class = train_class
 
+
 # Advanced version of calling points
 class CallingPointAdvanced():
     def __init__(self, stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure) -> None:
@@ -57,8 +60,6 @@ class CallingPointAdvanced():
         self.booked_departure = booked_departure
         self.realtime_departure = realtime_departure
 
-
-# TODO: Add separate adv + sim classes 
 
 # Class for getting and creating service details
 class ServiceDetails():
@@ -102,23 +103,23 @@ class ServiceDetails():
             try:
                 if self.__complexity == "a.p" or self.__complexity == "a":
                     # If complexity is advanced (prettier), run advanced_prettier for data
-                    return self.__advanced_prettier(service_data, service_uid)
+                    return AdvancedServiceData()._advanced_prettier(service_data, service_uid)
 
                 elif self.__complexity == "a.n":
                     # If complexity is advanced (normal), run advanced_normal for data
-                    return self.__advanced_normal(service_data, service_uid)
+                    return AdvancedServiceData()._advanced_normal(service_data, service_uid)
                 
                 elif self.__complexity == "s.p" or self.__complexity == "s":
                     # If complexity is simple (prettier), run simple_prettier for data
-                    return self.__simple_prettier(service_data, service_uid)
+                    return SimpleServiceData()._simple_prettier(service_data, service_uid)
 
                 elif self.__complexity == "s.n":
                     # If complexity is simple (normal), run simple_normal for data
-                    return self.__simple_normal(service_data, service_uid)
+                    return SimpleServiceData()._simple_normal(service_data, service_uid)
             
             except:
                 # If an item couldn't be found, raise an error
-                raise Exception("An error occurred while fetching service data (404). This is likely because the API response didn't provide the desired data.")
+                raise Exception("An error occurred while fetching service data (500). This is likely because the API response didn't provide the desired data.")
         
         elif api_response.status_code == 404:
             # Raise an error if either status codes are 404 (Not found)
@@ -132,8 +133,11 @@ class ServiceDetails():
             # Raise an error for any other status codes
             raise Exception(f"Failed to connect to the RTT API server ({api_response.status_code}). Try again in a few minutes.")
 
+
+# Class for getting advanced service data
+class AdvancedServiceData():
     # Advanced Normal
-    def __advanced_normal(self, service_data, service_uid) -> None | ServiceDetailsAdvanced | str:
+    def _advanced_normal(self, service_data, service_uid) -> None | ServiceDetailsAdvanced | str:
         service_type = service_data["serviceType"] # Type of service
 
         # Check for the type of service
@@ -284,7 +288,7 @@ class ServiceDetails():
             raise Exception("The service type of this service wasn't recognised (501).")
         
     # Advanced Prettier
-    def __advanced_prettier(self, service_data, service_uid) -> None | str:
+    def _advanced_prettier(self, service_data, service_uid) -> None | str:
         service_type = service_data["serviceType"] # Type of service
 
         # Check for the type of service
@@ -386,7 +390,7 @@ class ServiceDetails():
                 )
             )
 
-            return "Service data returned successfully"
+            return "Service data returned successfully (200)."
 
         elif service_type == "bus":
             train_id = service_data["trainIdentity"] # Get the train ID
@@ -462,13 +466,16 @@ class ServiceDetails():
                 )
             )
 
-            return "Service data returned successfully"
+            return "Service data returned successfully (200)."
 
         else:
             raise Exception("The service type of this service wasn't recognised (501).")
-        
+
+
+# Class for getting simple service data
+class SimpleServiceData():
     # Simple Normal
-    def __simple_normal(self, service_data, service_uid) -> ServiceDetailsSimple:
+    def _simple_normal(self, service_data, service_uid) -> ServiceDetailsSimple:
         train_id = service_data["trainIdentity"] # Get the train ID
         operator = service_data["atocName"] # Get the operator
 
@@ -539,7 +546,7 @@ class ServiceDetails():
         return ServiceDetailsSimple(train_id, service_uid, operator, origin, destination, calling_points, start_time)
 
     # Simple Prettier
-    def __simple_prettier(self, service_data, service_uid) -> str:
+    def _simple_prettier(self, service_data, service_uid) -> str:
         train_id = service_data["trainIdentity"] # Get the train ID
         operator = service_data["atocName"] # Get the operator
 
@@ -622,4 +629,4 @@ class ServiceDetails():
             )
         )
 
-        return "Service data returned successfully"
+        return "Service data returned successfully (200)."

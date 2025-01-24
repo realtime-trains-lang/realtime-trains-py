@@ -4,6 +4,7 @@ import os, os.path
 import re
 import requests
 
+
 # Create new file
 def create_file(name: str, contents) -> None:
     # Check if folder exists

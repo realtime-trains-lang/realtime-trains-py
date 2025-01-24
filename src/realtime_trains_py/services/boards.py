@@ -528,7 +528,7 @@ class Boards():
                 create_file(dep_file_name, departures_data)
                 create_file(arr_file_name, arrivals_data)
 
-                return f"Departures and arrivals saved to files: \n  {dep_file_name} \n  {arr_file_name}"
+                return f"Departures and arrivals saved to files: \n  {dep_file_name} \n  {arr_file_name}. \n (200)."
 
             # Create the station board
             new_boards = NewStationBoard(departures_data, arrivals_data)

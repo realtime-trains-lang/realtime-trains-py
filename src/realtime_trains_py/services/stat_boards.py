@@ -10,6 +10,7 @@ except:
     from services.merge_sort import merge_sort
     from services.utilities import format_time
 
+
 # Class for Station Board Details
 class StationBoardDetails():
     def __init__(self, gbtt_arrival, gbtt_departure, terminus, origin, platform, realtime_arrival, realtime_departure, service_uid) -> None:
@@ -22,15 +23,16 @@ class StationBoardDetails():
         self.realtime_departure = realtime_departure
         self.service_uid = service_uid
 
+
 # Class for creating station boards
 class NewStationBoard():
     # Initialise the board
     def __init__(self, departure_data, arrival_data) -> None:
-        requested_location_d = departure_data["location"]["name"] # Requested location (d)
+        requested_location = departure_data["location"]["name"] # Requested location
 
         # Compare the locations and check they're equal
-        if requested_location_d == arrival_data["location"]["name"]:
-            self.requested_location = requested_location_d
+        if requested_location == arrival_data["location"]["name"]:
+            self.requested_location = requested_location
 
         else:
             raise Exception("An unexpected error occurred handling your request (500). Try again in a few minutes.")
@@ -40,34 +42,28 @@ class NewStationBoard():
         departure_board = []
         self.combined_board = []
 
-        # Create a new Station Board Creator
-        board_creator = CreateBoardDetails()
         # Iterate over each service and append it to the departure board
         for dep_service in departure_data["services"]:
-            departure_board.append(board_creator._create_dep_service(dep_service))
+            departure_board.append(CreateBoardDetails()._create_dep_service(dep_service))
 
         # Iterate over each service and append it to the arrival board
         for arr_service in arrival_data["services"]:
-            arrival_board.append(board_creator._create_arr_service(arr_service))
+            arrival_board.append(CreateBoardDetails()._create_arr_service(arr_service))
 
-        # Iterate over each att in departures
+        # Iterate over each att in departure board
         for departures in departure_board:
-            # Iterate over each att in arrivals
+            # Iterate over each att in arrival board
             for arrivals in arrival_board:
                 # If the values at position 0 are equal, append it to the combined board
                 if departures[0] == arrivals[0]:
+                    # Overwrite the departure times
                     arrivals[1].realtime_departure = departures[1].realtime_departure
                     arrivals[1].gbtt_departure = departures[1].gbtt_departure
-                    self.combined_board.append(arrivals[1])
-                    # print(arrivals[1].gbtt_arrival,
-                    #       arrivals[1].gbtt_departure,
-                    #       arrivals[1].terminus,
-                    #       arrivals[1].origin,
-                    #       arrivals[1].platform,
-                    #       arrivals[1].realtime_arrival,
-                    #       arrivals[1].realtime_departure,
-                    #       arrivals[1].service_uid)
 
+                    # Append the arrivals to the combined board
+                    self.combined_board.append(arrivals[1])
+
+                    # Remove the old values from the arrival and departure boards
                     arrival_board.remove(arrivals)
                     departure_board.remove(departures)
 
@@ -77,7 +73,6 @@ class NewStationBoard():
         for arrival in arrival_board:
             self.combined_board.append(arrival[1])
 
-        # Append the remaining values to the combined board
         for departure in departure_board:
             self.combined_board.append(departure[1]) 
 
@@ -149,7 +144,8 @@ class NewStationBoard():
         # Print the table
         print(tabulate(out_board, tablefmt = "rounded_grid", headers = ["Booked Arrival", "Booked Departure", "Destination", "Origin", "Platform", "Actual Arrival", "Actual Departure", "Service UID"]))
 
-        return "Departure board printed successfully" 
+        return "Station board printed successfully 200)." 
+
 
 # Class for creating the details for the boards
 class CreateBoardDetails():
