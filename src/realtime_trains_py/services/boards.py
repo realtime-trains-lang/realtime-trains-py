@@ -6,31 +6,15 @@ from tabulate import tabulate
 
 # Import functions from utilities
 try:
+    from realtime_trains_py.services.details import DepartureBoardDetails, ArrivalBoardDetails
     from realtime_trains_py.services.stat_boards import NewStationBoard
     from realtime_trains_py.services.utilities import create_file, format_time, validate_date, validate_time
 except:
+    from services.details import DepartureBoardDetails, ArrivalBoardDetails
     from services.stat_boards import NewStationBoard
     from services.utilities import create_file, format_time, validate_date, validate_time
 
 
-# Class for Departures Board
-class DepartureBoardDetails():
-    def __init__(self, gbtt_departure, terminus, platform, realtime_departure, service_uid) -> None:
-        self.gbtt_departure = gbtt_departure
-        self.terminus = terminus
-        self.platform = platform
-        self.realtime_departure = realtime_departure
-        self.service_uid = service_uid
-
-# CLass for Arrivals Board
-class ArrivalBoardDetails():
-    def __init__(self, gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid) -> None:
-        self.gbtt_arrival = gbtt_arrival
-        self.terminus = terminus
-        self.origin = origin
-        self.platform = platform
-        self.realtime_arrival = realtime_arrival
-        self.service_uid = service_uid
 
 # Class for creating and returning departure, arrival and station boards
 class Boards():
@@ -55,13 +39,17 @@ class Boards():
         if search_filter is not None:
             search_query += f"/to/{search_filter.upper()}"
 
-        # If a date was provided, append it to the search_query
-        if date is not None:
+        if time is not None and date is None:
+            # If a time was provided and a date isn't provided, append a date and the current time to the search_query
+            search_query += f"/{(datetime.now()).strftime("%Y/%m/%d")}/{time}"
+            
+        elif date is not None:
+            # If a date was provided, append it to the search_query
             search_query +=  f"/{date}"
 
-        # If a time was provided, append it to the search_query
-        if time is not None:
-            search_query += f"/{time}"
+            if time is not None:
+                # If a time was provided, append it to the search_query
+                search_query += f"/{time}"
 
         # Get the api response using the auth details provided
         api_response =  requests.get(search_query, auth=(self.__username, self.__password))
@@ -93,7 +81,7 @@ class Boards():
                 return f"Arrivals saved to file: \n  {file_name}"
             
             # Advanced/Simple (Prettier)
-            elif self.__complexity == "a.p" or self.__complexity == "a" or self.__complexity == "s.p" or self.__complexity == "s":
+            elif self.__complexity in ["a", "a.p", "s", "s.p"]:
                 # Create a new departure board list
                 departure_board: list = []
                 
@@ -273,13 +261,17 @@ class Boards():
         if search_filter is not None:
             search_query += f"/to/{search_filter.upper()}"
 
-        # If a date was provided, append it to the search_query
-        if date is not None:
+        if time is not None and date is None:
+            # If a time was provided and a date isn't provided, append a date and the current time to the search_query
+            search_query += f"/{(datetime.now()).strftime("%Y/%m/%d")}/{time}"
+            
+        elif date is not None:
+            # If a date was provided, append it to the search_query
             search_query +=  f"/{date}"
 
-        # If a time was provided, append it to the search_query
-        if time is not None:
-            search_query += f"/{time}"
+            if time is not None:
+                # If a time was provided, append it to the search_query
+                search_query += f"/{time}"
 
         # Get the api response using the auth details provided
         api_response =  requests.get(f"{search_query}/arrivals", auth = (self.__username, self.__password))
@@ -309,7 +301,7 @@ class Boards():
                 return f"Arrivals saved to file: \n  {file_name}"
  
             # Advanced/Simple (Prettier)
-            elif self.__complexity == "a.p" or self.__complexity == "a" or self.__complexity == "s.p" or self.__complexity == "s":
+            elif self.__complexity in ["a", "a.p", "s", "s.p"]:
                 # Create a new arrivals board list
                 arrivals_board: list = []
                 
@@ -491,13 +483,17 @@ class Boards():
         if search_filter is not None:
             search_query += f"/to/{search_filter.upper()}"
 
-        # If a date was provided, append it to the search_query
-        if date is not None:
-            search_query += f"/{date}"
+        if time is not None and date is None:
+            # If a time was provided and a date isn't provided, append a date and the current time to the search_query
+            search_query += f"/{(datetime.now()).strftime("%Y/%m/%d")}/{time}"
+            
+        elif date is not None:
+            # If a date was provided, append it to the search_query
+            search_query +=  f"/{date}"
 
-        # If a time was provided, append it to the search_query
-        if time is not None:
-            search_query += f"/{time}"
+            if time is not None:
+                # If a time was provided, append it to the search_query
+                search_query += f"/{time}"
 
         # Get the api response using the auth details provided
         dep_api_response =  requests.get(search_query, auth = (self.__username, self.__password))
@@ -528,14 +524,14 @@ class Boards():
                 create_file(dep_file_name, departures_data)
                 create_file(arr_file_name, arrivals_data)
 
-                return f"Departures and arrivals saved to files: \n  {dep_file_name} \n  {arr_file_name}"
+                return f"Departures and arrivals saved to files: \n  {dep_file_name} \n  {arr_file_name}. \n (200)."
 
             # Create the station board
             new_boards = NewStationBoard(departures_data, arrivals_data)
             board = new_boards._create_station_board(rows)
-            # print(board)
 
             match self.__complexity:
+                # Select which to do run based on complexity
                 case "s":
                     return new_boards._output_formatted_board() 
                 
