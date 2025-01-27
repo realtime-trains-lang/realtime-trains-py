@@ -4,24 +4,13 @@ from tabulate import tabulate
 
 # Import functions from utilities
 try:
+    from realtime_trains_py.services.details import StationBoardDetails
     from realtime_trains_py.services.merge_sort import merge_sort
     from realtime_trains_py.services.utilities import format_time
 except:
     from services.merge_sort import merge_sort
     from services.utilities import format_time
 
-
-# Class for Station Board Details
-class StationBoardDetails():
-    def __init__(self, gbtt_arrival, gbtt_departure, terminus, origin, platform, realtime_arrival, realtime_departure, service_uid) -> None:
-        self.gbtt_arrival = gbtt_arrival
-        self.gbtt_departure = gbtt_departure
-        self.terminus = terminus
-        self.origin = origin
-        self.platform = platform
-        self.realtime_arrival = realtime_arrival
-        self.realtime_departure = realtime_departure
-        self.service_uid = service_uid
 
 
 # Class for creating station boards
@@ -32,7 +21,7 @@ class NewStationBoard():
 
         # Compare the locations and check they're equal
         if requested_location == arrival_data["location"]["name"]:
-            self.requested_location = requested_location
+            self._requested_location = requested_location
 
         else:
             raise Exception("An unexpected error occurred handling your request (500). Try again in a few minutes.")
@@ -40,7 +29,7 @@ class NewStationBoard():
         # Create new empty boards
         arrival_board = []
         departure_board = []
-        self.combined_board = []
+        self._combined_board = []
 
         # Iterate over each service and append it to the departure board
         for dep_service in departure_data["services"]:
@@ -61,7 +50,7 @@ class NewStationBoard():
                     arrivals[1].gbtt_departure = departures[1].gbtt_departure
 
                     # Append the arrivals to the combined board
-                    self.combined_board.append(arrivals[1])
+                    self._combined_board.append(arrivals[1])
 
                     # Remove the old values from the arrival and departure boards
                     arrival_board.remove(arrivals)
@@ -71,10 +60,10 @@ class NewStationBoard():
         
         # Append the remaining values to the combined board
         for arrival in arrival_board:
-            self.combined_board.append(arrival[1])
+            self._combined_board.append(arrival[1])
 
         for departure in departure_board:
-            self.combined_board.append(departure[1]) 
+            self._combined_board.append(departure[1]) 
 
         # Clear the old boards
         arrival_board.clear()
@@ -86,7 +75,7 @@ class NewStationBoard():
         new_board = []
 
         # Iterate over each item in the board
-        for item in self.combined_board:  
+        for item in self._combined_board:  
             # If a gbtt_departure       
             # print(item, item.gbtt_departure, item.gbtt_arrival)    
             if item.gbtt_departure == "":
@@ -98,7 +87,7 @@ class NewStationBoard():
                 new_board.append([item.gbtt_departure, item])
 
         # Overwrite the combined board
-        self.combined_board = new_board
+        self._combined_board = new_board
 
     # Create the new board
     def _create_station_board(self, rows: int=None) -> list:
@@ -106,20 +95,20 @@ class NewStationBoard():
         self.__extract_times()
 
         # Complete a merge sort on the combined board and return it
-        combined_board = merge_sort(self.combined_board)
-        self.combined_board.clear()
+        combined_board = merge_sort(self._combined_board)
+        self._combined_board.clear()
 
         count = 0 # Set count to 0
 
         for service in combined_board:
-            self.combined_board.append(service[1])
+            self._combined_board.append(service[1])
 
             count += 1
             if count == rows:
                 break
 
         # Return the combined board
-        return self.combined_board
+        return self._combined_board
     
     # Output the board in a formatted way
     def _output_formatted_board(self) -> str:
@@ -127,7 +116,7 @@ class NewStationBoard():
         out_board = []
 
         # For each service in the board, add its content to the output board
-        for service in self.combined_board:
+        for service in self._combined_board:
             out_board.append([
                 service.gbtt_arrival, 
                 service.gbtt_departure, 
@@ -140,7 +129,7 @@ class NewStationBoard():
             ])  
 
         # Print the station info
-        print(f"Station board for {self.requested_location}. Generated at {datetime.now().strftime("%H:%M:%S on %d/%m/%y")}.")
+        print(f"Station board for {self._requested_location}. Generated at {datetime.now().strftime("%H:%M:%S on %d/%m/%y")}.")
         # Print the table
         print(tabulate(out_board, tablefmt = "rounded_grid", headers = ["Booked Arrival", "Booked Departure", "Destination", "Origin", "Platform", "Actual Arrival", "Actual Departure", "Service UID"]))
 

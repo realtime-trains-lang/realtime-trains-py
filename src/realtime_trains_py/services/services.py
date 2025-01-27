@@ -6,59 +6,12 @@ from tabulate import tabulate
 
 # Import functions from utilities
 try:
+    from realtime_trains_py.services.details import ServiceDetailsSimple, ServiceDetailsAdvanced, CallingPointSimple, CallingPointAdvanced
     from realtime_trains_py.services.utilities import create_file, format_time, validate_date, validate_uid
 except:
+    from services.details import ServiceDetailsSimple, ServiceDetailsAdvanced, CallingPointSimple, CallingPointAdvanced
     from services.utilities import create_file, format_time, validate_date, validate_uid
 
-
-# Simple version of the service
-class ServiceDetailsSimple():
-    def __init__(self, train_id, service_uid, operator, origin, destination, calling_points, start_time) -> None:
-        self.train_id = train_id
-        self.service_uid = service_uid
-        self.operator = operator
-        self.origin = origin
-        self.destination = destination
-        self.calling_points = calling_points
-        self.start_time = start_time
-
-
-# Simple version of calling points
-class CallingPointSimple():
-    def __init__(self, stop_name, booked_arrival, realtime_arrival, platform, booked_departure, realtime_departure) -> None:
-        self.stop_name = stop_name
-        self.booked_arrival = booked_arrival
-        self.realtime_arrival = realtime_arrival
-        self.platform = platform
-        self.booked_departure = booked_departure
-        self.realtime_departure = realtime_departure
-
-
-# Advanced version of the service
-class ServiceDetailsAdvanced():
-    def __init__(self, train_id, service_uid, operator, origin, destination, calling_points, start_time, end_time, power, train_class) -> None:
-        self.train_id = train_id
-        self.service_uid = service_uid
-        self.operator = operator
-        self.origin = origin
-        self.destination = destination
-        self.calling_points = calling_points
-        self.start_time = start_time
-        self.end_time = end_time
-        self.power = power
-        self.train_class = train_class
-
-
-# Advanced version of calling points
-class CallingPointAdvanced():
-    def __init__(self, stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure) -> None:
-        self.stop_name = stop_name
-        self.booked_arrival = booked_arrival
-        self.realtime_arrival = realtime_arrival
-        self.platform = platform
-        self.line = line
-        self.booked_departure = booked_departure
-        self.realtime_departure = realtime_departure
 
 
 # Class for getting and creating service details
