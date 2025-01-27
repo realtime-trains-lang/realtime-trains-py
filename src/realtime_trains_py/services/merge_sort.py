@@ -16,14 +16,14 @@ def merge_sort(arr) -> list:
 
 # Merge the two lists in order
 def merge(left, right) -> list:
-    # print(left, right)
     # New result list
     result = []
     # Set counts to 0
-    count_l = count_r = 0
+    count_l = 0
+    count_r = 0
 
+    # While both counts are less than the length of the lists
     while count_l < len(left) and count_r < len(right):
-        # print(left[count_l][0], right[count_r][0])
         if left[count_l][0] < right[count_r][0]:
             # If left item is less than right item, append left to the result
             result.append(left[count_l])

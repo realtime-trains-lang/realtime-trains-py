@@ -144,7 +144,7 @@ class NewStationBoard():
         # Print the table
         print(tabulate(out_board, tablefmt = "rounded_grid", headers = ["Booked Arrival", "Booked Departure", "Destination", "Origin", "Platform", "Actual Arrival", "Actual Departure", "Service UID"]))
 
-        return "Station board printed successfully 200)." 
+        return "Station board printed successfully (200)." 
 
 
 # Class for creating the details for the boards

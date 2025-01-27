@@ -22,7 +22,8 @@ class DepartureBoardDetails():
         self.realtime_departure = realtime_departure
         self.service_uid = service_uid
 
-# CLass for Arrivals Board
+
+# Class for Arrivals Board
 class ArrivalBoardDetails():
     def __init__(self, gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid) -> None:
         self.gbtt_arrival = gbtt_arrival
@@ -31,6 +32,7 @@ class ArrivalBoardDetails():
         self.platform = platform
         self.realtime_arrival = realtime_arrival
         self.service_uid = service_uid
+
 
 # Class for creating and returning departure, arrival and station boards
 class Boards():
