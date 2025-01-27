@@ -8,6 +8,7 @@ try:
     from realtime_trains_py.services.merge_sort import merge_sort
     from realtime_trains_py.services.utilities import format_time
 except:
+    from services.details import StationBoardDetails
     from services.merge_sort import merge_sort
     from services.utilities import format_time
 
