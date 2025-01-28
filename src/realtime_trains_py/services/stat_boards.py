@@ -25,7 +25,7 @@ class NewStationBoard():
             self._requested_location = requested_location
 
         else:
-            raise Exception("An unexpected error occurred handling your request (500). Try again in a few minutes.")
+            raise Exception("500: An unexpected error occurred handling your request. Try again in a few minutes.")
 
         # Create new empty boards
         arrival_board = []

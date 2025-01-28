@@ -26,11 +26,11 @@ class Boards():
     def _get_dep_board_details(self, tiploc: str, search_filter: str=None, rows: int=None, time: str=None, date: str=None) -> list | str: 
         # If a date is provided and it isn't valid, raise an error
         if date is not None and not validate_date(date):
-            raise ValueError("Invalid date (400). The date provided did not meet requirements or fall into the valid date range.")
+            raise ValueError("400: Invalid date. The date provided did not meet requirements or fall into the valid date range.")
 
         # If a time is provided and it isn't valid, raise an error
         if time is not None and not validate_time(time):
-            raise ValueError("Invalid time (400). The time provided did not meet requirements or fall into the valid time range.")
+            raise ValueError("400: Invalid time. The time provided did not meet requirements or fall into the valid time range.")
 
         # Add the tiploc to the search_query
         search_query = f"https://api.rtt.io/api/v1/json/search/{tiploc}"
@@ -60,7 +60,7 @@ class Boards():
 
             # If the data is None, raise an error
             if service_data["services"] == None:
-                raise ValueError("No data found (404).")
+                raise ValueError("404: No data found.")
 
             # Select run based on complexity
             # Complex
@@ -235,24 +235,24 @@ class Boards():
 
         elif api_response.status_code == 404:
             # Raise an error if either status codes are 404 (Not found)
-            raise Exception("The data you requested could not be found (404).")
+            raise Exception("404: The data you requested could not be found.")
 
         elif api_response.status_code == 401 or api_response.status_code == 403:
             # Raise an error if either status codes are 401 (Unauthorised) or 403 (Forbidden)
-            raise Exception(f"Access blocked: check your credentials ({api_response.status_code}).")
+            raise Exception(f"{api_response.status_code}: Access blocked. Check your credentials.")
 
         else:
             # Raise an error for any other status codes
-            raise Exception(f"Failed to connect to the RTT API server ({api_response.status_code}). Try again in a few minutes.")
+            raise Exception(f"{api_response.status_code}: Failed to connect to the RTT API server. Try again in a few minutes.")
 
     def _get_arr_board_details(self, tiploc: str, search_filter: str=None, rows: int=None, time: str=None, date: str=None) -> list | str:       
         # If a date is provided and it isn't valid, raise an error
         if date is not None and not validate_date(date):
-            raise ValueError("Invalid date (400). The date provided did not meet requirements or fall into the valid date range.")
+            raise ValueError("400: Invalid date. The date provided did not meet requirements or fall into the valid date range.")
 
         # If a time is provided and it isn't valid, raise an error
         if time is not None and not validate_time(time):
-            raise ValueError("Invalid time (400). The time provided did not meet requirements or fall into the valid time range.")
+            raise ValueError("400: Invalid time. The time provided did not meet requirements or fall into the valid time range.")
 
         # Add the tiploc to the search_query
         search_query = f"https://api.rtt.io/api/v1/json/search/{tiploc}"
@@ -282,7 +282,7 @@ class Boards():
 
             # If the data is None, raise an error
             if service_data["services"] == None:
-                raise ValueError("No data found (404).")
+                raise ValueError("404: No data found.")
             
             if self.__complexity == "c":
                 if date is None:
@@ -457,24 +457,24 @@ class Boards():
                     
         elif api_response.status_code == 404:
             # Raise an error if either status codes are 404 (Not found)
-            raise Exception("The data you requested could not be found (404).")
+            raise Exception("404: The data you requested could not be found.")
         
         elif api_response.status_code == 401 or api_response.status_code == 403:
             # Raise an error if either status codes are 401 (Unauthorised) or 403 (Forbidden)
-            raise Exception(f"Access blocked: check your credentials ({api_response.status_code}).")
+            raise Exception(f"{api_response.status_code}: Access blocked. Check your credentials.")
 
         else:
             # Raise an error for any other status codes
-            raise Exception(f"Failed to connect to the RTT API server ({api_response.status_code}). Try again in a few minutes.")
+            raise Exception(f"{api_response.status_code}: Failed to connect to the RTT API server. Try again in a few minutes.")
 
     def _get_stat_board_details(self, tiploc: str, search_filter: str=None, rows: int=None, time: str=None, date: str=None) -> list | str:
         # If a date is provided and it isn't valid, raise an error
         if date is not None and not validate_date(date):
-            raise ValueError("Invalid date (400). The date provided did not meet requirements or fall into the valid date range.")
+            raise ValueError("400: Invalid date. The date provided did not meet requirements or fall into the valid date range.")
 
         # If a time is provided and it isn't valid, raise an error
         if time is not None and not validate_time(time):
-            raise ValueError("Invalid time (400). The time provided did not meet requirements or fall into the valid time range.")
+            raise ValueError("400: Invalid time. The time provided did not meet requirements or fall into the valid time range.")
 
         # Add the tiploc to the search_query
         search_query = f"https://api.rtt.io/api/v1/json/search/{tiploc}"
@@ -506,7 +506,7 @@ class Boards():
 
             # If the data is None, raise an error
             if departures_data["services"] == None or arrivals_data["services"] == None:
-                raise ValueError("No data found (404).")
+                raise ValueError("404: No data found.")
             
             if self.__complexity == "c":
                 if date is None:
@@ -552,12 +552,12 @@ class Boards():
         
         elif dep_api_response.status_code == 404 or arr_api_response == 404:
             # Raise an error if either status codes are 404 (Not found)
-            raise Exception(f"The data you requested could not be found ({dep_api_response.status_code}, {arr_api_response.status_code}).")
+            raise Exception(f"{dep_api_response.status_code} and {arr_api_response.status_code}: The data you requested could not be found.")
 
         elif (dep_api_response == 401 or arr_api_response == 401) or (dep_api_response == 403 or arr_api_response == 403):
             # Raise an error if either status codes are 401 (Unauthorised) or 403 (Forbidden)
-            raise Exception(f"Access blocked: check your credentials ({dep_api_response.status_code}, {arr_api_response.status_code}).")
+            raise Exception(f"{dep_api_response.status_code} and {arr_api_response.status_code}: Access blocked. Check your credentials.")
 
         else:
             # Raise an error for any other status codes
-            raise Exception(f"Failed to connect to the RTT API server ({dep_api_response.status_code}, {arr_api_response.status_code}). Try again in a few minutes.")
+            raise Exception(f"{dep_api_response.status_code} and {arr_api_response.status_code}: Failed to connect to the RTT API server. Try again in a few minutes.")

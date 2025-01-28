@@ -23,7 +23,7 @@ def create_file(name: str, contents) -> None:
             json.dump(contents, file, ensure_ascii = False, indent = 4)
 
     else:
-        raise Exception("Failed to write to file (500). Perhaps the file already exists?")
+        raise Exception("500: Failed to write to file. Perhaps the file already exists?")
 
 # Format the time
 def format_time(time: str) -> str:

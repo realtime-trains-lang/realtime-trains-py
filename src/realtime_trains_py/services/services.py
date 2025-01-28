@@ -25,11 +25,11 @@ class ServiceDetails():
     def _get_service_details(self, service_uid: str, date: str=None) -> ServiceDetailsAdvanced | ServiceDetailsSimple | str:
         if not validate_uid(service_uid):
             # Check if the Service UID is valid. If not, raise an error 
-            raise ValueError("Invalid Service UID (400). The service UID provided did not meet requirements or fall into the valid range.")
+            raise ValueError("400: Invalid Service UID. The service UID provided did not meet requirements or fall into the valid range.")
         
         if date is not None and not validate_date(date):
             # If a date is provided and it isn't valid, raise an error
-            raise ValueError("Invalid date (400). The date provided did not meet requirements or fall into the valid date range.")
+            raise ValueError("400: Invalid date. The date provided did not meet requirements or fall into the valid date range.")
         
         elif date is None:
             # If a date isn't provided, set the date to be now
@@ -72,19 +72,19 @@ class ServiceDetails():
             
             except:
                 # If an item couldn't be found, raise an error
-                raise Exception("An error occurred while fetching service data (500). This is likely because the API response didn't provide the desired data.")
+                raise Exception("500: An error occurred while fetching service data. This is likely because the API response didn't provide the desired data.")
         
         elif api_response.status_code == 404:
             # Raise an error if either status codes are 404 (Not found)
-            raise Exception("The data you requested could not be found (404).")
+            raise Exception("404: The data you requested could not be found.")
         
         elif api_response.status_code == 401 or api_response.status_code == 403:
             # Raise an error if either status codes are 401 (Unauthorised) or 403 (Forbidden)
-            raise Exception(f"Access blocked: check your credentials ({api_response.status_code}).")
+            raise Exception(f"{api_response.status_code}: Access blocked. Check your credentials.")
 
         else:
             # Raise an error for any other status codes
-            raise Exception(f"Failed to connect to the RTT API server ({api_response.status_code}). Try again in a few minutes.")
+            raise Exception(f"{api_response.status_code}: Failed to connect to the RTT API server. Try again in a few minutes.")
 
 
 # Class for getting advanced service data
@@ -238,7 +238,7 @@ class AdvancedServiceData():
             return ServiceDetailsAdvanced(train_id, service_uid, operator, origin, destination, calling_points, start_time, end_time, "BUS", "BUS")
         
         else:
-            raise Exception("The service type of this service wasn't recognised (501).")
+            raise Exception("501: The service type of this service wasn't recognised.")
         
     # Advanced Prettier
     def _advanced_prettier(self, service_data, service_uid) -> None | str:
@@ -422,7 +422,7 @@ class AdvancedServiceData():
             return "Service data returned successfully (200)."
 
         else:
-            raise Exception("The service type of this service wasn't recognised (501).")
+            raise Exception("501: The service type of this service wasn't recognised.")
 
 
 # Class for getting simple service data
