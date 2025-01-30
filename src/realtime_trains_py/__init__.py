@@ -1,12 +1,12 @@
 # Import classes from boards and services
 try:
-    from realtime_trains_py.services.boards import Boards
-    from realtime_trains_py.services.services import ServiceDetailsAdvanced, ServiceDetailsSimple, ServiceDetails
-    from realtime_trains_py.services.utilities import connection_authorised
+    from realtime_trains_py.internal.boards import Boards
+    from realtime_trains_py.internal.services import ServiceDetailsAdvanced, ServiceDetailsSimple, ServiceDetails
+    from realtime_trains_py.internal.utilities import connection_authorised
 except:
-    from services.boards import Boards
-    from services.services import ServiceDetailsAdvanced, ServiceDetailsSimple, ServiceDetails
-    from services.utilities import connection_authorised
+    from internal.boards import Boards
+    from internal.services import ServiceDetailsAdvanced, ServiceDetailsSimple, ServiceDetails
+    from internal.utilities import connection_authorised
 
 
 # The RealtimeTrainsPy class

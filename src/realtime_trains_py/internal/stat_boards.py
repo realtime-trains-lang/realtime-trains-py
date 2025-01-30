@@ -4,13 +4,13 @@ from tabulate import tabulate
 
 # Import functions from utilities
 try:
-    from realtime_trains_py.services.details import StationBoardDetails
-    from realtime_trains_py.services.merge_sort import merge_sort
-    from realtime_trains_py.services.utilities import format_time
+    from realtime_trains_py.internal.details import StationBoardDetails
+    from realtime_trains_py.internal.merge_sort import merge_sort
+    from realtime_trains_py.internal.utilities import format_time
 except:
-    from services.details import StationBoardDetails
-    from services.merge_sort import merge_sort
-    from services.utilities import format_time
+    from internal.details import StationBoardDetails
+    from internal.merge_sort import merge_sort
+    from internal.utilities import format_time
 
 
 
@@ -34,11 +34,11 @@ class NewStationBoard():
 
         # Iterate over each service and append it to the departure board
         for dep_service in departure_data["services"]:
-            departure_board.append(CreateBoardDetails()._create_dep_service(dep_service))
+            departure_board.append(CreateBoardDetails._create_dep_service(dep_service))
 
         # Iterate over each service and append it to the arrival board
         for arr_service in arrival_data["services"]:
-            arrival_board.append(CreateBoardDetails()._create_arr_service(arr_service))
+            arrival_board.append(CreateBoardDetails._create_arr_service(arr_service))
 
         # Iterate over each att in departure board
         for departures in departure_board:
@@ -140,7 +140,7 @@ class NewStationBoard():
 # Class for creating the details for the boards
 class CreateBoardDetails():
     # Create the departures service info
-    def _create_dep_service(self, service) -> tuple:
+    def _create_dep_service(service) -> tuple:
         location_detail = service["locationDetail"] # Details of the location
         status = location_detail["displayAs"] # Status of service
 
@@ -201,7 +201,7 @@ class CreateBoardDetails():
         return service_uid, StationBoardDetails("", gbtt_departure, terminus, origin, platform, "", realtime_departure, service_uid)
 
     # Create the arrivals service info
-    def _create_arr_service(self, service) -> tuple:
+    def _create_arr_service(service) -> tuple:
         location_detail = service["locationDetail"] # Details of the location
         status = location_detail["displayAs"] # Status of service
 

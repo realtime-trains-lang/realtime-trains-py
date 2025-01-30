@@ -2,14 +2,10 @@
 def merge_sort(arr) -> list:
     # If the length is 1 or less, return the array
     if len(arr) <= 1: return arr
-    
-    # Split into two halves
-    left = arr[:(len(arr)//2)]
-    right = arr[(len(arr)//2):]
 
     # Sort each half
-    sorted_l = merge_sort(left)
-    sorted_r = merge_sort(right)
+    sorted_l = merge_sort(arr[:(len(arr)//2)])
+    sorted_r = merge_sort(arr[(len(arr)//2):])
 
     # Return the sorted array
     return merge(sorted_l, sorted_r)
