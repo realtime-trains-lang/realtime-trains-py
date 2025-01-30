@@ -4,6 +4,16 @@ import os, os.path
 import re
 import requests
 
+# Test the connection to the API
+def connection_authorised(username: str, password: str) -> bool:
+    # Test the connection for departures at KNGX, with the auth details provided
+    test = requests.get("https://api.rtt.io/api/v1/json/search/KNGX", auth=(username, password))
+
+    # If the status code is 401, return False
+    if test.status_code == 401: return False
+    
+    # If any other code is provided, return True
+    return True
 
 # Create new file
 def create_file(name: str, contents) -> None:
@@ -29,17 +39,6 @@ def create_file(name: str, contents) -> None:
 def format_time(time: str) -> str:
     # Get the first 4 values and add a : in the middle
     return f"{time[0]}{time[1]}:{time[2]}{time[3]}"
-
-# Test the connection to the API
-def connection_authorised(username: str, password: str) -> bool:
-    # Test the connection for departures at KNGX, with the auth details provided
-    test = requests.get("https://api.rtt.io/api/v1/json/search/KNGX", auth=(username, password))
-
-    # If the status code is 401, return False
-    if test.status_code == 401: return False
-    
-    # If any other code is provided, return True
-    return True
 
 # Validate the date
 def validate_date(date: str) -> bool:

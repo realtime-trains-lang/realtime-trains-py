@@ -2,7 +2,7 @@
 from datetime import datetime
 from tabulate import tabulate 
 
-# Import functions from utilities
+# Import functions from other files
 try:
     from realtime_trains_py.internal.details import StationBoardDetails
     from realtime_trains_py.internal.merge_sort import merge_sort
@@ -72,8 +72,7 @@ class NewStationBoard():
 
     # Get the times (the sort by) out of the combined_board
     def __extract_times(self) -> None:
-        # Create a temporary empty new board
-        new_board = []
+        temp_board = [] # Create a temporary board
 
         # Iterate over each item in the board
         for item in self._combined_board:  
@@ -81,26 +80,28 @@ class NewStationBoard():
             # print(item, item.gbtt_departure, item.gbtt_arrival)    
             if item.gbtt_departure == "":
                 # Append the arrival time and details to the new board
-                new_board.append([item.gbtt_arrival, item])
+                temp_board.append([item.gbtt_arrival, item])
 
             else:
                 # Append the departure time and details to the new board
-                new_board.append([item.gbtt_departure, item])
+                temp_board.append([item.gbtt_departure, item])
 
         # Overwrite the combined board
-        self._combined_board = new_board
+        self._combined_board = temp_board
+
+        temp_board.clear() # Clear the temporary board
 
     # Create the new board
     def _create_station_board(self, rows: int=None) -> list:
-        # Get the times out
-        self.__extract_times()
+        self.__extract_times() # Extract the times
 
-        # Complete a merge sort on the combined board and return it
+        # Perform a merge sort on the combined board and return it
         combined_board = merge_sort(self._combined_board)
-        self._combined_board.clear()
+        self._combined_board.clear() # Clear the combined board
 
         count = 0 # Set count to 0
 
+        # Append each service to the combined board, until rows is reached
         for service in combined_board:
             self._combined_board.append(service[1])
 
@@ -108,13 +109,14 @@ class NewStationBoard():
             if count == rows:
                 break
 
+        combined_board.clear() # Clear the combined board
+
         # Return the combined board
         return self._combined_board
     
     # Output the board in a formatted way
     def _output_formatted_board(self) -> str:
-        # Create a new empty output board
-        out_board = []
+        out_board = [] # Create a new empty output board
 
         # For each service in the board, add its content to the output board
         for service in self._combined_board:
@@ -132,9 +134,11 @@ class NewStationBoard():
         # Print the station info
         print(f"Station board for {self._requested_location}. Generated at {datetime.now().strftime("%H:%M:%S on %d/%m/%y")}.")
         # Print the table
-        print(tabulate(out_board, tablefmt = "rounded_grid", headers = ["Booked Arrival", "Booked Departure", "Destination", "Origin", "Platform", "Actual Arrival", "Actual Departure", "Service UID"]))
+        print(tabulate(out_board, tablefmt="rounded_grid", headers=["Booked Arrival", "Booked Departure", "Destination", "Origin", "Platform", "Actual Arrival", "Actual Departure", "Service UID"]))
 
-        return "Station board printed successfully (200)." 
+        out_board.clear() # Clear the output board
+
+        return "200: Station board printed successfully." 
 
 
 # Class for creating the details for the boards
@@ -191,10 +195,10 @@ class CreateBoardDetails():
         gbtt_departure = format_time(gbtt_departure)
         
         # Pop the terminus
-        terminus = (location_detail["destination"]).pop()["description"]
+        terminus = location_detail["destination"].pop()["description"]
 
         # Pop the origin
-        origin = (location_detail["origin"]).pop()["description"]
+        origin = location_detail["origin"].pop()["description"]
 
 
         # Return the service UID and Departure Board 

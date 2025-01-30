@@ -1,4 +1,4 @@
-# Import classes from boards and services
+# Import functions from other files
 try:
     from realtime_trains_py.internal.boards import Boards
     from realtime_trains_py.internal.services import ServiceDetailsAdvanced, ServiceDetailsSimple, ServiceDetails

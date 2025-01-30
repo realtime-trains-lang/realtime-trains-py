@@ -4,7 +4,7 @@ import requests
 from datetime import datetime
 from tabulate import tabulate
 
-# Import functions from utilities
+# Import functions from other files
 try:
     from realtime_trains_py.internal.details import DepartureBoardDetails, ArrivalBoardDetails
     from realtime_trains_py.internal.stat_boards import NewStationBoard
@@ -18,11 +18,13 @@ except:
 
 # Class for creating and returning departure, arrival and station boards
 class Boards():
+    # Initialise the class
     def __init__(self, username: str=None, password: str=None, complexity: str="s") -> None:
         self.__username = username
         self.__password = password
         self.__complexity = complexity
 
+    # Get departure board details
     def _get_dep_board_details(self, tiploc: str, search_filter: str=None, rows: int=None, time: str=None, date: str=None) -> list | str: 
         # If a date is provided and it isn't valid, raise an error
         if date is not None and not validate_date(date):
@@ -78,7 +80,7 @@ class Boards():
                 # Create a new file
                 create_file(file_name, service_data)
 
-                return f"Arrivals saved to file: \n  {file_name}"
+                return f"200: Arrivals saved to file: \n  {file_name}."
             
             # Advanced/Simple (Prettier)
             elif self.__complexity in ["a", "a.p", "s", "s.p"]:
@@ -157,7 +159,7 @@ class Boards():
                 # Print the table
                 print(tabulate(departure_board, tablefmt = "rounded_grid", headers = ["Booked Departure", "Destination", "Platform", "Actual Departure", "Service UID"]))
 
-                return "Departure board printed successfully" 
+                return "200: Departure board printed successfully." 
 
             # Advanced/Simple (Normal)
             elif self.__complexity.endswith("n"):
@@ -245,6 +247,7 @@ class Boards():
             # Raise an error for any other status codes
             raise Exception(f"{api_response.status_code}: Failed to connect to the RTT API server. Try again in a few minutes.")
 
+    # Get arrival board details
     def _get_arr_board_details(self, tiploc: str, search_filter: str=None, rows: int=None, time: str=None, date: str=None) -> list | str:       
         # If a date is provided and it isn't valid, raise an error
         if date is not None and not validate_date(date):
@@ -298,7 +301,7 @@ class Boards():
                 # Create a new file
                 create_file(file_name, service_data)
 
-                return f"Arrivals saved to file: \n  {file_name}"
+                return f"200: Arrivals saved to file: \n  {file_name}."
  
             # Advanced/Simple (Prettier)
             elif self.__complexity in ["a", "a.p", "s", "s.p"]:
@@ -378,7 +381,7 @@ class Boards():
                 # Print the table
                 print(tabulate(arrivals_board, tablefmt = "rounded_grid", headers = ["Booked Arrival", "Destination", "Origin", "Platform", "Actual Arrival", "Service UID"]))
 
-                return "Arrivals board printed successfully"
+                return "200: Arrivals board printed successfully."
             
             # Advanced/Simple (Normal)
             elif self.__complexity.endswith("n"):
@@ -467,6 +470,7 @@ class Boards():
             # Raise an error for any other status codes
             raise Exception(f"{api_response.status_code}: Failed to connect to the RTT API server. Try again in a few minutes.")
 
+    # Get station board details
     def _get_stat_board_details(self, tiploc: str, search_filter: str=None, rows: int=None, time: str=None, date: str=None) -> list | str:
         # If a date is provided and it isn't valid, raise an error
         if date is not None and not validate_date(date):
@@ -524,7 +528,7 @@ class Boards():
                 create_file(dep_file_name, departures_data)
                 create_file(arr_file_name, arrivals_data)
 
-                return f"Departures and arrivals saved to files: \n  {dep_file_name} \n  {arr_file_name}. \n (200)."
+                return f"200: Departures and arrivals saved to files: \n  {dep_file_name} \n  {arr_file_name}. \n."
 
             # Create the station board
             new_boards = NewStationBoard(departures_data, arrivals_data)

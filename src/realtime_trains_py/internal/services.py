@@ -4,7 +4,7 @@ import requests
 from datetime import datetime
 from tabulate import tabulate 
 
-# Import functions from utilities
+# Import functions from other files
 try:
     from realtime_trains_py.internal.details import ServiceDetailsSimple, ServiceDetailsAdvanced, CallingPointSimple, CallingPointAdvanced
     from realtime_trains_py.internal.utilities import create_file, format_time, validate_date, validate_uid
@@ -343,7 +343,7 @@ class AdvancedServiceData():
                 )
             )
 
-            return "Service data returned successfully (200)."
+            return "200: Service data returned successfully."
 
         elif service_type == "bus":
             train_id = service_data["trainIdentity"] # Get the train ID
@@ -419,7 +419,7 @@ class AdvancedServiceData():
                 )
             )
 
-            return "Service data returned successfully (200)."
+            return "200: Service data returned successfully."
 
         else:
             raise Exception("501: The service type of this service wasn't recognised.")
@@ -582,4 +582,4 @@ class SimpleServiceData():
             )
         )
 
-        return "Service data returned successfully (200)."
+        return "200: Service data returned successfully."

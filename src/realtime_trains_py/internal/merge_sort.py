@@ -12,24 +12,19 @@ def merge_sort(arr) -> list:
 
 # Merge the two lists in order
 def merge(left, right) -> list:
-    # New result list
-    result = []
-    # Set counts to 0
-    count_l = 0
-    count_r = 0
+    result = [] # New empty result list
+    count_l = count_r = 0 # Set both counts to 0
 
     # While both counts are less than the length of the lists
     while count_l < len(left) and count_r < len(right):
         if left[count_l][0] < right[count_r][0]:
-            # If left item is less than right item, append left to the result
+            # If left item is less than right item, append left to the result and increment the left count
             result.append(left[count_l])
-            # Increment count
             count_l += 1
 
         else:
-            # Append right to the result
+            # Append right to the result and increment the right count
             result.append(right[count_r])
-            # Increment count
             count_r += 1
 
     # Extend both lists
