@@ -55,14 +55,24 @@ You need an account for the Realtime Trains API to use this package. You can sig
 
 ## Examples of this package
 
-The example below will return you up to 15 rows on the departure board for London King's Cross at the time you run the program. 
+The example below will return up to 15 rows on the departure board for London King's Cross at the time you run the program. 
 ```python
 rtt.get_departures(tiploc="KNGX", rows=15)
 ```
 
-The example below will return you up to 15 rows on the arrivals board for London King's Cross at the time you run the program. 
+The example below will return up to 15 rows on the arrivals board for London King's Cross at the time you run the program. 
 ```python
 rtt.get_arrivals(tiploc="KNGX", rows=15)
+```
+
+The example below will return the service information of G28171 (2H18 0958 London Liverpool Street to Cambridge North) at the time you run the program. 
+```python
+rtt.get_service(service_uid="G28171")
+```
+
+The example below will return up to 15 rows of departures and arrivals for London King's Cross at the time you run the program. 
+```python
+rtt.get_station(tiploc="KNGX", rows=15)
 ```
 
 More in-depth examples can be found on our [examples page](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Examples). 
