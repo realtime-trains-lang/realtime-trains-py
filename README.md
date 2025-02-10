@@ -1,4 +1,4 @@
-# RealTime Trains API Python Module
+# Realtime Trains API Python Module
 
 Maintained and managed by members of [realtime-trains-lang](https://github.com/realtime-trains-lang)
 
@@ -81,3 +81,5 @@ More in-depth examples can be found on our [examples page](https://github.com/re
 ## License
 
 The **realtime-trains-py** API Wrapper uses an MIT License.
+
+All of our data is kindly provided by [Realtime Trains](https://www.realtimetrains.co.uk/).
