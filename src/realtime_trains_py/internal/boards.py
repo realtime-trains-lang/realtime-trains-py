@@ -5,27 +5,17 @@ from datetime import datetime
 from tabulate import tabulate
 
 # Import functions from other files
-try:
-    from realtime_trains_py.internal.details import (
-        DepartureBoardDetails,
-        ArrivalBoardDetails,
-    )
-    from realtime_trains_py.internal.stat_boards import NewStationBoard
-    from realtime_trains_py.internal.utilities import (
-        create_file,
-        format_time,
-        validate_date,
-        validate_time,
-    )
-except:
-    from internal.details import DepartureBoardDetails, ArrivalBoardDetails
-    from internal.stat_boards import NewStationBoard
-    from internal.utilities import (
-        create_file,
-        format_time,
-        validate_date,
-        validate_time,
-    )
+from realtime_trains_py.internal.details import (
+    DepartureBoardDetails,
+    ArrivalBoardDetails,
+)
+from realtime_trains_py.internal.stat_boards import NewStationBoard
+from realtime_trains_py.internal.utilities import (
+    create_file,
+    format_time,
+    validate_date,
+    validate_time,
+)
 
 
 # Class for creating and returning departure, arrival and station boards

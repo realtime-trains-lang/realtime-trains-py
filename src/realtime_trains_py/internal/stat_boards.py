@@ -3,14 +3,9 @@ from datetime import datetime
 from tabulate import tabulate
 
 # Import functions from other files
-try:
-    from realtime_trains_py.internal.details import StationBoardDetails
-    from realtime_trains_py.internal.merge_sort import merge_sort
-    from realtime_trains_py.internal.utilities import format_time
-except:
-    from internal.details import StationBoardDetails
-    from internal.merge_sort import merge_sort
-    from internal.utilities import format_time
+from realtime_trains_py.internal.details import StationBoardDetails
+from realtime_trains_py.internal.merge_sort import merge_sort
+from realtime_trains_py.internal.utilities import format_time
 
 
 # Class for creating station boards
@@ -64,6 +59,7 @@ class NewStationBoard:
                     if departures[1] in arr_dep_temp:
                         arr_dep_temp.remove(departures[1])
 
+                    # Add the values that need to be inserted to the added items list
                     added_items.append(departures[1])
                     added_items.append(arrivals[1])
 
@@ -88,15 +84,6 @@ class NewStationBoard:
                     if departures[1] not in arr_dep_temp and departures[1] not in added_items:
                         arr_dep_temp.append(departures[1])
 
-
-        # FIXME - Bug here causing duplicate details to show
-        #         See #12 
-
-        # Append the remaining values to the combined board
-        # for arrival in arrival_board:
-        #     if arrival[1] not in self._combined_board:
-        #         self._combined_board.append(arrival[1])
-
         for services in arr_dep_temp:
             self._combined_board.append(services)
 
@@ -106,7 +93,7 @@ class NewStationBoard:
         arrival_board.clear()
         departure_board.clear()
 
-    # Get the times (the sort by) out of the combined_board
+    # Get the times (the value we sort by) out of the combined_board
     def __extract_times(self) -> None:
         temp_board = []  # Create a temporary board
 
@@ -123,6 +110,7 @@ class NewStationBoard:
 
         # Overwrite the combined board
         self._combined_board = temp_board
+        temp_board.clear()
 
     # Create the new board
     def _create_station_board(self, rows: int = None) -> list:
@@ -135,6 +123,7 @@ class NewStationBoard:
             self._combined_board.append(service[1])
 
         # Return the combined board
+        combined_board.clear()
         return self._combined_board
 
     # Output the board in a formatted way
@@ -143,40 +132,34 @@ class NewStationBoard:
 
         # For each service in the board, add its content to the output board
         for service in self._combined_board:
-            out_board.append(
-                [
-                    service.gbtt_arrival,
-                    service.gbtt_departure,
-                    service.terminus,
-                    service.origin,
-                    service.platform,
-                    service.realtime_arrival,
-                    service.realtime_departure,
-                    service.service_uid,
-                ]
-            )
+            out_board.append([
+                service.gbtt_arrival,
+                service.gbtt_departure,
+                service.terminus,
+                service.origin,
+                service.platform,
+                service.realtime_arrival,
+                service.realtime_departure,
+                service.service_uid
+            ])
 
         # Print the station info
         print(
             f"Station board for {self._requested_location}. Generated at {datetime.now().strftime("%H:%M:%S on %d/%m/%y")}."
         )
         # Print the table
-        print(
-            tabulate(
-                out_board,
-                tablefmt="rounded_grid",
-                headers=[
-                    "Booked Arrival",
-                    "Booked Departure",
-                    "Destination",
-                    "Origin",
-                    "Platform",
-                    "Actual Arrival",
-                    "Actual Departure",
-                    "Service UID",
-                ],
-            )
-        )
+        print(tabulate(
+            out_board, tablefmt="rounded_grid",
+            headers=[
+                "Booked Arrival",
+                "Booked Departure",
+                "Destination",
+                "Origin",
+                "Platform",
+                "Actual Arrival",
+                "Actual Departure",
+                "Service UID",
+            ]))
 
         return "200: Station board printed successfully."
 

@@ -5,41 +5,30 @@ from datetime import datetime
 from tabulate import tabulate
 
 # Import functions from other files
-try:
-    from realtime_trains_py.internal.details import (
-        ServiceDetailsSimple,
-        ServiceDetailsAdvanced,
-        CallingPointSimple,
-        CallingPointAdvanced,
-    )
-    from realtime_trains_py.internal.utilities import (
-        create_file,
-        format_time,
-        validate_date,
-        validate_uid,
-    )
-except:
-    from internal.details import (
-        ServiceDetailsSimple,
-        ServiceDetailsAdvanced,
-        CallingPointSimple,
-        CallingPointAdvanced,
-    )
-    from internal.utilities import create_file, format_time, validate_date, validate_uid
+from realtime_trains_py.internal.details import (
+    ServiceDetailsSimple,
+    ServiceDetailsAdvanced,
+    CallingPointSimple,
+    CallingPointAdvanced,
+)
+from realtime_trains_py.internal.utilities import (
+    create_file,
+    format_time,
+    validate_date,
+    validate_uid,
+)
 
 
 # Class for getting and creating service details
 class ServiceDetails:
-    def __init__(
-        self, username: str = None, password: str = None, complexity: str = "s"
-    ) -> None:
+    def __init__(self, username: str=None, password: str=None, complexity: str="s") -> None:
         self.__username = username
         self.__password = password
         self.__complexity = complexity
 
     # Get the service details
     def _get_service_details(
-        self, service_uid: str, date: str = None
+        self, service_uid: str, date: str=None
     ) -> ServiceDetailsAdvanced | ServiceDetailsSimple | str:
         if not validate_uid(service_uid):
             # Check if the Service UID is valid. If not, raise an error

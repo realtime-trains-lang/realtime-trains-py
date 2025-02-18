@@ -5,8 +5,8 @@ def merge_sort(arr) -> list:
         return arr
 
     # Sort each half
-    sorted_l = merge_sort(arr[: (len(arr) // 2)])
-    sorted_r = merge_sort(arr[(len(arr) // 2) :])
+    sorted_l = merge_sort(arr[:(len(arr)//2)])
+    sorted_r = merge_sort(arr[(len(arr)//2) :])
 
     # Return the sorted array
     return merge(sorted_l, sorted_r)

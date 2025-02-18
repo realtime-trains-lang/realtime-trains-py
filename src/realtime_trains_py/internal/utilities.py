@@ -52,13 +52,7 @@ def format_time(time: str) -> str:
 # Validate the date
 def validate_date(date: str) -> bool:
     # Check if the regex pattern was found
-    if (
-        re.search(
-            "[1-9][0-9][0-9]{2}/([0][1-9]|[1][0-2])/([1-2][0-9]|[0][1-9]|[3][0-1])",
-            date,
-        )
-        != None
-    ):
+    if re.search("[1-9][0-9][0-9]{2}/([0][1-9]|[1][0-2])/([1-2][0-9]|[0][1-9]|[3][0-1])", date) != None:
         # If found, return True
         return True
 
