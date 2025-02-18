@@ -16,7 +16,7 @@ except:
 # Class for creating station boards
 class NewStationBoard:
     # Initialise the board
-    def __init__(self, departure_data, arrival_data) -> None:
+    def __init__(self, rows=None, departure_data=None, arrival_data=None) -> None:
         requested_location = departure_data["location"]["name"]  # Requested location
 
         # Compare the locations and check they're equal
@@ -29,24 +29,44 @@ class NewStationBoard:
             )
 
         # Create new empty boards
+        added_items = []
+        arr_dep_temp = []
         arrival_board = []
         departure_board = []
         self._combined_board = []
 
+        count = 0
         # Iterate over each service and append it to the departure board
         for dep_service in departure_data["services"]:
             departure_board.append(CreateBoardDetails()._create_dep_service(dep_service))
+            count +=1 
+            if count == rows:
+                break
 
+        count = 0
         # Iterate over each service and append it to the arrival board
         for arr_service in arrival_data["services"]:
             arrival_board.append(CreateBoardDetails()._create_arr_service(arr_service))
+            count +=1 
+            if count == rows:
+                break
 
-        # Iterate over each att in departure board
+        # Iterate over each item in departure board
         for departures in departure_board:
-            # Iterate over each att in arrival board
+            # Iterate over each item in arrival board
             for arrivals in arrival_board:
-                # If the values at position 0 are equal, append it to the combined board
+                # If the values at position 0 are equal...
                 if departures[0] == arrivals[0]:
+                    # Remove any duplicates from arr_dep_temp
+                    if arrivals[1] in arr_dep_temp:
+                        arr_dep_temp.remove(arrivals[1])
+
+                    if departures[1] in arr_dep_temp:
+                        arr_dep_temp.remove(departures[1])
+
+                    added_items.append(departures[1])
+                    added_items.append(arrivals[1])
+
                     # Overwrite the departure times
                     arrivals[1].realtime_departure = departures[1].realtime_departure
                     arrivals[1].gbtt_departure = departures[1].gbtt_departure
@@ -55,19 +75,34 @@ class NewStationBoard:
                     self._combined_board.append(arrivals[1])
 
                     # Remove the old values from the arrival and departure boards
-                    arrival_board.remove(arrivals)
-                    departure_board.remove(departures)
+                    # arrival_board.remove(arrivals)
+                    # departure_board.remove(departures)
 
                     break
 
-        # Append the remaining values to the combined board
-        for arrival in arrival_board:
-            self._combined_board.append(arrival[1])
+                else:
+                    # Add any not found items to arr_dep_temp
+                    if arrivals[1] not in arr_dep_temp and arrivals[1] not in added_items:
+                        arr_dep_temp.append(arrivals[1])
 
-        for departure in departure_board:
-            self._combined_board.append(departure[1])
+                    if departures[1] not in arr_dep_temp and departures[1] not in added_items:
+                        arr_dep_temp.append(departures[1])
+
+
+        # FIXME - Bug here causing duplicate details to show
+        #         See #12 
+
+        # Append the remaining values to the combined board
+        # for arrival in arrival_board:
+        #     if arrival[1] not in self._combined_board:
+        #         self._combined_board.append(arrival[1])
+
+        for services in arr_dep_temp:
+            self._combined_board.append(services)
 
         # Clear the old boards
+        added_items.clear()
+        arr_dep_temp.clear()
         arrival_board.clear()
         departure_board.clear()
 
@@ -77,8 +112,7 @@ class NewStationBoard:
 
         # Iterate over each item in the board
         for item in self._combined_board:
-            # If a gbtt_departure
-            # print(item, item.gbtt_departure, item.gbtt_arrival)
+            # If a gbtt_departure is found...
             if item.gbtt_departure == "":
                 # Append the arrival time and details to the new board
                 temp_board.append([item.gbtt_arrival, item])
@@ -93,20 +127,12 @@ class NewStationBoard:
     # Create the new board
     def _create_station_board(self, rows: int = None) -> list:
         self.__extract_times()  # Extract the times
-
-        # Perform a merge sort on the combined board and return it
         combined_board = merge_sort(self._combined_board)
-        self._combined_board.clear()  # Clear the combined board
-
-        count = 0  # Set count to 0
+        self._combined_board.clear()
 
         # Append each service to the combined board, until rows is reached
         for service in combined_board:
             self._combined_board.append(service[1])
-
-            count += 1
-            if count == rows:
-                break
 
         # Return the combined board
         return self._combined_board

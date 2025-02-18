@@ -678,7 +678,7 @@ class Boards:
                 return f"200: Departures and arrivals saved to files: \n  {dep_file_name} \n  {arr_file_name}. \n."
 
             # Create the station board
-            new_boards = NewStationBoard(departures_data, arrivals_data)
+            new_boards = NewStationBoard(rows, departures_data, arrivals_data)
             board = new_boards._create_station_board(rows)
 
             match self.__complexity:
