@@ -110,7 +110,6 @@ class NewStationBoard:
 
         # Overwrite the combined board
         self._combined_board = temp_board
-        temp_board.clear()
 
     # Create the new board
     def _create_station_board(self, rows: int = None) -> list:
@@ -123,7 +122,6 @@ class NewStationBoard:
             self._combined_board.append(service[1])
 
         # Return the combined board
-        combined_board.clear()
         return self._combined_board
 
     # Output the board in a formatted way
