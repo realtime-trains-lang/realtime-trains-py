@@ -112,7 +112,7 @@ class NewStationBoard:
         self._combined_board = temp_board
 
     # Create the new board
-    def _create_station_board(self, rows: int = None) -> list:
+    def _create_station_board(self) -> list:
         self.__extract_times()  # Extract the times
         combined_board = merge_sort(self._combined_board)
         self._combined_board.clear()
@@ -133,8 +133,8 @@ class NewStationBoard:
             out_board.append([
                 service.gbtt_arrival,
                 service.gbtt_departure,
-                service.terminus,
                 service.origin,
+                service.terminus,
                 service.platform,
                 service.realtime_arrival,
                 service.realtime_departure,
@@ -151,8 +151,8 @@ class NewStationBoard:
             headers=[
                 "Booked Arrival",
                 "Booked Departure",
-                "Destination",
                 "Origin",
+                "Destination",
                 "Platform",
                 "Actual Arrival",
                 "Actual Departure",

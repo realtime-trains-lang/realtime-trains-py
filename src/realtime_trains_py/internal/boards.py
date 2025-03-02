@@ -669,7 +669,7 @@ class Boards:
 
             # Create the station board
             new_boards = NewStationBoard(rows, departures_data, arrivals_data)
-            board = new_boards._create_station_board(rows)
+            board = new_boards._create_station_board()
 
             match self.__complexity:
                 # Select which to do run based on complexity
