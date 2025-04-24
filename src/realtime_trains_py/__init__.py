@@ -1,10 +1,6 @@
 # Import functions from other files
 from realtime_trains_py.internal.boards import Boards
-from realtime_trains_py.internal.services import (
-    ServiceDetailsAdvanced,
-    ServiceDetailsSimple,
-    ServiceDetails,
-)
+from realtime_trains_py.internal.services import ServiceDetailsAdvanced, ServiceDetailsSimple, ServiceDetails
 from realtime_trains_py.internal.utilities import connection_authorised
 
 
@@ -15,7 +11,8 @@ class RealtimeTrainsPy:
         """
         :param str username: (Required) A string representing your username for authentication.
         :param str password: (Required) A string representing your password for authentication.
-        :param str complexity: (Optional) A string representing your chosen complexity level. Choose from: `["c", "a", "a.n", "a.p", "s", "s.n", "s.p"]`
+        :param str complexity: (Optional) A string representing your chosen complexity level. 
+        Choose from: `["a", "a.n", "a.p", "c", "s","s.n", "s.p"]`. If not provided, defaults to "s".
         
         ## Examples
         ```python
@@ -27,19 +24,15 @@ class RealtimeTrainsPy:
         # Check if the username and password have been provided
         if username == None or password == None:
             # If at least one is missing, raise an error
-            raise ValueError(
-                "400: Missing authentication details. Both username and password must be provided. Not all required fields were provided."
-            )
+            raise ValueError("400: Missing authentication details. Both username and password must be provided. Not all required fields were provided.")
 
         # Check if the connection is authorised
         if not connection_authorised(username=username, password=password):
             # If not authorised, raise an error
-            raise PermissionError(
-                "401: Couldn't verify your username or password. Check your details and try again."
-            )
+            raise PermissionError("401: Couldn't verify your username or password. Check your details and try again.")
 
         # Check if selected complexity is valid
-        if complexity.lower() not in ["s", "s.p", "s.n", "a", "a.p", "a.n", "c"]:
+        if complexity.lower() not in ["a", "a.n", "a.p", "c", "s","s.n", "s.p"]:
             # If complexity is not in the valid range, raise an error
             raise ValueError("400: Complexity not recognised. Select a valid type.")
 
@@ -104,12 +97,20 @@ class RealtimeTrainsPy:
         :param str tiploc: (Required) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the station.
         :param str filter: (Optional) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the filter station.
         :param str date: (Optional) A string representing the date in the format YYYY/MM/DD.
-        :param int rows: (Optional) An integer representing half of the maximum number of rows to return. If you require 20 rows, set `rows=10`. (Only available for simple and advanced complexity.)
+        :param int rows: (Optional) An integer representing half of the maximum number of rows to return. See below for more details.
         :param str time: (Optional) A string representing the time in the format HHMM.
 
+        ### Rows
+        Rows is the maximum number of rows to return. The API may return twice the number of rows requested, so if you want 10 rows, 
+        you should set rows to 5. This is because the API returns both departures and arrivals. 
+        
+        If you set rows to 10, the API will return up to 10 departures and 10 arrivals. These are then sorted and combined into a single list, so you may
+        not actually receive 20 rows of data.
+
+        ---
         ## Examples
         ```python
-        get_station(tiploc="KNGX", filter="STEVNGE", date="2024/11/16", time="1800", rows=10)
+        get_station(tiploc="STEVNGE", filter="KNGX", date="2024/11/16", time="1800", rows=10)
 
         get_station(tiploc="YORK", date="2024/11/16", time="1800")
         ```

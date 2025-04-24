@@ -19,9 +19,7 @@ class NewStationBoard:
             self._requested_location = requested_location
 
         else:
-            raise Exception(
-                "500: An unexpected error occurred handling your request. Try again in a few minutes."
-            )
+            raise Exception("500: An unexpected error occurred handling your request. Try again in a few minutes.")
 
         # Create new empty boards
         added_items = []
@@ -70,10 +68,6 @@ class NewStationBoard:
                     # Append the arrivals to the combined board
                     self._combined_board.append(arrivals[1])
 
-                    # Remove the old values from the arrival and departure boards
-                    # arrival_board.remove(arrivals)
-                    # departure_board.remove(departures)
-
                     break
 
                 else:
@@ -114,6 +108,9 @@ class NewStationBoard:
     # Create the new board
     def _create_station_board(self) -> list:
         self.__extract_times()  # Extract the times
+        #######################################
+        # MERGE SORT ALGORITHM IS CALLED HERE #
+        #######################################
         combined_board = merge_sort(self._combined_board)
         self._combined_board.clear()
 
@@ -130,34 +127,15 @@ class NewStationBoard:
 
         # For each service in the board, add its content to the output board
         for service in self._combined_board:
-            out_board.append([
-                service.gbtt_arrival,
-                service.gbtt_departure,
-                service.origin,
-                service.terminus,
-                service.platform,
-                service.realtime_arrival,
-                service.realtime_departure,
-                service.service_uid
-            ])
+            out_board.append([service.gbtt_arrival, service.gbtt_departure, service.origin, service.terminus, service.platform, service.realtime_arrival, service.realtime_departure, service.service_uid])
 
         # Print the station info
-        print(
-            f"Station board for {self._requested_location}. Generated at {datetime.now().strftime("%H:%M:%S on %d/%m/%y")}."
-        )
+        print(f"Station board for {self._requested_location}. Generated at {datetime.now().strftime("%H:%M:%S on %d/%m/%y")}.")
+
         # Print the table
-        print(tabulate(
-            out_board, tablefmt="rounded_grid",
-            headers=[
-                "Booked Arrival",
-                "Booked Departure",
-                "Origin",
-                "Destination",
-                "Platform",
-                "Actual Arrival",
-                "Actual Departure",
-                "Service UID",
-            ]))
+        print(tabulate(out_board, tablefmt="rounded_grid",
+            headers=["Booked Arrival", "Booked Departure", "Origin", "Destination", "Platform", "Actual Arrival", "Actual Departure", "Service UID"]
+        ))
 
         return "200: Station board printed successfully."
 
@@ -221,16 +199,7 @@ class CreateBoardDetails:
         origin = location_detail["origin"].pop()["description"]
 
         # Return the service UID and Departure Board
-        return service_uid, StationBoardDetails(
-            "",
-            gbtt_departure,
-            terminus,
-            origin,
-            platform,
-            "",
-            realtime_departure,
-            service_uid,
-        )
+        return service_uid, StationBoardDetails("", gbtt_departure, terminus, origin, platform, "", realtime_departure, service_uid)
 
     # Create the arrivals service info
     def _create_arr_service(self, service) -> tuple:
@@ -289,13 +258,4 @@ class CreateBoardDetails:
         origin = (location_detail["origin"]).pop()["description"]
 
         # Return the service UID and Arrival Board
-        return service_uid, StationBoardDetails(
-            gbtt_arrival,
-            "",
-            terminus,
-            origin,
-            platform,
-            realtime_arrival,
-            "",
-            service_uid,
-        )
+        return service_uid, StationBoardDetails(gbtt_arrival, "", terminus, origin, platform, realtime_arrival, "", service_uid)

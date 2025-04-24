@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-We release updates and patches regularly. Below are the versions of this project that are actively supported and maintained. If a version isn't shown in this table, then it is no longer supported.
+We release updates and patches regularly. Below are the versions of this project that are actively supported and maintained. If a version isn't shown in this table, then it is no longer supported. Specific versions that will no longer be supported in the next few months will be shown too.
 
 | Version (realtime-trains-py)  | Supported          |
 |-------------------------------|--------------------|
@@ -31,7 +31,7 @@ After confirming the issue, we will:
 
 ## Security Updates
 
-We will post updates about resolved security vulnerabilities in the **[releases section of this repository.](https://github.com/realtime-trains-lang/realtime-trains-py/releases)**
+We will post updates about resolved security vulnerabilities in the **[releases section of this repository.](https://github.com/realtime-trains-lang/realtime-trains-py/releases)**.
 
 ## Scope
 

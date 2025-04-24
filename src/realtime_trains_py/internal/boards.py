@@ -5,49 +5,28 @@ from datetime import datetime
 from tabulate import tabulate
 
 # Import functions from other files
-from realtime_trains_py.internal.details import (
-    DepartureBoardDetails,
-    ArrivalBoardDetails,
-)
+from realtime_trains_py.internal.details import (DepartureBoardDetails, ArrivalBoardDetails)
 from realtime_trains_py.internal.stat_boards import NewStationBoard
-from realtime_trains_py.internal.utilities import (
-    create_file,
-    format_time,
-    validate_date,
-    validate_time,
-)
+from realtime_trains_py.internal.utilities import (create_file, format_time, validate_date, validate_time)
 
 
 # Class for creating and returning departure, arrival and station boards
 class Boards:
     # Initialise the class
-    def __init__(
-        self, username: str = None, password: str = None, complexity: str = "s"
-    ) -> None:
+    def __init__(self, username: str=None, password: str=None, complexity: str="s") -> None:
         self.__username = username
         self.__password = password
         self.__complexity = complexity
 
     # Get departure board details
-    def _get_dep_board_details(
-        self,
-        tiploc: str,
-        search_filter: str = None,
-        rows: int = None,
-        time: str = None,
-        date: str = None,
-    ) -> list | str:
+    def _get_dep_board_details(self, tiploc: str, search_filter: str=None, rows: int=None, time: str=None, date: str=None) -> list | str:
         # If a date is provided and it isn't valid, raise an error
         if date is not None and not validate_date(date):
-            raise ValueError(
-                "400: Invalid date. The date provided did not meet requirements or fall into the valid date range."
-            )
+            raise ValueError("400: Invalid date. The date provided did not meet requirements or fall into the valid date range.")
 
         # If a time is provided and it isn't valid, raise an error
         if time is not None and not validate_time(time):
-            raise ValueError(
-                "400: Invalid time. The time provided did not meet requirements or fall into the valid time range."
-            )
+            raise ValueError("400: Invalid time. The time provided did not meet requirements or fall into the valid time range.")
 
         # Add the tiploc to the search_query
         search_query = f"https://api.rtt.io/api/v1/json/search/{tiploc}"
@@ -69,9 +48,7 @@ class Boards:
                 search_query += f"/{time}"
 
         # Get the api response using the auth details provided
-        api_response = requests.get(
-            search_query, auth=(self.__username, self.__password)
-        )
+        api_response = requests.get(search_query, auth=(self.__username, self.__password))
 
         if api_response.status_code == 200:
             # If the status code is 200, convert the response to json
@@ -84,6 +61,14 @@ class Boards:
             # Select run based on complexity
             # Complex
             if self.__complexity == "c":
+                # This block of code is for the Complex complexity level.
+                # The code is used to create a new json file with the departure data inside it. 
+                #
+                # It first checks if a date was provided, and if not, sets the date to now.
+                # It then splits the date by each "/" and sets the file name to the TIPLOC and date.
+                # The file name is then used to create a new file with the service data inside it.
+                # The function then returns a success message and exits this block.
+
                 if date is None:
                     # If no date was provided, set the date as now
                     date = (datetime.now()).strftime("%Y/%m/%d")
@@ -101,18 +86,35 @@ class Boards:
 
             # Advanced/Simple (Prettier)
             elif self.__complexity in ["a", "a.p", "s", "s.p"]:
+                # This block of code is for the Advanced/Simple (Prettier) complexity level.
+                # The code is used to create a new departure board list and format the data for display
+                # It first creates a new empty departures board list, gets the requested location, and 
+                # initializes a count variable which is used to limit the number of rows displayed, if 
+                # it is provided by the user. It then loops through the services in the service data, 
+                # extracting the relevant information for each service.. Details include: 
+                # - the booked departure time (This is formatted to a readable format [HH:MM])
+                # - the actual departure time 
+                #       - The value of this is set to "On time" if the booked and actual departure are equal
+                #       - "Exp" if it is different
+                #       - "Cancelled" if the service is cancelled
+                # - the service UID
+                # - the platform
+                # - the terminus
+                # 
+                # The details of each service are then appended to the departures board list that was 
+                # created at the start of the function. The count variable is then incremented by 1, and if
+                # the count is equal to the number of rows provided, the loop breaks. 
+                # The departure info is then printed to the console using tabulate to format it in a 
+                # readable way. The function returns a success message and exits this block.
+
                 # Create a new departure board list
                 departure_board: list = []
 
-                requested_location = service_data["location"][
-                    "name"
-                ]  # Requested location
+                requested_location = service_data["location"]["name"]  # Requested location
                 count = 0  # Count
 
                 for service in service_data["services"]:
-                    location_detail = service[
-                        "locationDetail"
-                    ]  # Details of the location
+                    location_detail = service["locationDetail"]  # Details of the location
                     status = location_detail["displayAs"]  # Status of service
 
                     # Check if booked departure is in location detail
@@ -144,15 +146,13 @@ class Boards:
 
                     # Check if the status isn't cancelled
                     if status != "CANCELLED_CALL":
-                        # If the gbtt departure and realtime departure are equal, set realtime departure to On Time
+                        # If the gbtt departure and realtime departure are the same, set realtime departure to On Time
                         if gbtt_departure == realtime_departure:
                             realtime_departure = "On time"
 
                         # If the realtime departure isn't null, format and add Exp
                         elif realtime_departure != "-":
-                            realtime_departure = (
-                                f"Exp {format_time(realtime_departure)}"
-                            )
+                            realtime_departure = (f"Exp {format_time(realtime_departure)}")
 
                         # Format the gbtt departure
                         gbtt_departure = format_time(gbtt_departure)
@@ -167,15 +167,7 @@ class Boards:
                     terminus = (location_detail["destination"]).pop()["description"]
 
                     # Append the service details to a list
-                    departure_board.append(
-                        [
-                            gbtt_departure,
-                            terminus,
-                            platform,
-                            realtime_departure,
-                            service_uid,
-                        ]
-                    )
+                    departure_board.append([gbtt_departure, terminus, platform, realtime_departure, service_uid])
 
                     # Add one to count
                     count += 1
@@ -184,40 +176,47 @@ class Boards:
                         break
 
                 # Print the departure info
-                print(
-                    f"Departure board for {requested_location}. Generated at {datetime.now().strftime("%H:%M:%S on %d/%m/%y")}."
-                )
+                print(f"Departure board for {requested_location}. Generated at {datetime.now().strftime("%H:%M:%S on %d/%m/%y")}.")
+
                 # Print the table
-                print(
-                    tabulate(
-                        departure_board,
-                        tablefmt="rounded_grid",
-                        headers=[
-                            "Booked Departure",
-                            "Destination",
-                            "Platform",
-                            "Actual Departure",
-                            "Service UID",
-                        ],
-                    )
-                )
+                print(tabulate(departure_board, tablefmt="rounded_grid",
+                        headers=["Booked Departure", "Destination", "Platform", "Actual Departure", "Service UID"]
+                ))
 
                 return "200: Departure board printed successfully."
 
             # Advanced/Simple (Normal)
             elif self.__complexity.endswith("n"):
+                # This block of code is for the Advanced/Simple (Normal) complexity level
+                # The code is used to create a new departure board list and format the data for display
+                # It first creates a new empty departures board list, gets the requested location, and 
+                # initializes a count variable which is used to limit the number of rows displayed, if 
+                # it is provided by the user. It then loops through the services in the service data, 
+                # extracting the relevant information for each service.. Details include: 
+                # - the booked departure time (This is formatted to a readable format [HH:MM])
+                # - the actual departure time 
+                #       - The value of this is set to "On time" if the booked and actual departure are equal
+                #       - "Exp" if it is different
+                #       - "Cancelled" if the service is cancelled
+                # - the service UID
+                # - the platform
+                # - the terminus
+                # 
+                # The details of each service are added to a new DepartureBoardDetails class. The class is 
+                # then appended to the departures board list that was created at the start of the function. 
+                # The count variable is then incremented by 1, and if the count is equal to the number of rows 
+                # provided, the loop breaks. 
+                # The function returns the departure board list. The function returns a success message 
+                # and exits this block.
+
                 # Create a new departure board list
                 departure_board: list = []
 
-                requested_location = service_data["location"][
-                    "name"
-                ]  # Requested location
+                requested_location = service_data["location"]["name"]  # Requested location
                 count = 0  # Count
 
                 for service in service_data["services"]:
-                    location_detail = service[
-                        "locationDetail"
-                    ]  # Details of the location
+                    location_detail = service["locationDetail"]  # Details of the location
                     status = location_detail["displayAs"]  # Status of service
 
                     # Check if booked departure is in location detail
@@ -255,9 +254,7 @@ class Boards:
 
                         # If the realtime departure isn't null, format and add Exp
                         elif realtime_departure != "-":
-                            realtime_departure = (
-                                f"Exp {format_time(realtime_departure)}"
-                            )
+                            realtime_departure = (f"Exp {format_time(realtime_departure)}")
 
                         # Format the gbtt departure
                         gbtt_departure = format_time(gbtt_departure)
@@ -272,15 +269,7 @@ class Boards:
                     terminus = (location_detail["destination"]).pop()["description"]
 
                     # Append new DepartureBoardSimple service details
-                    departure_board.append(
-                        DepartureBoardDetails(
-                            gbtt_departure,
-                            terminus,
-                            platform,
-                            realtime_departure,
-                            service_uid,
-                        )
-                    )
+                    departure_board.append(DepartureBoardDetails(gbtt_departure, terminus, platform, realtime_departure, service_uid))
 
                     # Add one to count
                     count += 1
@@ -296,15 +285,11 @@ class Boards:
 
         elif api_response.status_code == 401 or api_response.status_code == 403:
             # Raise an error if either status codes are 401 (Unauthorised) or 403 (Forbidden)
-            raise Exception(
-                f"{api_response.status_code}: Access blocked. Check your credentials."
-            )
+            raise Exception(f"{api_response.status_code}: Access blocked. Check your credentials.")
 
         else:
             # Raise an error for any other status codes
-            raise Exception(
-                f"{api_response.status_code}: Failed to connect to the RTT API server. Try again in a few minutes."
-            )
+            raise Exception(f"{api_response.status_code}: Failed to connect to the RTT API server. Try again in a few minutes.")
 
     # Get arrival board details
     def _get_arr_board_details(
@@ -360,6 +345,14 @@ class Boards:
                 raise ValueError("404: No data found.")
 
             if self.__complexity == "c":
+                # This block of code is for the Complex complexity level.
+                # The code is used to create a new json file with the departure data inside it. 
+                #
+                # It first checks if a date was provided, and if not, sets the date to now.
+                # It then splits the date by each "/" and sets the file name to the TIPLOC and date.
+                # The file name is then used to create a new file with the service data inside it.
+                # The function then returns a success message and exits this block.
+
                 if date is None:
                     # If no date was provided, set the date as now
                     date = (datetime.now()).strftime("%Y/%m/%d")
@@ -377,6 +370,28 @@ class Boards:
 
             # Advanced/Simple (Prettier)
             elif self.__complexity in ["a", "a.p", "s", "s.p"]:
+                # This block of code is for the Advanced/Simple (Prettier) complexity level.
+                # The code is used to create a new arrivals board list and format the data for display
+                # It first creates a new empty arrivals board list, gets the requested location, and 
+                # initializes a count variable which is used to limit the number of rows displayed, if 
+                # it is provided by the user. It then loops through the services in the service data, 
+                # extracting the relevant information for each service.. Details include: 
+                # - the booked arrival time (This is formatted to a readable format [HH:MM])
+                # - the actual arrival time 
+                #       - The value of this is set to "On time" if the booked and actual arrival are equal
+                #       - "Exp" if it is different
+                #       - "Cancelled" if the service is cancelled
+                # - the service UID
+                # - the platform
+                # - the terminus
+                # - the origin
+                # 
+                # The details of each service are then appended to the arrivals board list that was 
+                # created at the start of the function. The count variable is then incremented by 1, and if
+                # the count is equal to the number of rows provided, the loop breaks. 
+                # The arrival info is then printed to the console using tabulate to format it in a 
+                # readable way. The function returns a success message and exits this block.
+
                 # Create a new arrivals board list
                 arrivals_board: list = []
 
@@ -489,6 +504,28 @@ class Boards:
 
             # Advanced/Simple (Normal)
             elif self.__complexity.endswith("n"):
+                # This block of code is for the Advanced/Simple (Normal) complexity level
+                # The code is used to create a new arrival board list and format the data for display
+                # It first creates a new empty arrivals board list, gets the requested location, and 
+                # initializes a count variable which is used to limit the number of rows displayed, if 
+                # it is provided by the user. It then loops through the services in the service data, 
+                # extracting the relevant information for each service.. Details include: 
+                # - the booked arrival time (This is formatted to a readable format [HH:MM])
+                # - the actual arrival time 
+                #       - The value of this is set to "On time" if the booked and actual arrival are equal
+                #       - "Exp" if it is different
+                #       - "Cancelled" if the service is cancelled
+                # - the service UID
+                # - the platform
+                # - the terminus
+                # 
+                # The details of each service are added to a new ArrivalBoardDetails class. The class is 
+                # then appended to the arrivals board list that was created at the start of the function. 
+                # The count variable is then incremented by 1, and if the count is equal to the number of rows 
+                # provided, the loop breaks. 
+                # The function returns the arrival board list. The function returns a success message 
+                # and exits this block.
+
                 # Create a new arrivals board list
                 arrivals_board: list = []
 

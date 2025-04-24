@@ -8,9 +8,7 @@ import requests
 # Test the connection to the API
 def connection_authorised(username: str, password: str) -> bool:
     # Test the connection for departures at KNGX, with the auth details provided
-    test = requests.get(
-        "https://api.rtt.io/api/v1/json/search/KNGX", auth=(username, password)
-    )
+    test = requests.get("https://api.rtt.io/api/v1/json/search/KNGX", auth=(username, password))
 
     # If the status code is 401, return False
     if test.status_code == 401:
@@ -38,9 +36,7 @@ def create_file(name: str, contents) -> None:
             json.dump(contents, file, ensure_ascii=False, indent=4)
 
     else:
-        raise Exception(
-            "500: Failed to write to file. Perhaps the file already exists?"
-        )
+        raise Exception("500: Failed to write to file. Perhaps the file already exists?")
 
 
 # Format the time
