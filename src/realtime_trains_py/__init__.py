@@ -1,5 +1,6 @@
 # Import functions from other files
 from realtime_trains_py.internal.boards import Boards
+from realtime_trains_py.internal.live_board import LiveBoard
 from realtime_trains_py.internal.services import ServiceDetailsAdvanced, ServiceDetailsSimple, ServiceDetails
 from realtime_trains_py.internal.utilities import connection_authorised
 
@@ -39,6 +40,8 @@ class RealtimeTrainsPy:
         self.__services = ServiceDetails(username=username, password=password, complexity=complexity.lower())
 
         self.__boards = Boards(username=username, password=password, complexity=complexity.lower())
+
+        self.__live_board = LiveBoard(username=username, password=password)
 
     # Get the departures for {tiploc}, given {filter} on {date}, at around {time}. Provide up to {rows} rows
     def get_departures(self, tiploc: str, filter: str=None, date: str=None, rows: int=None, time: str=None) -> list | str:
@@ -116,3 +119,20 @@ class RealtimeTrainsPy:
         ```
         """
         return self.__boards._get_stat_board_details(tiploc=tiploc.upper(), search_filter=filter, date=date, rows=rows, time=time)
+
+    def get_live(self, tiploc: str) -> None:
+        """
+        ## Get Live
+        This function retrieves the live departure board for a given station. The board is updated every 30 seconds.
+        To exit the board, press Ctrl+C.
+
+        :param str tiploc: (Required) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the station.
+
+        ## Examples
+        ```python
+        get_live(tiploc="ELYY")
+
+        get_live(tiploc="PBRO")
+        ```
+        """
+        self.__live_board._get_live(tiploc=tiploc.upper())
