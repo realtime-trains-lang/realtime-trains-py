@@ -54,7 +54,7 @@ class LiveBoard:
                             service_uid = service["serviceUid"]
 
                         if location_detail["displayAs"] != "CANCELLED_CALL":
-                            # If the gbtt departure and realtime departure are equal, set realtime departure to On Time
+                            # If the gbtt departure and realtime departure are equal, set realtime departure to On time
                             if gbtt_departure == realtime_departure:
                                 realtime_departure = "On time"
 

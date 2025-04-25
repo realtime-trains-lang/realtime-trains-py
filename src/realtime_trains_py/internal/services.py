@@ -5,8 +5,8 @@ from datetime import datetime
 from tabulate import tabulate
 
 # Import functions from other files
-from realtime_trains_py.internal.details import (ServiceDetailsSimple, ServiceDetailsAdvanced, CallingPointSimple, CallingPointAdvanced)
-from realtime_trains_py.internal.utilities import (create_file, format_time, validate_date, validate_uid)
+from realtime_trains_py.internal.details import ServiceDetailsSimple, ServiceDetailsAdvanced, CallingPointSimple, CallingPointAdvanced
+from realtime_trains_py.internal.utilities import create_file, format_time, validate_date, validate_uid
 
 
 # Class for getting and creating service details
