@@ -16,8 +16,8 @@ classifiers = [
 ]
 
 [project.urls]
-Repository = "https://github.com/anonymous44401/realtime-trains-py"
-Issues = "https://github.com/anonymous44401/realtime-trains-py/issues"
+Repository = "https://github.com/realtime-trains-lang/realtime-trains-py"
+Issues = "https://github.com/realtime-trains-lang/realtime-trains-py/issues"
 Discord = "https://discord.gg/8xcXSGhBAR"
 
 [build-system]
