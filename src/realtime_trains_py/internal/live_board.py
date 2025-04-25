@@ -19,12 +19,11 @@ class LiveBoard:
         sys.stdout.write("Press Ctrl+C to close live departure board.\n")
         time.sleep(2)
 
-        count = 62
+        count = 0
 
         while True:
             departure_board = []
-            count += 1
-            if count == 63:
+            if count == 0 or datetime.now().strftime("%S") == "00":
                 # Clear the screen
                 sys.stdout.write("\033c\r")
                 count = 0
@@ -78,17 +77,13 @@ class LiveBoard:
 
                     sys.stdout.write("\033[1;34m")
                     sys.stdout.write(f"{requested_location} Live:\n")
-                    sys.stdout.write("\033[1;33m")
+                    sys.stdout.write("\033[1;39m")
                     first = True
 
                     for service in departure_board:
                         if first:
-                            sys.stdout.write(f"1st {service.gbtt_departure} {service.terminus} {service.platform} ")
-                            if service.realtime_departure == "Cancelled":
-                                sys.stdout.write("\033[1;31m")
-
-                            sys.stdout.write(f"{service.realtime_departure}\n")
-                            sys.stdout.write("\033[1;33m")
+                            sys.stdout.write(f"1st {service.gbtt_departure} {service.terminus}  Plat {service.platform} ")
+                            self.__check_cancel(service.realtime_departure)
 
                             service_api_response = requests.get(f"https://api.rtt.io/api/v1/json/service/{service.service_uid}/{(datetime.now()).strftime("%Y/%m/%d")}", auth=(self.__username, self.__password))
                             service_data = service_api_response.json()
@@ -108,22 +103,40 @@ class LiveBoard:
                                     valid = True
 
                             first = False
+                            second = True
                             sys.stdout.write("\n")
 
-                        else:
-                            sys.stdout.write(f"{service.gbtt_departure} {service.terminus} {service.platform} ")
-                            if service.realtime_departure == "Cancelled":
-                                sys.stdout.write("\033[1;31m")
+                        elif second:
+                            sys.stdout.write(f"2nd {service.gbtt_departure} {service.terminus}  Plat {service.platform} ")
+                            second = False
+                            self.__check_cancel(service.realtime_departure)
 
-                            sys.stdout.write(f"{service.realtime_departure}\n")
-                            sys.stdout.write("\033[1;33m")
+                        else:
+                            sys.stdout.write(f"3rd {service.gbtt_departure} {service.terminus}  Plat {service.platform} ")
+
+                            self.__check_cancel(service.realtime_departure)
                 else:
                     sys.stdout.write("\033[1;34m")
                     sys.stdout.write(f"{tiploc} Live:\n")
-                    sys.stdout.write("\033[1;33m")
+                    sys.stdout.write("\033[1;30m")
                     sys.stdout.write("Check timetable for services.\n")
 
             sys.stdout.write("\033[1;3m")
-            sys.stdout.write(datetime.now().strftime("     %H:%M:%S     "))
+            sys.stdout.write(datetime.now().strftime("         %H:%M:%S"))
             sys.stdout.write("\033[K\r")
             time.sleep(1)
+
+    def __check_cancel(self, realtime_departure: str) -> str:
+        """
+        Check if the service is cancelled or delayed.
+        """
+        sys.stdout.write("\033[1;33m")
+
+        if realtime_departure == "Cancelled":
+            sys.stdout.write("\033[1;31m")
+
+        elif realtime_departure == "On time":
+            sys.stdout.write("\033[1;32m")
+
+        sys.stdout.write(f"  {realtime_departure}\n")
+        sys.stdout.write("\033[1;39m")
