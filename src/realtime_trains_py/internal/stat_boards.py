@@ -31,7 +31,7 @@ class NewStationBoard:
         count = 0
         # Iterate over each service and append it to the departure board
         for dep_service in departure_data["services"]:
-            departure_board.append(CreateBoardDetails()._create_dep_service(dep_service))
+            departure_board.append(create_service_details(dep_service, "Departure"))
             count +=1 
             if count == rows:
                 break
@@ -39,7 +39,7 @@ class NewStationBoard:
         count = 0
         # Iterate over each service and append it to the arrival board
         for arr_service in arrival_data["services"]:
-            arrival_board.append(CreateBoardDetails()._create_arr_service(arr_service))
+            arrival_board.append(create_service_details(arr_service, "Arrival"))
             count +=1 
             if count == rows:
                 break
@@ -94,7 +94,7 @@ class NewStationBoard:
         # Iterate over each item in the board
         for item in self._combined_board:
             # If a gbtt_departure is found...
-            if item.gbtt_departure == "":
+            if item.gbtt_departure == "-":
                 # Append the arrival time and details to the new board
                 temp_board.append([item.gbtt_arrival, item])
 
@@ -133,129 +133,58 @@ class NewStationBoard:
         print(f"Station board for {self._requested_location}. Generated at {datetime.now().strftime("%H:%M:%S on %d/%m/%y")}.")
 
         # Print the table
-        print(tabulate(out_board, tablefmt="rounded_grid",
-            headers=["Booked Arrival", "Booked Departure", "Origin", "Destination", "Platform", "Actual Arrival", "Actual Departure", "Service UID"]
-        ))
+        print(tabulate(out_board, tablefmt="rounded_grid", headers=["Booked Arrival", "Booked Departure", "Origin", "Destination", "Platform", "Actual Arrival", "Actual Departure", "Service UID"]))
 
         return "200: Station board printed successfully."
 
+def create_service_details(service, type) -> tuple:
+    gbtt_time = platform = real_time = service_uid = "-"
+    
+    location_detail = service["locationDetail"]  # Details of the location
+    status = location_detail["displayAs"]  # Status of service
 
-# Class for creating the details for the boards
-class CreateBoardDetails:
-    # Create the departures service info
-    def _create_dep_service(self, service) -> tuple:
-        location_detail = service["locationDetail"]  # Details of the location
-        status = location_detail["displayAs"]  # Status of service
+    # Check if booked departure is in location detail
+    if f"gbttBooked{type}" in location_detail:
+        gbtt_time = location_detail[f"gbttBooked{type}"]
+        
+    # Check if platform is in location detail
+    if "platform" in location_detail:
+        platform = location_detail["platform"]
+        
+    # Check if realtime departure is in location detail
+    if f"realtime{type}" in location_detail:
+        real_time = location_detail[f"realtime{type}"]
 
-        # Check if booked departure is in location detail
-        if "gbttBookedDeparture" in location_detail:
-            gbtt_departure = location_detail["gbttBookedDeparture"]
+    # Check if service UID is in location detail
+    if "serviceUid" in service:
+        service_uid = service["serviceUid"]
 
-        else:
-            gbtt_departure = ""
+    # Check if the status isn't cancelled
+    if status != "CANCELLED_CALL":
+        # If the gbtt departure and realtime departure are equal, set realtime departure to On Time
+        if gbtt_time == real_time:
+            real_time = "On time"
 
-        # Check if platform is in location detail
-        if "platform" in location_detail:
-            platform = location_detail["platform"]
+        # If the realtime departure isn't null, format and add Exp
+        elif real_time != "-":
+            real_time = f"Exp {format_time(real_time)}"
 
-        else:
-            platform = "-"
+    else:
+        # Set the realtime departure to cancelled
+        real_time = "Cancelled"
 
-        # Check if realtime departure is in location detail
-        if "realtimeDeparture" in location_detail:
-            realtime_departure = location_detail["realtimeDeparture"]
+    # Format the gbtt departure
+    gbtt_time = format_time(gbtt_time)
 
-        else:
-            realtime_departure = "-"
+    # Pop the terminus
+    terminus = location_detail["destination"].pop()["description"]
 
-        # Check if service UID is in location detail
-        if "serviceUid" in service:
-            service_uid = service["serviceUid"]
+    # Pop the origin
+    origin = location_detail["origin"].pop()["description"]
 
-        else:
-            service_uid = "-"
-
-        # Check if the status isn't cancelled
-        if status != "CANCELLED_CALL":
-            # If the gbtt departure and realtime departure are equal, set realtime departure to On Time
-            if gbtt_departure == realtime_departure:
-                realtime_departure = "On time"
-
-            # If the realtime departure isn't null, format and add Exp
-            elif realtime_departure != "-":
-                realtime_departure = f"Exp {format_time(realtime_departure)}"
-
-        else:
-            # Set the realtime departure to cancelled
-            realtime_departure = "Cancelled"
-
-        # Format the gbtt departure
-        gbtt_departure = format_time(gbtt_departure)
-
-        # Pop the terminus
-        terminus = location_detail["destination"].pop()["description"]
-
-        # Pop the origin
-        origin = location_detail["origin"].pop()["description"]
-
-        # Return the service UID and Departure Board
-        return service_uid, StationBoardDetails("", gbtt_departure, terminus, origin, platform, "", realtime_departure, service_uid)
-
-    # Create the arrivals service info
-    def _create_arr_service(self, service) -> tuple:
-        location_detail = service["locationDetail"]  # Details of the location
-        status = location_detail["displayAs"]  # Status of service
-
-        # Check if booked arrival is in location detail
-        if "gbttBookedArrival" in location_detail:
-            gbtt_arrival = location_detail["gbttBookedArrival"]
-
-        else:
-            gbtt_arrival = "-"
-
-        # Check if platform is in location detail
-        if "platform" in location_detail:
-            platform = location_detail["platform"]
-
-        else:
-            platform = "-"
-
-        # Check if realtime arrival is in location detail
-        if "realtimeArrival" in location_detail:
-            realtime_arrival = location_detail["realtimeArrival"]
-
-        else:
-            realtime_arrival = "-"
-
-        # Check if service UID is in location detail
-        if "serviceUid" in service:
-            service_uid = service["serviceUid"]
-
-        else:
-            service_uid = "-"
-
-        # Check if the status isn't cancelled
-        if status != "CANCELLED_CALL":
-            # If the gbtt arrival and realtime arrival are equal, set realtime arrival to On Time
-            if gbtt_arrival == realtime_arrival:
-                realtime_arrival = "On time"
-
-            # If the realtime arrival isn't null, format and add Exp
-            elif realtime_arrival != "-":
-                realtime_arrival = f"Exp {format_time(realtime_arrival)}"
-
-        else:
-            # Set the realtime arrival to cancelled
-            realtime_arrival = "Cancelled"
-
-        # Format the gbtt arrival
-        gbtt_arrival = format_time(gbtt_arrival)
-
-        # Pop the terminus
-        terminus = (location_detail["destination"]).pop()["description"]
-
-        # Pop the origin
-        origin = (location_detail["origin"]).pop()["description"]
-
-        # Return the service UID and Arrival Board
-        return service_uid, StationBoardDetails(gbtt_arrival, "", terminus, origin, platform, realtime_arrival, "", service_uid)
+    # Return the service UID and Board Details
+    if type == "Departure":
+        return service_uid, StationBoardDetails("-", gbtt_time, terminus, origin, platform, "-", real_time, service_uid)
+    
+    else:
+        return service_uid, StationBoardDetails(gbtt_time, "-", terminus, origin, platform, real_time, "-", service_uid)

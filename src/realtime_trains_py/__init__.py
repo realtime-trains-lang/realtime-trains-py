@@ -123,8 +123,8 @@ class RealtimeTrainsPy:
     def get_live(self, tiploc: str) -> None:
         """
         ## Get Live
-        This function retrieves the live departure board for a given station. The board is updated every 30 seconds.
-        To exit the board, press Ctrl+C.
+        This function retrieves the live departure board for a given station. The board is updated every 60 seconds, on the minute.
+        To exit the board, press Ctrl + C.
 
         :param str tiploc: (Required) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the station.
 

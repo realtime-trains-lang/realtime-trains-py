@@ -75,6 +75,11 @@ The example below will return up to 30 rows of departures and arrivals for Londo
 rtt.get_station(tiploc="KNGX", rows=15)
 ```
 
+The example below will display a life departure board for Ely. 
+```python
+rtt.get_live(tiploc="ELYY")
+```
+
 More in-depth examples can be found on our [examples page](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Examples). 
 
 
