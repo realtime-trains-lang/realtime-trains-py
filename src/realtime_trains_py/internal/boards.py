@@ -355,7 +355,7 @@ def get_arr_service_data(service) -> ArrivalBoardDetails:
     if "serviceUid" in service:
         service_uid = service["serviceUid"]
 
-    return DepartureBoardDetails(
+    return ArrivalBoardDetails(
         format_time(gbtt_arrival), 
         (location_detail["destination"]).pop()["description"], 
         (location_detail["origin"]).pop()["description"],

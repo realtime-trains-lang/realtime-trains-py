@@ -134,5 +134,4 @@ class LiveBoard:
         elif realtime_departure == "On time":
             sys.stdout.write("\033[1;32m")
 
-        sys.stdout.write(f"  {realtime_departure}\n")
-        sys.stdout.write("\033[1;39m")
+        sys.stdout.write(f"  {realtime_departure}\n\033[1;39m")
