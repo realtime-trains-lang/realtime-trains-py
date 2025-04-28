@@ -14,9 +14,8 @@ class LiveBoard:
         self.__password = password
 
     def _get_live(self, tiploc: str) -> None:  
-        # Output a helpful message to the user
-        sys.stdout.write("\033[1;2m")
-        sys.stdout.write("Press Ctrl+C to close live departure board.\n")
+        # Output a helpful message to the user: Press Ctrl+C to close live departure board.
+        sys.stdout.write("\033[1;2mPress Ctrl+C to close live departure board.\n")
         time.sleep(2)
 
         count = 0
@@ -30,15 +29,13 @@ class LiveBoard:
 
                 departure_data = requests.get(f"https://api.rtt.io/api/v1/json/search/{tiploc}", auth=(self.__username, self.__password)).json()
 
-                # If the data is None, raise an error
+                # If the data is not None, continue
                 if departure_data["services"] != None:
-                    
                     requested_location = departure_data["location"]["name"] 
 
                     # Get the service details
                     for service in departure_data["services"]:
                         location_detail = service["locationDetail"] 
-
                         gbtt_departure = realtime_departure = service_uid = platform = "-"
 
                         if "gbttBookedDeparture" in location_detail:
@@ -75,56 +72,55 @@ class LiveBoard:
                         if count == 3:
                             break
 
-                    sys.stdout.write("\033[1;34m")
-                    sys.stdout.write(f"{requested_location} Live:\n")
-                    sys.stdout.write("\033[1;39m")
+                    sys.stdout.write(f"\033[1;34m{requested_location} Live:\n\033[1;39m")
                     first = True
 
                     for service in departure_board:
                         if first:
-                            sys.stdout.write(f"1st {service.gbtt_departure} {service.terminus}  Plat {service.platform} ")
-                            self.__check_cancel(service.realtime_departure)
-
-                            service_api_response = requests.get(f"https://api.rtt.io/api/v1/json/service/{service.service_uid}/{(datetime.now()).strftime("%Y/%m/%d")}", auth=(self.__username, self.__password))
-                            service_data = service_api_response.json()
-
-                            sys.stdout.write("Calling at: ")
-
-                            valid = False
-                            for location in service_data["locations"]:
-                                if location["description"] == service.terminus:
-                                    valid = False
-                                    sys.stdout.write(f"{location['description']}")
-                    
-                                if valid:
-                                    sys.stdout.write(f"{location["description"]}, ")
-
-                                if location["description"] == requested_location:
-                                    valid = True
-
+                            self.__first_service(service, requested_location)
                             first = False
                             second = True
-                            sys.stdout.write("\n")
-
-                        elif second:
-                            sys.stdout.write(f"2nd {service.gbtt_departure} {service.terminus}  Plat {service.platform} ")
-                            second = False
-                            self.__check_cancel(service.realtime_departure)
 
                         else:
-                            sys.stdout.write(f"3rd {service.gbtt_departure} {service.terminus}  Plat {service.platform} ")
+                            if second:
+                                sys.stdout.write(f"2nd {service.gbtt_departure} {service.terminus}  Plat {service.platform} ")
+                                second = False
 
+                            else:
+                                sys.stdout.write(f"3rd {service.gbtt_departure} {service.terminus}  Plat {service.platform} ")
+                            
                             self.__check_cancel(service.realtime_departure)
-                else:
-                    sys.stdout.write("\033[1;34m")
-                    sys.stdout.write(f"{tiploc} Live:\n")
-                    sys.stdout.write("\033[1;30m")
-                    sys.stdout.write("Check timetable for services.\n")
 
-            sys.stdout.write("\033[1;3m")
-            sys.stdout.write(datetime.now().strftime("         %H:%M:%S"))
-            sys.stdout.write("\033[K\r")
+                # If the data is None, display a Check timetable for services message
+                else:
+                    count = 3
+                    sys.stdout.write(f"\033[1;34m{tiploc} Live:\n \033[1;30mCheck timetable for services.\n")
+
+            sys.stdout.write(f"\033[1;3m{datetime.now().strftime("         %H:%M:%S")}\033[K\r")
             time.sleep(1)
+
+    def __first_service(self, service, requested_location: str) -> None:
+        sys.stdout.write(f"1st {service.gbtt_departure} {service.terminus}  Plat {service.platform} ")
+        self.__check_cancel(service.realtime_departure)
+
+        service_api_response = requests.get(f"https://api.rtt.io/api/v1/json/service/{service.service_uid}/{(datetime.now()).strftime("%Y/%m/%d")}", auth=(self.__username, self.__password))
+        service_data = service_api_response.json()
+
+        sys.stdout.write("Calling at: ")
+
+        valid = False
+        for location in service_data["locations"]:
+            if location["description"] == service.terminus:
+                valid = False
+                sys.stdout.write(f"{location['description']}")
+
+            if valid:
+                sys.stdout.write(f"{location["description"]}, ")
+
+            if location["description"] == requested_location:
+                valid = True
+
+        sys.stdout.write("\n")
 
     def __check_cancel(self, realtime_departure: str) -> str:
         """

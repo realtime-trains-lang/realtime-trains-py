@@ -37,15 +37,6 @@ class ServiceDetails:
             service_data = api_response.json()
 
             if self.__complexity == "c":
-                # This block of code is for the Complex complexity level.
-                # The code is used to create a new json file with the departure data inside it. 
-                #
-                # It first checks if a date was provided, and if not, sets the date to now.
-                # It then splits the date by each "/" and sets the file name to the TIPLOC and date.
-                # The file name is then used to create a new file with the service data inside it.
-                # The function then returns a success message and exits this block.
-
-                # Split the date by each "/"
                 date_parts = date.split("/")
 
                 # Set the file name
