@@ -1,7 +1,7 @@
 # Import functions from other files
 from realtime_trains_py.internal.boards import Boards
 from realtime_trains_py.internal.live_board import LiveBoard
-from realtime_trains_py.internal.services import ServiceDetailsAdvanced, ServiceDetailsSimple, ServiceDetails
+from realtime_trains_py.internal.services import ServiceDetails, ServiceData, ServiceDetails
 from realtime_trains_py.internal.utilities import connection_authorised
 
 
@@ -80,7 +80,7 @@ class RealtimeTrainsPy:
         return self.__boards._get_arr_board_details(tiploc=tiploc.upper(), search_filter=filter, date=date, rows=rows, time=time)
 
     # Get the service info for {service_uid} on {date}
-    def get_service(self, service_uid: str, date: str=None) -> ServiceDetailsAdvanced | ServiceDetailsSimple | str:
+    def get_service(self, service_uid: str, date: str=None) -> ServiceData | str:
         """
         :param str service_uid: (Required) A string representing the Service Unique Identity (UID) code.
         :param str date: (Optional) A string representing the date in the format YYYY/MM/DD.

@@ -7,12 +7,11 @@ from tabulate import tabulate
 # Import functions from other files
 from realtime_trains_py.internal.details import DepartureBoardDetails, ArrivalBoardDetails
 from realtime_trains_py.internal.stat_boards import NewStationBoard
-from realtime_trains_py.internal.utilities import create_file, format_time, validate_date, validate_time
+from realtime_trains_py.internal.utilities import create_file, create_search_query, format_time, get_time_status
 
 
 # Class for creating and returning departure, arrival and station boards
 class Boards:
-    # Initialise the class
     def __init__(self, username: str=None, password: str=None, complexity: str="s") -> None:
         self.__username = username
         self.__password = password
@@ -20,35 +19,8 @@ class Boards:
 
     # Get departure board details
     def _get_dep_board_details(self, tiploc: str, search_filter: str=None, rows: int=None, time: str=None, date: str=None) -> list | str:
-        # If a date is provided and it isn't valid, raise an error
-        if date is not None and not validate_date(date):
-            raise ValueError("400: Invalid date. The date provided did not meet requirements or fall into the valid date range.")
-
-        # If a time is provided and it isn't valid, raise an error
-        if time is not None and not validate_time(time):
-            raise ValueError("400: Invalid time. The time provided did not meet requirements or fall into the valid time range.")
-
-        # Add the tiploc to the search_query
-        search_query = f"https://api.rtt.io/api/v1/json/search/{tiploc}"
-
-        # If a search filter was provided, append it to the search_query
-        if search_filter is not None:
-            search_query += f"/to/{search_filter.upper()}"
-
-        if time is not None and date is None:
-            # If a time was provided and a date isn't provided, append a date and the current time to the search_query
-            search_query += f"/{(datetime.now()).strftime("%Y/%m/%d")}/{time}"
-
-        elif date is not None:
-            # If a date was provided, append it to the search_query
-            search_query += f"/{date}"
-
-            if time is not None:
-                # If a time was provided, append it to the search_query
-                search_query += f"/{time}"
-
         # Get the api response using the auth details provided
-        api_response = requests.get(search_query, auth=(self.__username, self.__password))
+        api_response = requests.get(create_search_query(tiploc, search_filter, rows, time, date), auth=(self.__username, self.__password))
 
         if api_response.status_code == 200:
             # If the status code is 200, convert the response to json
@@ -123,35 +95,8 @@ class Boards:
 
     # Get arrival board details
     def _get_arr_board_details(self, tiploc: str, search_filter: str=None, rows: int=None, time: str=None, date: str=None) -> list | str:
-        # If a date is provided and it isn't valid, raise an error
-        if date is not None and not validate_date(date):
-            raise ValueError("400: Invalid date. The date provided did not meet requirements or fall into the valid date range.")
-
-        # If a time is provided and it isn't valid, raise an error
-        if time is not None and not validate_time(time):
-            raise ValueError("400: Invalid time. The time provided did not meet requirements or fall into the valid time range.")
-
-        # Add the tiploc to the search_query
-        search_query = f"https://api.rtt.io/api/v1/json/search/{tiploc}"
-
-        # If a search filter was provided, append it to the search_query
-        if search_filter is not None:
-            search_query += f"/to/{search_filter.upper()}"
-
-        if time is not None and date is None:
-            # If a time was provided and a date isn't provided, append a date and the current time to the search_query
-            search_query += f"/{(datetime.now()).strftime("%Y/%m/%d")}/{time}"
-
-        elif date is not None:
-            # If a date was provided, append it to the search_query
-            search_query += f"/{date}"
-
-            if time is not None:
-                # If a time was provided, append it to the search_query
-                search_query += f"/{time}"
-
         # Get the api response using the auth details provided
-        api_response = requests.get(f"{search_query}/arrivals", auth=(self.__username, self.__password))
+        api_response = requests.get(f"{create_search_query(tiploc, search_filter, rows, time, date)}/arrivals", auth=(self.__username, self.__password))
 
         if api_response.status_code == 200:
             # If the status code is 200, convert the response to json
@@ -223,32 +168,7 @@ class Boards:
 
     # Get station board details
     def _get_stat_board_details(self, tiploc: str, search_filter: str=None, rows: int=None, time: str=None, date: str=None) -> list | str:
-        # If a date is provided and it isn't valid, raise an error
-        if date is not None and not validate_date(date):
-            raise ValueError("400: Invalid date. The date provided did not meet requirements or fall into the valid date range.")
-
-        # If a time is provided and it isn't valid, raise an error
-        if time is not None and not validate_time(time):
-            raise ValueError("400: Invalid time. The time provided did not meet requirements or fall into the valid time range.")
-
-        # Add the tiploc to the search_query
-        search_query = f"https://api.rtt.io/api/v1/json/search/{tiploc}"
-
-        # If a search filter was provided, append it to the search_query
-        if search_filter is not None:
-            search_query += f"/to/{search_filter.upper()}"
-
-        if time is not None and date is None:
-            # If a time was provided and a date isn't provided, append a date and the current time to the search_query
-            search_query += f"/{(datetime.now()).strftime("%Y/%m/%d")}/{time}"
-
-        elif date is not None:
-            # If a date was provided, append it to the search_query
-            search_query += f"/{date}"
-
-            if time is not None:
-                # If a time was provided, append it to the search_query
-                search_query += f"/{time}"
+        search_query = create_search_query(tiploc, search_filter, rows, time, date)
 
         # Get the api response using the auth details provided
         dep_api_response = requests.get(search_query, auth=(self.__username, self.__password))
@@ -303,6 +223,7 @@ class Boards:
             # Raise an error for any other status codes
             raise Exception(f"{dep_api_response.status_code} | {arr_api_response.status_code}: Failed to connect to the RTT API server. Try again in a few minutes.")
 
+
 def get_dep_service_data(service) -> DepartureBoardDetails:
     gbtt_departure = platform = realtime_departure = service_uid = "-"
 
@@ -332,6 +253,7 @@ def get_dep_service_data(service) -> DepartureBoardDetails:
         get_time_status(gbtt_departure, realtime_departure, status),
         service_uid
     )
+
 
 def get_arr_service_data(service) -> ArrivalBoardDetails:
     gbtt_arrival = platform = realtime_arrival = service_uid = "-"
@@ -363,18 +285,3 @@ def get_arr_service_data(service) -> ArrivalBoardDetails:
         get_time_status(gbtt_arrival, realtime_arrival, status),
         service_uid
     )
-
-def get_time_status(gbtt_time, actual_time, status):
-    # Check if the status isn't cancelled
-    if status != "CANCELLED_CALL":
-        # If the gbtt departure and realtime departure are the same, set realtime departure to On Time
-        if gbtt_time == actual_time:
-            return "On time"
-
-        # If the realtime departure isn't null, format and add Exp
-        elif actual_time != "-":
-            return (f"Exp {format_time(actual_time)}")
-
-    else:
-        # Set the realtime departure to cancelled
-        return "Cancelled"
