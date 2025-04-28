@@ -66,6 +66,7 @@ class ServiceDetails:
             # Raise an error for any other status codes
             raise Exception(f"{api_response.status_code}: Failed to connect to the RTT API server. Try again in a few minutes.")
 
+
 def create_service_record(complexity: str, service_data, service_uid) -> str:  
     service_type = service_data["serviceType"]      
     calling_points: list = []

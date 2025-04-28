@@ -1,6 +1,5 @@
 # Sort the two lists
 def merge_sort(arr) -> list:
-    # If the length is 1 or less, return the array
     if len(arr) <= 1:
         return arr
 
@@ -11,11 +10,10 @@ def merge_sort(arr) -> list:
     # Return the sorted array
     return merge(sorted_l, sorted_r)
 
-
 # Merge the two lists in order
 def merge(left, right) -> list:
-    result = []  # New empty result list
-    count_l = count_r = 0  # Set both counts to 0
+    result = [] 
+    count_l = count_r = 0 
 
     # While both counts are less than the length of the lists
     while count_l < len(left) and count_r < len(right):

@@ -1,4 +1,4 @@
-# Import libraries
+# Import external libraries
 import json
 import os, os.path
 import re
@@ -7,19 +7,15 @@ import requests
 from datetime import datetime
 
 
-# Test the connection to the API
 def connection_authorised(username: str, password: str) -> bool:
     # Test the connection for departures at KNGX, with the auth details provided
     test = requests.get("https://api.rtt.io/api/v1/json/search/KNGX", auth=(username, password))
 
-    # If the status code is 401, return False
     if test.status_code == 401:
         return False
 
     return True
 
-
-# Create new file
 def create_file(name: str, contents) -> None:
     # Check if folder exists and create it if not
     if not os.path.isdir("realtime_trains_py_data"):
@@ -46,7 +42,6 @@ def create_search_query(tiploc: str, search_filter: str=None, rows: int=None, ti
     if time is not None and not validate_time(time):
         raise ValueError("400: Invalid time. The time provided did not meet requirements or fall into the valid time range.")
 
-    # Add the tiploc to the search_query
     search_query = f"https://api.rtt.io/api/v1/json/search/{tiploc}"
 
     # If a search filter was provided, append it to the search_query
@@ -64,8 +59,6 @@ def create_search_query(tiploc: str, search_filter: str=None, rows: int=None, ti
 
     return search_query
 
-
-# Format the time
 def format_time(time: str) -> str:
     return f"{time[0]}{time[1]}:{time[2]}{time[3]}"
 
@@ -84,27 +77,18 @@ def get_time_status(gbtt_time, actual_time, status):
     else:
         return "Cancelled"
 
-
-# Validate the date
 def validate_date(date: str) -> bool:
-    # Check if the regex pattern was found
     if re.search("[1-9][0-9][0-9]{2}/([0][1-9]|[1][0-2])/([1-2][0-9]|[0][1-9]|[3][0-1])", date) != None:
-        # If found, return True
         return True
 
-    # If not found, return False
     return False
 
-
-# Validate the time
 def validate_time(time: str) -> bool:
     if re.search("([01][0-9]|2[0-3])([0-5][0-9])", time) != None:
         return True
 
     return False
 
-
-# Validate the service UID
 def validate_uid(uid: str) -> bool:
     if re.search("[A-Z][0-9]{5}", uid) != None:
         return True

@@ -1,8 +1,8 @@
-# Import libraries
+# Import external libraries
 from datetime import datetime
 from tabulate import tabulate
 
-# Import functions from other files
+# Import necessary items from other files
 from realtime_trains_py.internal.details import StationBoardDetails
 from realtime_trains_py.internal.merge_sort import merge_sort
 from realtime_trains_py.internal.utilities import format_time, get_time_status
@@ -81,33 +81,30 @@ class NewStationBoard:
         for services in arr_dep_temp:
             self._combined_board.append(services)
 
-        # Clear the old boards
         added_items.clear()
         arr_dep_temp.clear()
         arrival_board.clear()
         departure_board.clear()
 
-    # Get the times (the value we sort by) out of the combined_board
     def __extract_times(self) -> None:
-        temp_board = []  # Create a temporary board
+        """
+        Extract the times (the value we sort by) from the combined board and create a new board with the times and services.
+        If the gbtt_departure is "-", set the sort time to gbtt_arrival.
+        If the gbtt_arrival is "-", set the sort time to gbtt_departure.
+        """
+        temp_board = [] 
 
-        # Iterate over each item in the board
         for item in self._combined_board:
-            # If a gbtt_departure is found...
             if item.gbtt_departure == "-":
-                # Append the arrival time and details to the new board
                 temp_board.append([item.gbtt_arrival, item])
 
             else:
-                # Append the departure time and details to the new board
                 temp_board.append([item.gbtt_departure, item])
 
-        # Overwrite the combined board
         self._combined_board = temp_board
 
-    # Create the new board
     def _create_station_board(self) -> list:
-        self.__extract_times()  # Extract the times
+        self.__extract_times()
         #################################################
         # vvvv MERGE SORT ALGORITHM IS CALLED HERE vvvv #
         #################################################
@@ -117,29 +114,35 @@ class NewStationBoard:
         #################################################
         self._combined_board.clear()
 
-        # Append each service to the combined board
         for service in combined_board:
             self._combined_board.append(service[1])
 
-        # Return the combined board
         return self._combined_board
 
-    # Output the board in a formatted way
     def _output_formatted_board(self) -> str:
-        out_board = []  # Create a new empty output board
+        out_board = [] 
 
         # For each service in the board, add its content to the output board
         for service in self._combined_board:
             out_board.append([service.gbtt_arrival, service.gbtt_departure, service.origin, service.terminus, service.platform, service.realtime_arrival, service.realtime_departure, service.service_uid])
 
-        # Print the station info and table
+        # Print the station details and the tabulate table
         print(f"Station board for {self._requested_location}. Generated at {datetime.now().strftime("%H:%M:%S on %d/%m/%y")}.")
-
         print(tabulate(out_board, tablefmt="rounded_grid", headers=["Booked Arrival", "Booked Departure", "Origin", "Destination", "Platform", "Actual Arrival", "Actual Departure", "Service UID"]))
 
         return "200: Station board printed successfully."
 
 def create_service_details(service, type) -> tuple:
+    """
+    Get the service service data from the API response.
+    This function extracts the relevant information from the service data and returns it as a StationBoardDetails object.
+
+    It begins by setting the default values for gbtt_time, platform, real_time, and service_uid to "-".
+    Then, it retrieves the location detail.
+    It checks if the keys "gbttBooked[Departure/Arrival]", "platform", "realtime[Departure/Arrival]" and "serviceUid" are in the location detail and assigns their values to the respective variables.
+    
+    Finally, it returns the serviceUid and a StationBoardDetails object with the formatted gbtt_[Departure/Arrival], gbtt_[Arrival/Departure], terminus, origin, platform, realtime_[Departure/Arrival], realtime_[Arrival/Departure], and service_uid.
+    """
     gbtt_time = platform = real_time = service_uid = "-"
     
     location_detail = service["locationDetail"] 
