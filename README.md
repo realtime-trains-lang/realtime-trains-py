@@ -1,13 +1,13 @@
 # Realtime Trains API Python Module
 
-Maintained and managed by members of [realtime-trains-lang](https://github.com/realtime-trains-lang)
+Maintained and managed by members of [realtime-trains-lang](https://github.com/realtime-trains-lang).
 
 ![PyPI](https://img.shields.io/pypi/v/realtime-trains-py) ![License](https://img.shields.io/github/license/realtime-trains-lang/realtime-trains-py) ![Issues](https://img.shields.io/github/issues/realtime-trains-lang/realtime-trains-py)
 
 
-### View our [release notes](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Release-Notes)
+### Check out our [release notes.](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Release-Notes)
 
-[Documentation](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Home)
+### Read the [documentation.](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Home)
 
 ## About this package
 
@@ -55,36 +55,41 @@ You'll need an account for the [Realtime Trains API](https://api.rtt.io) to use 
 
 ## Examples
 
-The example below will return up to 15 rows on the departure board for London King's Cross at the time you run the program. 
+#### Get Live *(New for version 2025.3.0)*
+###### The example below will display a live departure board for Ely. 
+```python
+rtt.get_live(tiploc="ELYY")
+```
+
+#### Get Departures
+###### The example below will return up to 15 rows on the departure board for London King's Cross at the time you run the program. 
 ```python
 rtt.get_departures(tiploc="KNGX", rows=15)
 ```
 
-The example below will return up to 15 rows on the arrivals board for London King's Cross at the time you run the program. 
+#### Get Arrivals
+###### The example below will return up to 15 rows on the arrivals board for London King's Cross at the time you run the program. 
 ```python
 rtt.get_arrivals(tiploc="KNGX", rows=15)
 ```
 
-The example below will return the service information of G28171 (2H18 0958 London Liverpool Street to Cambridge North) at the time you run the program. 
+#### Get Service
+###### The example below will return the service information of G28171 (2H18 0958 London Liverpool Street to Cambridge North) at the time you run the program. 
 ```python
 rtt.get_service(service_uid="G28171")
 ```
 
-The example below will return up to 30 rows of departures and arrivals for London King's Cross at the time you run the program. 
+#### Get Station
+###### The example below will return up to 30 rows of departures and arrivals for London King's Cross at the time you run the program. 
 ```python
 rtt.get_station(tiploc="KNGX", rows=15)
-```
-
-The example below will display a life departure board for Ely. 
-```python
-rtt.get_live(tiploc="ELYY")
 ```
 
 More in-depth examples can be found on our [examples page](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Examples). 
 
 
-## License
+## Licensing 
 
 The **realtime-trains-py** API Wrapper uses an MIT License.
 
-All of our data is kindly provided by [Realtime Trains](https://www.realtimetrains.co.uk/).
+All data is kindly provided by [Realtime Trains](https://www.realtimetrains.co.uk/) through the [Realtime Trains API](https://api.rtt.io).

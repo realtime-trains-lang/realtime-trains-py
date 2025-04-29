@@ -1,9 +1,11 @@
+# Import external libraries
 import requests
 import sys
 import time
 
 from datetime import datetime
 
+# Import necessary items from other files
 from realtime_trains_py.internal.details import DepartureBoardDetails
 from realtime_trains_py.internal.utilities import format_time
 
@@ -36,7 +38,8 @@ class LiveBoard:
                     # Get the service details
                     for service in departure_data["services"]:
                         location_detail = service["locationDetail"] 
-                        gbtt_departure = realtime_departure = service_uid = platform = "-"
+                        gbtt_departure = realtime_departure = service_uid = ""
+                        platform = "Unknown"
 
                         if "gbttBookedDeparture" in location_detail:
                             gbtt_departure = location_detail["gbttBookedDeparture"]
@@ -55,7 +58,7 @@ class LiveBoard:
                             if gbtt_departure == realtime_departure:
                                 realtime_departure = "On time"
 
-                            elif realtime_departure != "-":
+                            elif realtime_departure != "":
                                 realtime_departure = (f"Exp {format_time(realtime_departure)}")
 
                         else:
@@ -89,7 +92,7 @@ class LiveBoard:
                             else:
                                 sys.stdout.write(f"3rd {service.gbtt_departure} {service.terminus}  Plat {service.platform} ")
                             
-                            self.__check_cancel(service.realtime_departure)
+                            check_cancel(service.realtime_departure)
 
                 # If the data is None, display a Check timetable for services message
                 else:
@@ -100,8 +103,11 @@ class LiveBoard:
             time.sleep(1)
 
     def __first_service(self, service, requested_location: str) -> None:
+        """
+        Get the first service from the live board and print it to the screen with its subsequent calling points and service operator.
+        """
         sys.stdout.write(f"1st {service.gbtt_departure} {service.terminus}  Plat {service.platform} ")
-        self.__check_cancel(service.realtime_departure)
+        check_cancel(service.realtime_departure)
 
         service_api_response = requests.get(f"https://api.rtt.io/api/v1/json/service/{service.service_uid}/{(datetime.now()).strftime("%Y/%m/%d")}", auth=(self.__username, self.__password))
         service_data = service_api_response.json()
@@ -120,18 +126,19 @@ class LiveBoard:
             if location["description"] == requested_location:
                 valid = True
 
-        sys.stdout.write("\n")
+        sys.stdout.write(f". Operated by {service_data["atocName"]} \n")
 
-    def __check_cancel(self, realtime_departure: str) -> str:
-        """
-        Check if the service is cancelled or delayed.
-        """
-        sys.stdout.write("\033[1;33m")
+def check_cancel(realtime_departure: str) -> None:
+    """
+    Check if the service is cancelled or delayed. Change text colour accordingly.
+    If cancelled, set the text to red. If on time, set the text to green. Otherwise, set the text to yellow.
+    """
+    sys.stdout.write("\033[1;33m")
 
-        if realtime_departure == "Cancelled":
-            sys.stdout.write("\033[1;31m")
+    if realtime_departure == "Cancelled":
+        sys.stdout.write("\033[1;31m")
 
-        elif realtime_departure == "On time":
-            sys.stdout.write("\033[1;32m")
+    elif realtime_departure == "On time":
+        sys.stdout.write("\033[1;32m")
 
-        sys.stdout.write(f"  {realtime_departure}\n\033[1;39m")
+    sys.stdout.write(f"  {realtime_departure}\n\033[1;39m")

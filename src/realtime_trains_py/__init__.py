@@ -1,13 +1,11 @@
-# Import functions from other files
+# Import necessary items from other files
 from realtime_trains_py.internal.boards import Boards
 from realtime_trains_py.internal.live_board import LiveBoard
-from realtime_trains_py.internal.services import ServiceDetailsAdvanced, ServiceDetailsSimple, ServiceDetails
+from realtime_trains_py.internal.services import ServiceDetails, ServiceData, ServiceDetails
 from realtime_trains_py.internal.utilities import connection_authorised
 
 
-# The RealtimeTrainsPy class
 class RealtimeTrainsPy:
-    # Initialise the class
     def __init__(self, complexity: str="s", username: str=None, password: str=None) -> None:
         """
         :param str username: (Required) A string representing your username for authentication.
@@ -22,30 +20,24 @@ class RealtimeTrainsPy:
         rtt = RealtimeTrainsPy(complexity="a.n", username="<a_username>", password="<a_password>")
         ```
         """
-        # Check if the username and password have been provided
         if username == None or password == None:
-            # If at least one is missing, raise an error
             raise ValueError("400: Missing authentication details. Both username and password must be provided. Not all required fields were provided.")
 
-        # Check if the connection is authorised
         if not connection_authorised(username=username, password=password):
-            # If not authorised, raise an error
             raise PermissionError("401: Couldn't verify your username or password. Check your details and try again.")
 
-        # Check if selected complexity is valid
         if complexity.lower() not in ["a", "a.n", "a.p", "c", "s","s.n", "s.p"]:
-            # If complexity is not in the valid range, raise an error
             raise ValueError("400: Complexity not recognised. Select a valid type.")
 
         self.__services = ServiceDetails(username=username, password=password, complexity=complexity.lower())
-
         self.__boards = Boards(username=username, password=password, complexity=complexity.lower())
-
         self.__live_board = LiveBoard(username=username, password=password)
 
-    # Get the departures for {tiploc}, given {filter} on {date}, at around {time}. Provide up to {rows} rows
     def get_departures(self, tiploc: str, filter: str=None, date: str=None, rows: int=None, time: str=None) -> list | str:
         """
+        ## Get Departures
+        This function retrieves the departures for a given station.
+
         :param str tiploc: (Required) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the station.
         :param str filter: (Optional) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the filter station.
         :param str date: (Optional) A string representing the date in the format YYYY/MM/DD.
@@ -61,9 +53,11 @@ class RealtimeTrainsPy:
         """
         return self.__boards._get_dep_board_details(tiploc=tiploc.upper(), search_filter=filter, date=date, rows=rows, time=time)
 
-    # Get the arrivals for {tiploc}, given {filter} on {date}, at around {time}. Provide up to {rows} rows
     def get_arrivals(self, tiploc: str, filter: str=None, date: str=None, rows: int=None, time: str=None) -> list | str:
         """
+        ## Get Arrivals
+        This function retrieves the arrivals for a given station.
+
         :param str tiploc: (Required) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the station.
         :param str filter: (Optional) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the filter station.
         :param str date: (Optional) A string representing the date in the format YYYY/MM/DD.
@@ -79,9 +73,11 @@ class RealtimeTrainsPy:
         """
         return self.__boards._get_arr_board_details(tiploc=tiploc.upper(), search_filter=filter, date=date, rows=rows, time=time)
 
-    # Get the service info for {service_uid} on {date}
-    def get_service(self, service_uid: str, date: str=None) -> ServiceDetailsAdvanced | ServiceDetailsSimple | str:
+    def get_service(self, service_uid: str, date: str=None) -> ServiceData | str:
         """
+        ## Get Service
+        This function retrieves the service information for a given service UID on a provided date.
+
         :param str service_uid: (Required) A string representing the Service Unique Identity (UID) code.
         :param str date: (Optional) A string representing the date in the format YYYY/MM/DD.
 
@@ -94,9 +90,11 @@ class RealtimeTrainsPy:
         """
         return self.__services._get_service_details(service_uid=service_uid.upper(), date=date)
 
-    # Get the departures and arrivals for {tiploc}, given {filter} on {date}, at around {time}. Provide up to {rows} rows
     def get_station(self, tiploc: str, filter: str=None, date: str=None, rows: int=None, time: str=None) -> list | str:
         """
+        ## Get Station
+        This function retrieves the departures and arrivals for a given station and orders these into one big board.
+
         :param str tiploc: (Required) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the station.
         :param str filter: (Optional) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the filter station.
         :param str date: (Optional) A string representing the date in the format YYYY/MM/DD.
@@ -130,9 +128,9 @@ class RealtimeTrainsPy:
 
         ## Examples
         ```python
-        get_live(tiploc="ELYY")
+        get_live(tiploc="ELYY") # Live board for Ely
 
-        get_live(tiploc="PBRO")
+        get_live(tiploc="PBRO") # Live board for Peterborough
         ```
         """
         self.__live_board._get_live(tiploc=tiploc.upper())
