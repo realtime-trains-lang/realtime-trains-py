@@ -1,9 +1,11 @@
+# Import external libraries
 import requests
 import sys
 import time
 
 from datetime import datetime
 
+# Import necessary items from other files
 from realtime_trains_py.internal.details import DepartureBoardDetails
 from realtime_trains_py.internal.utilities import format_time
 

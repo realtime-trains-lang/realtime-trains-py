@@ -1,10 +1,10 @@
-# Import libraries
+# Import external libraries
 import requests
 
 from datetime import datetime
 from tabulate import tabulate
 
-# Import functions from other files
+# Import necessary items from other files
 from realtime_trains_py.internal.details import ServiceData, CallingPoint
 from realtime_trains_py.internal.utilities import create_file, format_time, validate_date, validate_uid
 
