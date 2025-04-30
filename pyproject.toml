@@ -1,6 +1,6 @@
 [project]
 name = "realtime-trains-py"
-version = "2025.3.0rc2"
+version = "2025.3.0"
 authors = [
   { name="anonymous44401", email="anonymous4401.ad@gmail.com" },
 ]
