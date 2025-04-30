@@ -25,27 +25,24 @@ class LiveBoard:
         while True:
             departure_board = []
             if count == 0 or datetime.now().strftime("%S") == "00":
-                # Clear the screen
-                sys.stdout.write("\033c\r")
                 count = 0
 
                 departure_data = requests.get(f"https://api.rtt.io/api/v1/json/search/{tiploc}", auth=(self.__username, self.__password)).json()
 
                 # If the data is not None, continue
-                if departure_data["services"] != None:
+                if "error" not in departure_board and departure_data["services"] != None:
                     requested_location = departure_data["location"]["name"] 
 
                     # Get the service details
                     for service in departure_data["services"]:
                         location_detail = service["locationDetail"] 
-                        gbtt_departure = realtime_departure = service_uid = ""
-                        platform = "Unknown"
+                        gbtt_departure = realtime_departure = service_uid = platform = ""
 
                         if "gbttBookedDeparture" in location_detail:
                             gbtt_departure = location_detail["gbttBookedDeparture"]
                             
                         if "platform" in location_detail:
-                            platform = location_detail["platform"]
+                            platform = f"Plat {location_detail["platform"]}"
                             
                         if "realtimeDeparture" in location_detail:
                             realtime_departure = location_detail["realtimeDeparture"]
@@ -75,44 +72,47 @@ class LiveBoard:
                         if count == 3:
                             break
 
-                    sys.stdout.write(f"\033[1;34m{requested_location} Live:\n\033[1;39m")
+                    line_one = f"\033[1;34m{requested_location} Live:\033[1;39m"
                     first = True
 
                     for service in departure_board:
                         if first:
-                            self.__first_service(service, requested_location)
+                            line_two, line_three = self.__first_service(service, requested_location)
                             first = False
                             second = True
 
                         else:
                             if second:
-                                sys.stdout.write(f"2nd {service.gbtt_departure} {service.terminus}  Plat {service.platform} ")
+                                line_four = f"2nd {service.gbtt_departure} {service.terminus} {service.platform}  {check_cancel(service.realtime_departure)}"
                                 second = False
 
                             else:
-                                sys.stdout.write(f"3rd {service.gbtt_departure} {service.terminus}  Plat {service.platform} ")
+                                line_five = f"3rd {service.gbtt_departure} {service.terminus} {service.platform}  {check_cancel(service.realtime_departure)}"
+                    
+                    # Clear the screen
+                    sys.stdout.write("\033c\r")
+                    sys.stdout.write(f"{line_one}\n{line_two}\n{line_three}\n{line_four}\n{line_five}\n")
                             
-                            check_cancel(service.realtime_departure)
-
                 # If the data is None, display a Check timetable for services message
                 else:
                     count = 3
+                    # Clear the screen
+                    sys.stdout.write("\033c\r")
                     sys.stdout.write(f"\033[1;34m{tiploc} Live:\n \033[1;30mCheck timetable for services.\n")
 
             sys.stdout.write(f"\033[1;3m{datetime.now().strftime("         %H:%M:%S")}\033[K\r")
             time.sleep(1)
 
-    def __first_service(self, service, requested_location: str) -> None:
+    def __first_service(self, service, requested_location: str) -> tuple:
         """
         Get the first service from the live board and print it to the screen with its subsequent calling points and service operator.
         """
-        sys.stdout.write(f"1st {service.gbtt_departure} {service.terminus}  Plat {service.platform} ")
-        check_cancel(service.realtime_departure)
+        line_two = f"1st {service.gbtt_departure} {service.terminus} {service.platform}  {check_cancel(service.realtime_departure)}"
 
         service_api_response = requests.get(f"https://api.rtt.io/api/v1/json/service/{service.service_uid}/{(datetime.now()).strftime("%Y/%m/%d")}", auth=(self.__username, self.__password))
         service_data = service_api_response.json()
 
-        sys.stdout.write("Calling at: ")
+        line_three = "Calling at: "
 
         valid = False
         stops_outputted = False
@@ -123,39 +123,37 @@ class LiveBoard:
             if service_count == services:
                 if stops_outputted:
                     valid = False
-                    sys.stdout.write(f"{location['description']}")
+                    line_three += f"{location['description']}"
 
                 else:
-                    sys.stdout.write(f"{location['description']} only")
+                    line_three += f"{location['description']} only"
                     break
 
             if valid:
                 stops_outputted = True
                 if service_count == services-1:
-                    sys.stdout.write(f"{location["description"]} & ")
+                    line_three += f"{location["description"]} & "
 
                 else:
-                    sys.stdout.write(f"{location["description"]}, ")
+                    line_three += f"{location["description"]}, "
 
             if location["description"] == requested_location:
                 valid = True
 
-            # sys.stdout.write(f"{location['description']} only.")
+        line_three += f". Operated by {service_data["atocName"]}."
 
+        return (line_two, line_three)
 
-        sys.stdout.write(f". A {service_data["atocName"]} service. \n")
-
-def check_cancel(realtime_departure: str) -> None:
+def check_cancel(realtime_departure: str) -> str:
     """
     Check if the service is cancelled or delayed. Change text colour accordingly.
     If cancelled, set the text to red. If on time, set the text to green. Otherwise, set the text to yellow.
     """
-    sys.stdout.write("\033[1;33m")
 
     if realtime_departure == "Cancelled":
-        sys.stdout.write("\033[1;31m")
+        return "\033[1;31mCancelled\033[1;39m"
 
     elif realtime_departure == "On time":
-        sys.stdout.write("\033[1;32m")
+        return "\033[1;32mOn time\033[1;39m"
 
-    sys.stdout.write(f"  {realtime_departure}\n\033[1;39m")
+    return f"\033[1;33m  {realtime_departure}\033[1;39m"
