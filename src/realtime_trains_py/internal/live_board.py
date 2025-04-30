@@ -115,15 +115,22 @@ class LiveBoard:
         sys.stdout.write("Calling at: ")
 
         valid = False
+        stops_outputted = False
         services = len(service_data["locations"])
         service_count = 0
         for location in service_data["locations"]:
             service_count += 1
             if service_count == services:
-                valid = False
-                sys.stdout.write(f"{location['description']}")
+                if stops_outputted:
+                    valid = False
+                    sys.stdout.write(f"{location['description']}")
+
+                else:
+                    sys.stdout.write(f"{location['description']} only")
+                    break
 
             if valid:
+                stops_outputted = True
                 if service_count == services-1:
                     sys.stdout.write(f"{location["description"]} & ")
 
@@ -132,6 +139,9 @@ class LiveBoard:
 
             if location["description"] == requested_location:
                 valid = True
+
+            # sys.stdout.write(f"{location['description']} only.")
+
 
         sys.stdout.write(f". A {service_data["atocName"]} service. \n")
 
