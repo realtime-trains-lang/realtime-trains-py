@@ -115,18 +115,25 @@ class LiveBoard:
         sys.stdout.write("Calling at: ")
 
         valid = False
+        services = len(service_data["locations"])
+        service_count = 0
         for location in service_data["locations"]:
-            if location["description"] == service.terminus:
+            service_count += 1
+            if service_count == services:
                 valid = False
                 sys.stdout.write(f"{location['description']}")
 
             if valid:
-                sys.stdout.write(f"{location["description"]}, ")
+                if service_count == services-1:
+                    sys.stdout.write(f"{location["description"]} & ")
+
+                else:
+                    sys.stdout.write(f"{location["description"]}, ")
 
             if location["description"] == requested_location:
                 valid = True
 
-        sys.stdout.write(f". Operated by {service_data["atocName"]} \n")
+        sys.stdout.write(f". A {service_data["atocName"]} service. \n")
 
 def check_cancel(realtime_departure: str) -> None:
     """
