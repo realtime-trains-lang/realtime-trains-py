@@ -72,7 +72,9 @@ class LiveBoard:
                         if count == 3:
                             break
 
-                    line_one = f"\033[1;34m{requested_location} Live:\033[1;39m"
+                    line_one = f"\033[1;34m{requested_location} Live:\n\033[1;39m"
+                    line_four = ""
+                    line_five = ""
                     first = True
 
                     for service in departure_board:
@@ -83,15 +85,15 @@ class LiveBoard:
 
                         else:
                             if second:
-                                line_four = f"2nd {service.gbtt_departure} {service.terminus} {service.platform}  {check_cancel(service.realtime_departure)}"
+                                line_four += f"2nd {service.gbtt_departure} {service.terminus} {service.platform}  {check_cancel(service.realtime_departure)}\n"
                                 second = False
 
                             else:
-                                line_five = f"3rd {service.gbtt_departure} {service.terminus} {service.platform}  {check_cancel(service.realtime_departure)}"
+                                line_five += f"3rd {service.gbtt_departure} {service.terminus} {service.platform}  {check_cancel(service.realtime_departure)}\n"
                     
                     # Clear the screen
                     sys.stdout.write("\033c\r")
-                    sys.stdout.write(f"{line_one}\n{line_two}\n{line_three}\n{line_four}\n{line_five}\n")
+                    sys.stdout.write(f"{line_one}{line_two}{line_three}{line_four}{line_five}")
                             
                 # If the data is None, display a Check timetable for services message
                 else:
@@ -107,7 +109,7 @@ class LiveBoard:
         """
         Get the first service from the live board and print it to the screen with its subsequent calling points and service operator.
         """
-        line_two = f"1st {service.gbtt_departure} {service.terminus} {service.platform}  {check_cancel(service.realtime_departure)}"
+        line_two = f"1st {service.gbtt_departure} {service.terminus} {service.platform}  {check_cancel(service.realtime_departure)}\n"
 
         service_api_response = requests.get(f"https://api.rtt.io/api/v1/json/service/{service.service_uid}/{(datetime.now()).strftime("%Y/%m/%d")}", auth=(self.__username, self.__password))
         service_data = service_api_response.json()
@@ -140,7 +142,7 @@ class LiveBoard:
             if location["description"] == requested_location:
                 valid = True
 
-        line_three += f". Operated by {service_data["atocName"]}."
+        line_three += f". Operated by {service_data["atocName"]}.\n"
 
         return (line_two, line_three)
 
