@@ -41,10 +41,9 @@ class Boards:
             
             departure_board: list = []
             requested_location = service_data["location"]["name"]
-            count = 0 
 
             # For each service in the departure data, get the service data
-            for service in service_data["services"]:
+            for service in service_data["services"][:rows]:
                 service_info = get_dep_service_data(service)
 
                 if self.__complexity.endswith("n"):
@@ -53,10 +52,6 @@ class Boards:
                 else:
                     # Unpack the service details and append them to a list if complexity does not end with n
                     departure_board.append([service_info.gbtt_departure, service_info.terminus, service_info.platform, service_info.realtime_departure, service_info.service_uid])
-
-                count += 1
-                if count == rows:
-                    break
 
             if self.__complexity.endswith("n"):
                 return departure_board
@@ -101,10 +96,9 @@ class Boards:
             
             arrivals_board: list = []
             requested_location = service_data["location"]["name"] 
-            count = 0  
 
             # For each service in the arrival data, get the service data
-            for service in service_data["services"]:
+            for service in service_data["services"][:rows]:
                 service_info = get_arr_service_data(service)
                     
                 if self.__complexity.endswith("n"):
@@ -113,10 +107,6 @@ class Boards:
                 else:
                     # Unpack the service details and append them to a list if complexity does not end with n
                     arrivals_board.append([service_info.gbtt_arrival, service_info.terminus, service_info.origin, service_info.platform, service_info.realtime_arrival, service_info.service_uid])
-
-                count += 1
-                if count == rows:
-                    break
 
             if self.__complexity.endswith("n"):
                 return arrivals_board

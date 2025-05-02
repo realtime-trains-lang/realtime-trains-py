@@ -4,7 +4,6 @@ from tabulate import tabulate
 
 # Import necessary items from other files
 from realtime_trains_py.internal.details import StationBoardDetails
-from realtime_trains_py.internal.merge_sort import merge_sort
 from realtime_trains_py.internal.utilities import format_time, get_time_status
 
 
@@ -28,21 +27,13 @@ class NewStationBoard:
         departure_board = []
         self._combined_board = []
 
-        count = 0
         # Iterate over each service and append it to the departure board
-        for dep_service in departure_data["services"]:
+        for dep_service in departure_data["services"][:rows]:
             departure_board.append(create_service_details(dep_service, "Departure"))
-            count +=1 
-            if count == rows:
-                break
 
-        count = 0
         # Iterate over each service and append it to the arrival board
-        for arr_service in arrival_data["services"]:
+        for arr_service in arrival_data["services"][:rows]:
             arrival_board.append(create_service_details(arr_service, "Arrival"))
-            count +=1 
-            if count == rows:
-                break
 
         # Iterate over each item in departure board
         for departures in departure_board:
@@ -105,17 +96,13 @@ class NewStationBoard:
 
     def _create_station_board(self) -> list:
         self.__extract_times()
-        #################################################
-        # vvvv MERGE SORT ALGORITHM IS CALLED HERE vvvv #
-        #################################################
-        combined_board = merge_sort(self._combined_board)
-        #################################################
-        # ^^^^ MERGE SORT ALGORITHM IS CALLED HERE ^^^^ #
-        #################################################
-        self._combined_board.clear()
+        self._combined_board.sort(key=lambda x: x[0], reverse=False)
+        combined_board = []
 
-        for service in combined_board:
-            self._combined_board.append(service[1])
+        for service in self._combined_board:
+            combined_board.append(service[1])
+
+        self._combined_board = combined_board
 
         return self._combined_board
 

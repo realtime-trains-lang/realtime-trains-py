@@ -144,7 +144,7 @@ class LiveBoard:
 
         line_three += f". Operated by {service_data["atocName"]}.\n"
 
-        return (line_two, line_three)
+        return line_two, line_three
 
 def check_cancel(realtime_departure: str) -> str:
     """
