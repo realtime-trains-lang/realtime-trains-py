@@ -13,11 +13,12 @@ class RealtimeTrainsPy:
         :param str complexity: (Optional) A string representing your chosen complexity level. 
         Choose from: `["a", "a.n", "a.p", "c", "s","s.n", "s.p"]`. If not provided, defaults to "s".
         
+        ---
         ## Examples
         ```python
-        rtt = RealtimeTrainsPy(complexity="s", username="<a_username>", password="<a_password>")
+        rtt = RealtimeTrainsPy(complexity="s", username="rttapi_<a_username>", password="<a_password>")
 
-        rtt = RealtimeTrainsPy(complexity="a.n", username="<a_username>", password="<a_password>")
+        rtt = RealtimeTrainsPy(complexity="a.n", username="rttapi_<a_username>", password="<a_password>")
         ```
         """
         if username == None or password == None:
@@ -44,6 +45,7 @@ class RealtimeTrainsPy:
         :param int rows: (Optional) An integer representing the maximum number of rows to return. (Only available for simple and advanced complexity.)
         :param str time: (Optional) A string representing the time in the format HHMM.
 
+        ---
         ## Examples
         ```python
         get_departures(tiploc="KNGX", filter="STEVNGE", date="2024/11/16", time="1800", rows=10)
@@ -64,6 +66,7 @@ class RealtimeTrainsPy:
         :param int rows: (Optional) An integer representing the maximum number of rows to return. (Only available for simple and advanced complexity.)
         :param str time: (Optional) A string representing the time in the format HHMM.
 
+        ---
         ## Examples
         ```python
         get_arrivals(tiploc="KNGX", filter="STEVNGE", date="2024/11/16", time="1800", rows=10)
@@ -81,6 +84,7 @@ class RealtimeTrainsPy:
         :param str service_uid: (Required) A string representing the Service Unique Identity (UID) code.
         :param str date: (Optional) A string representing the date in the format YYYY/MM/DD.
 
+        ---
         ## Examples
         ```python
         get_service(service_uid="G54071", date="2024/11/16")
@@ -126,6 +130,7 @@ class RealtimeTrainsPy:
 
         :param str tiploc: (Required) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the station.
 
+        ---
         ## Examples
         ```python
         get_live(tiploc="ELYY") # Live board for Ely

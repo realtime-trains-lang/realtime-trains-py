@@ -6,8 +6,10 @@ We release updates and patches regularly. Below are the versions of this project
 
 | Version (realtime-trains-py)  | Supported          |
 |-------------------------------|--------------------|
-| 2025.2.x                      | :white_check_mark: |
-| 2025.2.xbx                    | :white_check_mark: |
+| 2025.3.x                      | :white_check_mark: |
+| 2025.3.xbx                    | :white_check_mark: |
+| 2025.2.x                      | :warning: Ending 01/06/25 |
+| 2025.2.xbx                    | :warning: Ending 15/05/25 |
 
 If you are using an unsupported version, please upgrade to a supported version to receive the latest security updates.
 
