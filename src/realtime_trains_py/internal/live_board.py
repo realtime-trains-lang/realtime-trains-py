@@ -73,9 +73,9 @@ class LiveBoard:
                             break
 
                     line_one = f"\033[1;34m{requested_location} Live:\n\033[1;39m"
-                    line_four = ""
-                    line_five = ""
+                    line_two = line_three = line_four = line_five = ""
                     first = True
+                    second = False
 
                     for service in departure_board:
                         if first:

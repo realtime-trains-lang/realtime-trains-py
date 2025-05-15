@@ -11,12 +11,12 @@ from realtime_trains_py.internal.utilities import create_file, create_search_que
 
 
 class Boards:
-    def __init__(self, username: str=None, password: str=None, complexity: str="s") -> None:
+    def __init__(self, username: str, password: str, complexity: str="s") -> None:
         self.__username = username
         self.__password = password
         self.__complexity = complexity
 
-    def _get_dep_board_details(self, tiploc: str, search_filter: str=None, rows: int=None, time: str=None, date: str=None) -> list | str:
+    def _get_dep_board_details(self, tiploc: str, search_filter: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> list | str:
         # Create a search query and get the api response using the auth details provided
         api_response = requests.get(create_search_query(tiploc, search_filter, rows, time, date), auth=(self.__username, self.__password))
 
@@ -71,7 +71,7 @@ class Boards:
         else:
             raise Exception(f"{api_response.status_code}: Failed to connect to the RTT API server. Try again in a few minutes.")
 
-    def _get_arr_board_details(self, tiploc: str, search_filter: str=None, rows: int=None, time: str=None, date: str=None) -> list | str:
+    def _get_arr_board_details(self, tiploc: str, search_filter: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> list | str:
         # Create a search query and get the api response using the auth details provided
         api_response = requests.get(f"{create_search_query(tiploc, search_filter, rows, time, date)}/arrivals", auth=(self.__username, self.__password))
 
@@ -126,7 +126,7 @@ class Boards:
         else:
             raise Exception(f"{api_response.status_code}: Failed to connect to the RTT API server. Try again in a few minutes.")
 
-    def _get_stat_board_details(self, tiploc: str, search_filter: str=None, rows: int=None, time: str=None, date: str=None) -> list | str:
+    def _get_stat_board_details(self, tiploc: str, search_filter: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> list | str:
         # Create a search query and get the api response using the auth details provided
         search_query = create_search_query(tiploc, search_filter, rows, time, date)
 
@@ -156,7 +156,7 @@ class Boards:
                 return f"200: Departures and arrivals saved to files: \n  {dep_file_name} \n  {arr_file_name}. \n"
 
             # Create the station board
-            new_boards = NewStationBoard(rows, departures_data, arrivals_data)
+            new_boards = NewStationBoard(departures_data, arrivals_data, rows)
             board = new_boards._create_station_board()
 
             if self.__complexity.endswith("n"):

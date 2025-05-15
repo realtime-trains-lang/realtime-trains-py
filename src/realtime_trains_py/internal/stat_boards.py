@@ -10,7 +10,7 @@ from realtime_trains_py.internal.utilities import format_time, get_time_status
 # Class for creating station boards
 class NewStationBoard:
     # Initialise the board
-    def __init__(self, rows=None, departure_data=None, arrival_data=None) -> None:
+    def __init__(self, departure_data: dict, arrival_data: dict, rows: int | None=None) -> None:
         requested_location = departure_data["location"]["name"]  # Requested location
 
         # Compare the locations and check they're equal

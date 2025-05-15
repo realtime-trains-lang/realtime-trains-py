@@ -11,13 +11,13 @@ from realtime_trains_py.internal.utilities import create_file, format_time, vali
 
 # Class for getting and creating service details
 class ServiceDetails:
-    def __init__(self, username: str=None, password: str=None, complexity: str="s") -> None:
+    def __init__(self, username: str, password: str, complexity: str="s") -> None:
         self.__username = username
         self.__password = password
         self.__complexity = complexity
 
     # Get the service details
-    def _get_service_details(self, service_uid: str, date: str=None) -> ServiceData | str:
+    def _get_service_details(self, service_uid: str, date: str | None=None) -> ServiceData | str:
         if not validate_uid(service_uid):
             # Check if the Service UID is valid. If not, raise an error
             raise ValueError("400: Invalid Service UID. The service UID provided did not meet requirements or fall into the valid range.")
@@ -67,10 +67,11 @@ class ServiceDetails:
             raise Exception(f"{api_response.status_code}: Failed to connect to the RTT API server. Try again in a few minutes.")
 
 
-def create_service_record(complexity: str, service_data, service_uid) -> str:  
+def create_service_record(complexity: str, service_data, service_uid) -> str | ServiceData:  
     service_type = service_data["serviceType"]      
     calling_points: list = []
-    power_type = train_class= "Unknown"
+    power_type = train_class = origin = destination = "Unknown"
+    start_time = end_time = operator = train_id = ""
 
     train_id = service_data["trainIdentity"]  # Get the train ID
     operator = service_data["atocName"]  # Get the operator

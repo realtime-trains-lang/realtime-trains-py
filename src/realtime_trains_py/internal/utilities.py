@@ -30,7 +30,7 @@ def create_file(name: str, contents) -> None:
         raise Exception("500: Failed to write to file. Perhaps the file already exists?")
 
 # Create a new search query for board data requests to the API
-def create_search_query(tiploc: str, search_filter: str=None, rows: int=None, time: str=None, date: str=None) -> str:
+def create_search_query(tiploc: str, search_filter: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> str:
     # If a date is provided and it isn't valid, raise an error
     if date is not None and not validate_date(date):
         raise ValueError("400: Invalid date. The date provided did not meet requirements or fall into the valid date range.")

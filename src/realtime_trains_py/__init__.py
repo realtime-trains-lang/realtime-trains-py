@@ -6,7 +6,7 @@ from realtime_trains_py.internal.utilities import connection_authorised
 
 
 class RealtimeTrainsPy:
-    def __init__(self, complexity: str="s", username: str=None, password: str=None) -> None:
+    def __init__(self, complexity: str="s", username: str | None=None, password: str | None=None) -> None:
         """
         :param str username: (Required) A string representing your username for authentication.
         :param str password: (Required) A string representing your password for authentication.
@@ -34,7 +34,7 @@ class RealtimeTrainsPy:
         self.__boards = Boards(username=username, password=password, complexity=complexity.lower())
         self.__live_board = LiveBoard(username=username, password=password)
 
-    def get_departures(self, tiploc: str, filter: str=None, date: str=None, rows: int=None, time: str=None) -> list | str:
+    def get_departures(self, tiploc: str, filter: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> list | str:
         """
         ## Get Departures
         This function retrieves the departures for a given station.
@@ -55,7 +55,7 @@ class RealtimeTrainsPy:
         """
         return self.__boards._get_dep_board_details(tiploc=tiploc.upper(), search_filter=filter, date=date, rows=rows, time=time)
 
-    def get_arrivals(self, tiploc: str, filter: str=None, date: str=None, rows: int=None, time: str=None) -> list | str:
+    def get_arrivals(self, tiploc: str, filter: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> list | str:
         """
         ## Get Arrivals
         This function retrieves the arrivals for a given station.
@@ -76,7 +76,7 @@ class RealtimeTrainsPy:
         """
         return self.__boards._get_arr_board_details(tiploc=tiploc.upper(), search_filter=filter, date=date, rows=rows, time=time)
 
-    def get_service(self, service_uid: str, date: str=None) -> ServiceData | str:
+    def get_service(self, service_uid: str, date: str | None=None) -> ServiceData | str:
         """
         ## Get Service
         This function retrieves the service information for a given service UID on a provided date.
@@ -94,7 +94,7 @@ class RealtimeTrainsPy:
         """
         return self.__services._get_service_details(service_uid=service_uid.upper(), date=date)
 
-    def get_station(self, tiploc: str, filter: str=None, date: str=None, rows: int=None, time: str=None) -> list | str:
+    def get_station(self, tiploc: str, filter: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> list | str:
         """
         ## Get Station
         This function retrieves the departures and arrivals for a given station and orders these into one big board.
