@@ -57,7 +57,7 @@ class Boards:
                 return departure_board
 
             # Pint the departure info and tabulate table with the headers defined
-            print(f"Departure board for {requested_location}. Generated at {datetime.now().strftime("%H:%M:%S on %d/%m/%y")}.")
+            print(f"Departure board for {requested_location}. Generated at {datetime.now().strftime('%H:%M:%S on %d/%m/%y')}.")
             print(tabulate(departure_board, tablefmt="rounded_grid", headers=["Booked Departure", "Destination", "Platform", "Actual Departure", "Service UID"]))
 
             return "200: Departure board printed successfully."
