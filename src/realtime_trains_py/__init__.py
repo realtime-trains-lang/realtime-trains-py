@@ -1,5 +1,6 @@
 # Import necessary items from other files
 from realtime_trains_py.internal.boards import Boards
+from realtime_trains_py.internal.details import DefaultBoard
 from realtime_trains_py.internal.live_board import LiveBoard
 from realtime_trains_py.internal.services import ServiceDetails, ServiceData, ServiceDetails
 from realtime_trains_py.internal.utilities import connection_authorised
@@ -34,7 +35,7 @@ class RealtimeTrainsPy:
         self.__boards = Boards(username=username, password=password, complexity=complexity.lower())
         self.__live_board = LiveBoard(username=username, password=password)
 
-    def get_departures(self, tiploc: str, filter: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> list | str:
+    def get_departures(self, tiploc: str, filter: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> DefaultBoard | str:
         """
         ## Get Departures
         This function retrieves the departures for a given station.
@@ -55,7 +56,7 @@ class RealtimeTrainsPy:
         """
         return self.__boards._get_dep_board_details(tiploc=tiploc.upper(), search_filter=filter, date=date, rows=rows, time=time)
 
-    def get_arrivals(self, tiploc: str, filter: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> list | str:
+    def get_arrivals(self, tiploc: str, filter: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> DefaultBoard | str:
         """
         ## Get Arrivals
         This function retrieves the arrivals for a given station.
@@ -94,7 +95,7 @@ class RealtimeTrainsPy:
         """
         return self.__services._get_service_details(service_uid=service_uid.upper(), date=date)
 
-    def get_station(self, tiploc: str, filter: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> list | str:
+    def get_station(self, tiploc: str, filter: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> DefaultBoard | str:
         """
         ## Get Station
         This function retrieves the departures and arrivals for a given station and orders these into one big board.

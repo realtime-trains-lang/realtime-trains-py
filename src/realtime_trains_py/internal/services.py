@@ -111,7 +111,7 @@ def create_service_record(complexity: str, service_data, service_uid) -> str | S
             calling_points.append(calling_point)
 
     if complexity == "a" or complexity == "a.p":
-        print(f"{train_id} ({service_uid}) \n  {start_time} {origin} to {destination} \n  Pathed as {power_type}: train class {train_class} \n  Operated by {operator} \n\n  Generated at {datetime.now().strftime("%H:%M:%S on %d/%m/%y.")}")
+        print(f"{train_id} ({service_uid}) \n  {start_time} {origin} to {destination} \n  Pathed as {power_type}: train class {train_class} \n  Operated by {operator} \n\n  Generated at {datetime.now().strftime('%H:%M:%S on %d/%m/%y.')}")
 
         # Print the table for the service
         print(tabulate(calling_points, tablefmt="rounded_grid",
@@ -119,7 +119,7 @@ def create_service_record(complexity: str, service_data, service_uid) -> str | S
         ))
 
     elif complexity == "s" or complexity == "s.p":
-        print(f"{train_id} ({service_uid}) \n  {start_time} {origin} to {destination} \n  Operated by {operator} \n\n  Generated at {datetime.now().strftime("%H:%M:%S on %d/%m/%y.")}")
+        print(f"{train_id} ({service_uid}) \n  {start_time} {origin} to {destination} \n  Operated by {operator} \n\n  Generated at {datetime.now().strftime('%H:%M:%S on %d/%m/%y.')}")
 
         # Print the table for the service
         print(tabulate(calling_points, tablefmt="rounded_grid",

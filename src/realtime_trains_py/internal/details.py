@@ -2,59 +2,66 @@
 
 # Service data class
 class ServiceData:
-    def __init__(self, train_id, service_uid, operator, origin, destination, calling_points, start_time, end_time, power, train_class) -> None:
-        self.train_id = train_id
-        self.service_uid = service_uid
-        self.operator = operator
-        self.origin = origin
-        self.destination = destination
-        self.calling_points = calling_points
-        self.start_time = start_time
-        self.end_time = end_time
-        self.power = power
-        self.train_class = train_class
+    def __init__(self, train_id: str, service_uid: str, operator: str, origin: str, destination: str, calling_points: list, start_time: str, end_time: str, power: str, train_class: str) -> None:
+        self.calling_points: list = calling_points
+        self.destination: str = destination
+        self.service_uid: str = service_uid
+        self.train_class: str = train_class
+        self.start_time: str = start_time
+        self.end_time: str = end_time
+        self.operator: str = operator
+        self.train_id: str = train_id
+        self.origin: str = origin
+        self.power: str = power
+        
 
 # Calling point data class
 class CallingPoint:
-    def __init__(self, stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure) -> None:
-        self.stop_name = stop_name
-        self.booked_arrival = booked_arrival
-        self.realtime_arrival = realtime_arrival
-        self.platform = platform
-        self.line = line
-        self.booked_departure = booked_departure
-        self.realtime_departure = realtime_departure
+    def __init__(self, stop_name: str, booked_arrival: str, realtime_arrival: str, platform: str, line: str, booked_departure: str, realtime_departure: str) -> None:
+        self.realtime_departure: str = realtime_departure
+        self.realtime_arrival: str = realtime_arrival
+        self.booked_departure: str = booked_departure
+        self.booked_arrival: str = booked_arrival
+        self.stop_name: str = stop_name
+        self.platform: str = platform
+        self.line: str = line
 
 
 ### Board Details ###
 
 # Station Board Details class
 class StationBoardDetails:
-    def __init__(self, gbtt_arrival, gbtt_departure, terminus, origin, platform, realtime_arrival, realtime_departure, service_uid) -> None:
-        self.gbtt_arrival = gbtt_arrival
-        self.gbtt_departure = gbtt_departure
-        self.terminus = terminus
-        self.origin = origin
-        self.platform = platform
-        self.realtime_arrival = realtime_arrival
-        self.realtime_departure = realtime_departure
-        self.service_uid = service_uid
+    def __init__(self, gbtt_arrival: str, gbtt_departure: str, terminus: str, origin: str, platform: str, realtime_arrival: str | None, realtime_departure: str | None, service_uid: str) -> None:
+        self.realtime_departure: str | None = realtime_departure
+        self.realtime_arrival: str | None = realtime_arrival
+        self.gbtt_departure: str = gbtt_departure
+        self.gbtt_arrival: str = gbtt_arrival
+        self.service_uid: str = service_uid
+        self.platform: str = platform
+        self.terminus: str = terminus
+        self.origin: str = origin
 
 # Departure Board Details class
 class DepartureBoardDetails:
-    def __init__(self, gbtt_departure, terminus, platform, realtime_departure, service_uid) -> None:
-        self.gbtt_departure = gbtt_departure
-        self.terminus = terminus
-        self.platform = platform
-        self.realtime_departure = realtime_departure
-        self.service_uid = service_uid
+    def __init__(self, gbtt_departure: str, terminus: str, platform: str, realtime_departure: str | None, service_uid: str) -> None:
+        self.realtime_departure: str | None = realtime_departure
+        self.gbtt_departure: str = gbtt_departure
+        self.service_uid: str = service_uid
+        self.platform: str = platform
+        self.terminus: str = terminus
 
 # Arrivals Board Details class
 class ArrivalBoardDetails:
-    def __init__(self, gbtt_arrival, terminus, origin, platform, realtime_arrival, service_uid) -> None:
-        self.gbtt_arrival = gbtt_arrival
-        self.terminus = terminus
-        self.origin = origin
-        self.platform = platform
-        self.realtime_arrival = realtime_arrival
-        self.service_uid = service_uid
+    def __init__(self, gbtt_arrival: str, terminus: str, origin: str, platform: str, realtime_arrival: str | None, service_uid: str) -> None:
+        self.realtime_arrival: str | None = realtime_arrival
+        self.service_uid: str = service_uid
+        self.gbtt_arrival: str = gbtt_arrival
+        self.platform: str = platform
+        self.terminus: str = terminus
+        self.origin: str = origin
+
+
+class DefaultBoard:
+    def __init__(self, board: list, location: str) -> None:
+        self.board: list = board
+        self.location: str = location

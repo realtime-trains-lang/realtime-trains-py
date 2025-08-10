@@ -102,7 +102,7 @@ class LiveBoard:
                     sys.stdout.write("\033c\r")
                     sys.stdout.write(f"\033[1;34m{tiploc} Live:\n \033[1;30mCheck timetable for services.\n")
 
-            sys.stdout.write(f"\033[1;3m{datetime.now().strftime("         %H:%M:%S")}\033[K\r")
+            sys.stdout.write(f"\033[1;3m{datetime.now().strftime('         %H:%M:%S')}\033[K\r")
             time.sleep(1)
 
     def __first_service(self, service, requested_location: str) -> tuple:
@@ -111,7 +111,7 @@ class LiveBoard:
         """
         line_two = f"1st {service.gbtt_departure} {service.terminus} {service.platform}  {check_cancel(service.realtime_departure)}\n"
 
-        service_api_response = requests.get(f"https://api.rtt.io/api/v1/json/service/{service.service_uid}/{(datetime.now()).strftime("%Y/%m/%d")}", auth=(self.__username, self.__password))
+        service_api_response = requests.get(f"https://api.rtt.io/api/v1/json/service/{service.service_uid}/{(datetime.now()).strftime('%Y/%m/%d')}", auth=(self.__username, self.__password))
         service_data = service_api_response.json()
 
         line_three = "Calling at: "

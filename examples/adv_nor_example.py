@@ -12,7 +12,7 @@ rtt = RealtimeTrainsPy(
 # Query for getting the next 5 arrivals at Norwich
 arrivals_at_norwich = rtt.get_arrivals(tiploc="NRCH", rows=5)
 
-for arrivals in arrivals_at_norwich:
+for arrivals in arrivals_at_norwich.board:
     print(f"{arrivals.service_uid} | {arrivals.gbtt_arrival} | {arrivals.origin} to {arrivals.terminus}")
 
 ### EXAMPLE OUTPUT ###
@@ -29,7 +29,7 @@ for arrivals in arrivals_at_norwich:
 # Query for getting the next 10 departures from Hull around 10:00 UTC on 10th January 2025
 departures_at_hull = rtt.get_departures(tiploc="HULL", date="2025/01/10", time="1000", rows=10)
 
-for departures in departures_at_hull:
+for departures in departures_at_hull.board:
     print(f"{departures.service_uid} | {departures.gbtt_departure} | Hull to {departures.terminus}")
 
 ### EXAMPLE OUTPUT ###

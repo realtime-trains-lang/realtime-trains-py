@@ -10,7 +10,7 @@ rtt = RealtimeTrainsPy(
 #### EXAMPLE 1 ####
 
 # Query for getting the next 5 arrivals at Norwich
-rtt.get_arrivals(tiploc="NRCH", rows=5)
+rtt.get_departures(tiploc="NRCH", rows=5)
 
 ### EXAMPLE OUTPUT ###
 # Arrivals board for Norwich. Generated at xx:xx:xx on xx/xx/xx.

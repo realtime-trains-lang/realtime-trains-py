@@ -9,9 +9,7 @@ from datetime import datetime
 
 def connection_authorised(username: str, password: str) -> bool:
     # Test the connection for departures at KNGX, with the auth details provided
-    test = requests.get("https://api.rtt.io/api/v1/json/search/KNGX", auth=(username, password))
-
-    return test.status_code != 401
+    return requests.get("https://api.rtt.io/api/v1/json/search/KNGX", auth=(username, password)).status_code != 401
 
 def create_file(name: str, contents) -> None:
     # Check if folder exists and create it if not
@@ -60,7 +58,7 @@ def format_time(time: str) -> str:
     return f"{time[0]}{time[1]}:{time[2]}{time[3]}"
 
 # Get the time status
-def get_time_status(gbtt_time, actual_time, status):
+def get_time_status(gbtt_time, actual_time, status) -> str | None:
     # Check that the status isn't cancelled
     if status != "CANCELLED_CALL":
         if gbtt_time == actual_time:
@@ -68,7 +66,7 @@ def get_time_status(gbtt_time, actual_time, status):
 
         # If the realtime departure isn't null, format and add Exp
         elif actual_time != "-":
-            return (f"Exp {format_time(actual_time)}")
+            return f"Exp {format_time(actual_time)}"
 
     else:
         return "Cancelled"

@@ -5,7 +5,7 @@ from datetime import datetime
 from tabulate import tabulate
 
 # Import necessary items from other files
-from realtime_trains_py.internal.details import DepartureBoardDetails, ArrivalBoardDetails
+from realtime_trains_py.internal.details import ArrivalBoardDetails, DefaultBoard, DepartureBoardDetails
 from realtime_trains_py.internal.stat_boards import NewStationBoard
 from realtime_trains_py.internal.utilities import create_file, create_search_query, format_time, get_time_status
 
@@ -16,7 +16,7 @@ class Boards:
         self.__password = password
         self.__complexity = complexity
 
-    def _get_dep_board_details(self, tiploc: str, search_filter: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> list | str:
+    def _get_dep_board_details(self, tiploc: str, search_filter: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> DefaultBoard | str:
         # Create a search query and get the api response using the auth details provided
         api_response = requests.get(create_search_query(tiploc, search_filter, rows, time, date), auth=(self.__username, self.__password))
 
@@ -29,7 +29,7 @@ class Boards:
             if self.__complexity == "c":
                 # If complexity is c, save the JSON data to a new .json file
                 if date is None:
-                    date = (datetime.now()).strftime("%Y/%m/%d")
+                    date = datetime.now().strftime("%Y/%m/%d")
 
                 date_parts = date.split("/")
 
@@ -54,7 +54,7 @@ class Boards:
                     departure_board.append([service_info.gbtt_departure, service_info.terminus, service_info.platform, service_info.realtime_departure, service_info.service_uid])
 
             if self.__complexity.endswith("n"):
-                return departure_board
+                return DefaultBoard(departure_board, requested_location)
 
             # Pint the departure info and tabulate table with the headers defined
             print(f"Departure board for {requested_location}. Generated at {datetime.now().strftime('%H:%M:%S on %d/%m/%y')}.")
@@ -71,7 +71,7 @@ class Boards:
         else:
             raise Exception(f"{api_response.status_code}: Failed to connect to the RTT API server. Try again in a few minutes.")
 
-    def _get_arr_board_details(self, tiploc: str, search_filter: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> list | str:
+    def _get_arr_board_details(self, tiploc: str, search_filter: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> DefaultBoard | str:
         # Create a search query and get the api response using the auth details provided
         api_response = requests.get(f"{create_search_query(tiploc, search_filter, rows, time, date)}/arrivals", auth=(self.__username, self.__password))
 
@@ -84,7 +84,7 @@ class Boards:
             if self.__complexity == "c":
                 # If complexity is c, save the JSON data to a new .json file
                 if date is None:
-                    date = (datetime.now()).strftime("%Y/%m/%d")
+                    date = datetime.now().strftime("%Y/%m/%d")
 
                 date_parts = date.split("/")
 
@@ -109,10 +109,10 @@ class Boards:
                     arrivals_board.append([service_info.gbtt_arrival, service_info.terminus, service_info.origin, service_info.platform, service_info.realtime_arrival, service_info.service_uid])
 
             if self.__complexity.endswith("n"):
-                return arrivals_board
+                return DefaultBoard(arrivals_board, requested_location)
             
             # Pint the arrival info and tabulate table with the headers defined
-            print(f"Arrivals board for {requested_location}. Generated at {datetime.now().strftime("%H:%M:%S on %d/%m/%y.")}")
+            print(f"Arrivals board for {requested_location}. Generated at {datetime.now().strftime('%H:%M:%S on %d/%m/%y.')}")
             print(tabulate(arrivals_board, tablefmt="rounded_grid", headers=["Booked Arrival", "Destination", "Origin", "Platform", "Actual Arrival", "Service UID"]))
 
             return "200: Arrivals board printed successfully." 
@@ -126,7 +126,7 @@ class Boards:
         else:
             raise Exception(f"{api_response.status_code}: Failed to connect to the RTT API server. Try again in a few minutes.")
 
-    def _get_stat_board_details(self, tiploc: str, search_filter: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> list | str:
+    def _get_stat_board_details(self, tiploc: str, search_filter: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> DefaultBoard | str:
         # Create a search query and get the api response using the auth details provided
         search_query = create_search_query(tiploc, search_filter, rows, time, date)
 
@@ -143,7 +143,7 @@ class Boards:
             if self.__complexity == "c":
                 # If complexity is c, save the JSON data to new .json files
                 if date is None:
-                    date = (datetime.now()).strftime("%Y/%m/%d")
+                    date = datetime.now().strftime("%Y/%m/%d")
 
                 date_parts = date.split("/")
 
@@ -160,7 +160,7 @@ class Boards:
             board = new_boards._create_station_board()
 
             if self.__complexity.endswith("n"):
-                return board
+                return DefaultBoard(board[0], board[1])
             
             return new_boards._output_formatted_board()
 

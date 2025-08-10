@@ -94,7 +94,7 @@ class NewStationBoard:
 
         self._combined_board = temp_board
 
-    def _create_station_board(self) -> list:
+    def _create_station_board(self) -> tuple[list, str]:
         self.__extract_times()
         self._combined_board.sort(key=lambda x: x[0], reverse=False)
         combined_board = []
@@ -104,7 +104,7 @@ class NewStationBoard:
 
         self._combined_board = combined_board
 
-        return self._combined_board
+        return self._combined_board, self._requested_location
 
     def _output_formatted_board(self) -> str:
         out_board = [] 

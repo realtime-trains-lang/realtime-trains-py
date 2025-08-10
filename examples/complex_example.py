@@ -10,7 +10,7 @@ rtt = RealtimeTrainsPy(
 #### EXAMPLE 1 ####
 
 # Query for getting the arrivals at Norwich
-rtt.get_arrivals(tiploc="NRCH")
+rtt.get_departures(tiploc="NRCH")
 
 # Running this will create a new file called NRCH_on_yyyy.mm.dd_arr_board.json
 
