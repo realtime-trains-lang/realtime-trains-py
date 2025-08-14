@@ -8,8 +8,7 @@ We release updates and patches regularly. Below are the versions of this project
 |-------------------------------|--------------------|
 | 2025.3.x                      | :white_check_mark: |
 | 2025.3.xbx                    | :white_check_mark: |
-| 2025.2.x                      | :warning: Ending 01/06/25 |
-| 2025.2.xbx                    | :warning: Ending 15/05/25 |
+| 2025.x.x                      | :warning: Ending 1st March 2026 @ 00:00 UTC |
 
 If you are using an unsupported version, please upgrade to a supported version to receive the latest security updates.
 
@@ -33,7 +32,7 @@ After confirming the issue, we will:
 
 ## Security Updates
 
-We will post updates about resolved security vulnerabilities in the **[releases section of this repository.](https://github.com/realtime-trains-lang/realtime-trains-py/releases)**.
+We will post updates about resolved security vulnerabilities in the **[releases section of this repository.](https://github.com/realtime-trains-lang/realtime-trains-py/releases)**
 
 ## Scope
 
