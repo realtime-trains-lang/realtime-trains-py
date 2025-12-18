@@ -18,7 +18,7 @@ class ServiceDetails:
         self.__complexity = complexity
 
     # Get the service details
-    def _get_service_details(self, service_uid: str, date: str | None=None) -> ServiceData | str:
+    def _get_service_details(self, service_uid: str, date: str | None=None) -> ServiceData:
         validate_uid(service_uid)
 
         if date is not None:
@@ -46,7 +46,7 @@ class ServiceDetails:
                 # Create a new file
                 create_file(file_name, service_data)
 
-                return f"Service data saved to file: \n  {file_name}"
+                print(f"Service data saved to file: \n  {file_name}")
 
             try:
                 return create_service_record(self.__complexity, service_data, service_uid)
@@ -62,7 +62,7 @@ class ServiceDetails:
             raise APIResponseError(f"Failed to connect to the RTT API server: {api_response.status_code}")
 
 
-def create_service_record(complexity: str, service_data, service_uid) -> str | ServiceData:  
+def create_service_record(complexity: str, service_data, service_uid) -> ServiceData:  
     service_type = service_data["serviceType"]      
     calling_points: list = []
     power_type = train_class = origin = destination = "Unknown"
@@ -120,8 +120,6 @@ def create_service_record(complexity: str, service_data, service_uid) -> str | S
         print(tabulate(calling_points, tablefmt="rounded_grid",
                 headers=["Stop Name", "Booked Arrival", "Actual Arrival", "Platform", "Booked Departure", "Actual Departure"]
         ))
-
-        return "200: Service data returned successfully."
     
     return ServiceData(train_id, service_uid, operator, origin, destination, calling_points, start_time, end_time, power_type, train_class)
 

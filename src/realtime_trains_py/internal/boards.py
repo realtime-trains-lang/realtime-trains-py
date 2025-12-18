@@ -17,7 +17,7 @@ class Boards:
         self.__password = password
         self.__complexity = complexity
 
-    def _get_dep_board_details(self, tiploc: str, search_filter: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> DefaultBoard | str:
+    def _get_dep_board_details(self, tiploc: str, search_filter: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> DefaultBoard | None:
         # Create a search query and get the api response using the auth details provided
         api_response = requests.get(create_search_query(tiploc, search_filter, rows, time, date), auth=(self.__username, self.__password))
 
@@ -38,7 +38,7 @@ class Boards:
 
                 create_file(file_name, service_data)
 
-                return f"Departure data saved to file: \n  {file_name}."
+                print(f"Departure data saved to file: \n  {file_name}.")
             
             departure_board: list = []
             requested_location = service_data["location"]["name"]
@@ -61,15 +61,13 @@ class Boards:
             print(f"Departure board for {requested_location}. Generated at {datetime.now().strftime('%H:%M:%S on %d/%m/%y')}.")
             print(tabulate(departure_board, tablefmt="rounded_grid", headers=["Booked Departure", "Destination", "Platform", "Actual Departure", "Service UID"]))
 
-            return "200: Departure board printed successfully."
-
         elif api_response.status_code == 404:
            raise NoDataFound()
 
         else:
             raise APIResponseError(f"Failed to connect to the RTT API server: {api_response.status_code}")
 
-    def _get_arr_board_details(self, tiploc: str, search_filter: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> DefaultBoard | str:
+    def _get_arr_board_details(self, tiploc: str, search_filter: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> DefaultBoard | None:
         # Create a search query and get the api response using the auth details provided
         api_response = requests.get(f"{create_search_query(tiploc, search_filter, rows, time, date)}/arrivals", auth=(self.__username, self.__password))
 
@@ -90,7 +88,7 @@ class Boards:
 
                 create_file(file_name, service_data)
 
-                return f"Arrival data saved to file: \n  {file_name}."
+                print(f"Arrival data saved to file: \n  {file_name}.")
             
             arrivals_board: list = []
             requested_location = service_data["location"]["name"] 
@@ -113,8 +111,6 @@ class Boards:
             print(f"Arrivals board for {requested_location}. Generated at {datetime.now().strftime('%H:%M:%S on %d/%m/%y.')}")
             print(tabulate(arrivals_board, tablefmt="rounded_grid", headers=["Booked Arrival", "Destination", "Origin", "Platform", "Actual Arrival", "Service UID"]))
 
-            return "200: Arrivals board printed successfully." 
-
         elif api_response.status_code == 404:
             raise NoDataFound()
 
@@ -122,7 +118,7 @@ class Boards:
             raise APIResponseError(f"Failed to connect to the RTT API server: {api_response.status_code}")
 
 
-    def _get_stat_board_details(self, tiploc: str, search_filter: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> DefaultBoard | str:
+    def _get_stat_board_details(self, tiploc: str, search_filter: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> DefaultBoard | None:
         # Create a search query and get the api response using the auth details provided
         search_query = create_search_query(tiploc, search_filter, rows, time, date)
 
@@ -149,7 +145,7 @@ class Boards:
                 create_file(dep_file_name, departures_data)
                 create_file(arr_file_name, arrivals_data)
 
-                return f"200: Departures and arrivals saved to files: \n  {dep_file_name} \n  {arr_file_name}. \n"
+                print(f"Departures and arrivals saved to files: \n  {dep_file_name} \n  {arr_file_name}. \n")
 
             # Create the station board
             new_boards = NewStationBoard(departures_data, arrivals_data, rows)
@@ -158,7 +154,7 @@ class Boards:
             if self.__complexity.endswith("n"):
                 return DefaultBoard(board[0], board[1])
             
-            return new_boards._output_formatted_board()
+            new_boards._output_formatted_board()
 
         elif dep_api_response.status_code == 404 or arr_api_response == 404:
             raise NoDataFound()

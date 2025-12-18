@@ -107,7 +107,7 @@ class NewStationBoard:
 
         return self._combined_board, self._requested_location
 
-    def _output_formatted_board(self) -> str:
+    def _output_formatted_board(self) -> None:
         out_board = [] 
 
         # For each service in the board, add its content to the output board
@@ -115,10 +115,9 @@ class NewStationBoard:
             out_board.append([service.gbtt_arrival, service.gbtt_departure, service.origin, service.terminus, service.platform, service.realtime_arrival, service.realtime_departure, service.service_uid])
 
         # Print the station details and the tabulate table
-        print(f"Station board for {self._requested_location}. Generated at {datetime.now().strftime("%H:%M:%S on %d/%m/%y")}.")
+        print(f"Station board for {self._requested_location}. Generated at {datetime.now().strftime('%H:%M:%S on %d/%m/%y')}.")
         print(tabulate(out_board, tablefmt="rounded_grid", headers=["Booked Arrival", "Booked Departure", "Origin", "Destination", "Platform", "Actual Arrival", "Actual Departure", "Service UID"]))
 
-        return "200: Station board printed successfully."
 
 def create_service_details(service, type) -> tuple:
     """

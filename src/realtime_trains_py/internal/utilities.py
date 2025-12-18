@@ -54,7 +54,7 @@ def create_search_query(tiploc: str, search_filter: str | None=None, rows: int |
         search_query += f"/to/{search_filter.upper()}"
 
     if time is not None and date is None:
-        search_query += f"/{(datetime.now()).strftime("%Y/%m/%d")}/{time}"
+        search_query += f"/{(datetime.now()).strftime('%Y/%m/%d')}/{time}"
 
     elif date is not None:
         search_query += f"/{date}"
@@ -98,7 +98,7 @@ def validate_date(date: str) -> None:
 
 
 def validate_mode(mode: str) -> None:
-    if mode.upper() not in ["DMI.Y", "DMI.W", "LCD"]:
+    if mode not in ["DMI.Y", "DMI.W", "LCD"]:
         raise InvalidModeProvided(mode)
 
 

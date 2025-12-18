@@ -145,15 +145,15 @@ class LiveBoard:
             if valid:
                 stops_outputted = True
                 if service_count == services-1:
-                    line_three += f"{location["description"]} & "
+                    line_three += f"{location['description']} & "
 
                 else:
-                    line_three += f"{location["description"]}, "
+                    line_three += f"{location['description']}, "
 
-            if location["description"] == requested_location:
+            if location['description'] == requested_location:
                 valid = True
 
-        line_three += f". Operated by {service_data["atocName"]}.\n"
+        line_three += f". Operated by {service_data['atocName']}.\n"
 
         return line_two, line_three
 

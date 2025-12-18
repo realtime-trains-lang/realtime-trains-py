@@ -22,6 +22,8 @@ class RealtimeTrainsPy:
 
         rtt = RealtimeTrainsPy(complexity="a.n", username="rttapi_<a_username>", password="<a_password>")
         ```
+
+        [Check out the wiki](https://github.com/realtime-trains-lang/realtime-trains-py/wiki) for more examples and information.
         """
         username = str(username)
         password = str(password)
@@ -37,7 +39,7 @@ class RealtimeTrainsPy:
         self.__live_board = LiveBoard(username=username, password=password)
 
 
-    def get_departures(self, tiploc: str, filter: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> DefaultBoard | str:
+    def get_departures(self, tiploc: str, filter: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> DefaultBoard | None:
         """
         ## Get Departures
         This function retrieves the departures for a given station.
@@ -55,11 +57,13 @@ class RealtimeTrainsPy:
 
         get_departures(tiploc="YORK", date="2024/11/16", time="1800")
         ```
+
+        [Check out the wiki](https://github.com/realtime-trains-lang/realtime-trains-py/wiki) for more examples and information.
         """
         return self.__boards._get_dep_board_details(tiploc=tiploc.upper(), search_filter=filter, date=date, rows=rows, time=time)
 
 
-    def get_arrivals(self, tiploc: str, filter: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> DefaultBoard | str:
+    def get_arrivals(self, tiploc: str, filter: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> DefaultBoard | None:
         """
         ## Get Arrivals
         This function retrieves the arrivals for a given station.
@@ -77,11 +81,13 @@ class RealtimeTrainsPy:
 
         get_arrivals(tiploc="YORK", date="2024/11/16", time="1800")
         ```
+
+        [Check out the wiki](https://github.com/realtime-trains-lang/realtime-trains-py/wiki) for more examples and information.
         """
         return self.__boards._get_arr_board_details(tiploc=tiploc.upper(), search_filter=filter, date=date, rows=rows, time=time)
 
 
-    def get_service(self, service_uid: str, date: str | None=None) -> ServiceData | str:
+    def get_service(self, service_uid: str, date: str | None=None) -> ServiceData:
         """
         ## Get Service
         This function retrieves the service information for a given service UID on a provided date.
@@ -96,11 +102,13 @@ class RealtimeTrainsPy:
 
         get_service(service_uid="G26171")
         ```
+
+        [Check out the wiki](https://github.com/realtime-trains-lang/realtime-trains-py/wiki) for more examples and information.
         """
         return self.__services._get_service_details(service_uid=service_uid.upper(), date=date)
 
 
-    def get_station(self, tiploc: str, filter: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> DefaultBoard | str:
+    def get_station(self, tiploc: str, filter: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> DefaultBoard | None:
         """
         ## Get Station
         This function retrieves the departures and arrivals for a given station and orders these into one big board.
@@ -125,6 +133,8 @@ class RealtimeTrainsPy:
 
         get_station(tiploc="YORK", date="2024/11/16", time="1800")
         ```
+
+        [Check out the wiki](https://github.com/realtime-trains-lang/realtime-trains-py/wiki) for more examples and information.
         """
         return self.__boards._get_stat_board_details(tiploc=tiploc.upper(), search_filter=filter, date=date, rows=rows, time=time)
 
@@ -147,5 +157,7 @@ class RealtimeTrainsPy:
 
         get_live(tiploc="PBRO", mode="DMI.Y") # Live board for Peterborough, with mode set to DMI (Yellow)
         ```
+
+        [Check out the wiki](https://github.com/realtime-trains-lang/realtime-trains-py/wiki) for more examples and information.
         """        
         self.__live_board._get_live(tiploc=tiploc.upper(), mode=mode.upper())
