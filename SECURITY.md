@@ -1,13 +1,12 @@
 # Security Policy: realtime-trains-lang 
 
-## Supported Versions
+## Supported Versions of realtime-trains-py
 
 We release updates and patches regularly. Below are the versions of this project that are actively supported and maintained. If a version isn't shown in this table, then it is no longer supported. Specific versions that will no longer be supported in the next few months will be shown too.
 
 | Version (realtime-trains-py)  | Supported          |
 |-------------------------------|--------------------|
-| 2025.3.x                      | :white_check_mark: |
-| 2025.3.xbx                    | :white_check_mark: |
+| 2026.1.x                      | :white_check_mark: |
 | 2025.x.x                      | :warning: Ending 1st March 2026 @ 00:00 UTC |
 
 If you are using an unsupported version, please upgrade to a supported version to receive the latest security updates.

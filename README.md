@@ -55,7 +55,7 @@ You'll need an account for the [Realtime Trains API](https://api.rtt.io) to use 
 
 ## Examples
 
-#### Get Live *(New for version 2025.3.0)*
+#### Get Live
 ###### The example below will display a live departure board for Ely. 
 ```python
 rtt.get_live(tiploc="ELYY")

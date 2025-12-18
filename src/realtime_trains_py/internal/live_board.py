@@ -7,7 +7,7 @@ from datetime import datetime
 
 # Import necessary items from other files
 from realtime_trains_py.internal.details import DepartureBoardDetails
-from realtime_trains_py.internal.utilities import format_time
+from realtime_trains_py.internal.utilities import format_time, validate_mode
 
 
 class LiveBoard:
@@ -15,7 +15,9 @@ class LiveBoard:
         self.__username = username
         self.__password = password
 
-    def _get_live(self, tiploc: str) -> None:  
+    def _get_live(self, tiploc: str, mode: str="LCD") -> None:  
+        validate_mode(mode)
+
         # Output a helpful message to the user: Press Ctrl+C to close live departure board.
         sys.stdout.write("\033[1;2mPress Ctrl+C to close live departure board.\n")
         time.sleep(2)
@@ -24,6 +26,7 @@ class LiveBoard:
 
         while True:
             departure_board = []
+            # Update the departure board every 60 seconds, on the minute
             if count == 0 or datetime.now().strftime("%S") == "00":
                 count = 0
 
@@ -72,24 +75,32 @@ class LiveBoard:
                         if count == 3:
                             break
 
-                    line_one = f"\033[1;34m{requested_location} Live:\n\033[1;39m"
+                    if mode == "DMI.Y":
+                        line_one = f"\033[1;93m{requested_location} Live:\n"
+
+                    elif mode == "DMI.W":
+                        line_one = f"\033[1;39m{requested_location} Live:\n"
+                        
+                    else:
+                        line_one = f"\033[1;34m{requested_location} Live:\n\033[1;39m"
+
                     line_two = line_three = line_four = line_five = ""
                     first = True
                     second = False
 
                     for service in departure_board:
                         if first:
-                            line_two, line_three = self.__first_service(service, requested_location)
+                            line_two, line_three = self.__first_service(service, requested_location, mode)
                             first = False
                             second = True
 
                         else:
                             if second:
-                                line_four += f"2nd {service.gbtt_departure} {service.terminus} {service.platform}  {check_cancel(service.realtime_departure)}\n"
+                                line_four += f"2nd {service.gbtt_departure} {service.terminus} {service.platform}  {check_cancel(service.realtime_departure, mode)}\n"
                                 second = False
 
                             else:
-                                line_five += f"3rd {service.gbtt_departure} {service.terminus} {service.platform}  {check_cancel(service.realtime_departure)}\n"
+                                line_five += f"3rd {service.gbtt_departure} {service.terminus} {service.platform}  {check_cancel(service.realtime_departure, mode)}\n"
                     
                     # Clear the screen
                     sys.stdout.write("\033c\r")
@@ -105,11 +116,11 @@ class LiveBoard:
             sys.stdout.write(f"\033[1;3m{datetime.now().strftime('         %H:%M:%S')}\033[K\r")
             time.sleep(1)
 
-    def __first_service(self, service, requested_location: str) -> tuple:
+    def __first_service(self, service, requested_location: str, mode) -> tuple:
         """
         Get the first service from the live board and print it to the screen with its subsequent calling points and service operator.
         """
-        line_two = f"1st {service.gbtt_departure} {service.terminus} {service.platform}  {check_cancel(service.realtime_departure)}\n"
+        line_two = f"1st {service.gbtt_departure} {service.terminus} {service.platform}  {check_cancel(service.realtime_departure, mode)}\n"
 
         service_api_response = requests.get(f"https://api.rtt.io/api/v1/json/service/{service.service_uid}/{(datetime.now()).strftime('%Y/%m/%d')}", auth=(self.__username, self.__password))
         service_data = service_api_response.json()
@@ -146,16 +157,26 @@ class LiveBoard:
 
         return line_two, line_three
 
-def check_cancel(realtime_departure: str) -> str:
+def check_cancel(realtime_departure: str, mode) -> str:
     """
     Check if the service is cancelled or delayed. Change text colour accordingly.
     If cancelled, set the text to red. If on time, set the text to green. Otherwise, set the text to yellow.
     """
 
-    if realtime_departure == "Cancelled":
-        return "\033[1;31mCancelled\033[1;39m"
+    if mode != "LCD":
+        if realtime_departure == "Cancelled":
+            return "Cancelled"
 
-    elif realtime_departure == "On time":
-        return "\033[1;32mOn time\033[1;39m"
+        elif realtime_departure == "On time":
+            return "On time"
 
-    return f"\033[1;33m  {realtime_departure}\033[1;39m"
+        return f"{realtime_departure}"
+
+    else:
+        if realtime_departure == "Cancelled":
+            return "\033[1;31mCancelled\033[1;39m"
+
+        elif realtime_departure == "On time":
+            return "\033[1;32mOn time\033[1;39m"
+
+        return f"\033[1;33m  {realtime_departure}\033[1;39m"

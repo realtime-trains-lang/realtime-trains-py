@@ -4,6 +4,7 @@ from tabulate import tabulate
 
 # Import necessary items from other files
 from realtime_trains_py.internal.details import StationBoardDetails
+from realtime_trains_py.internal.errors import UnexpectedResponseError
 from realtime_trains_py.internal.utilities import format_time, get_time_status
 
 
@@ -18,7 +19,7 @@ class NewStationBoard:
             self._requested_location = requested_location
 
         else:
-            raise Exception("500: An unexpected error occurred handling your request. Try again in a few minutes.")
+            raise UnexpectedResponseError()
 
         # Create new empty boards
         added_items = []

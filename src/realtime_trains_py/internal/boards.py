@@ -6,6 +6,7 @@ from tabulate import tabulate
 
 # Import necessary items from other files
 from realtime_trains_py.internal.details import ArrivalBoardDetails, DefaultBoard, DepartureBoardDetails
+from realtime_trains_py.internal.errors import APIResponseError, NoDataFound
 from realtime_trains_py.internal.stat_boards import NewStationBoard
 from realtime_trains_py.internal.utilities import create_file, create_search_query, format_time, get_time_status
 
@@ -24,7 +25,7 @@ class Boards:
             service_data = api_response.json()
 
             if service_data["services"] == None:
-                raise ValueError("404: No data found.")
+                raise NoDataFound()
 
             if self.__complexity == "c":
                 # If complexity is c, save the JSON data to a new .json file
@@ -63,13 +64,10 @@ class Boards:
             return "200: Departure board printed successfully."
 
         elif api_response.status_code == 404:
-           raise Exception("404: The data you requested could not be found.")
-
-        elif api_response.status_code == 401 or api_response.status_code == 403:
-            raise Exception(f"{api_response.status_code}: Access blocked. Check your credentials.")
+           raise NoDataFound()
 
         else:
-            raise Exception(f"{api_response.status_code}: Failed to connect to the RTT API server. Try again in a few minutes.")
+            raise APIResponseError(f"Failed to connect to the RTT API server: {api_response.status_code}")
 
     def _get_arr_board_details(self, tiploc: str, search_filter: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> DefaultBoard | str:
         # Create a search query and get the api response using the auth details provided
@@ -79,7 +77,7 @@ class Boards:
             service_data = api_response.json()
 
             if service_data["services"] == None:
-                raise ValueError("404: No data found.")
+                raise NoDataFound()
 
             if self.__complexity == "c":
                 # If complexity is c, save the JSON data to a new .json file
@@ -118,13 +116,11 @@ class Boards:
             return "200: Arrivals board printed successfully." 
 
         elif api_response.status_code == 404:
-            raise Exception("404: The data you requested could not be found.")
-
-        elif api_response.status_code == 401 or api_response.status_code == 403:
-            raise Exception(f"{api_response.status_code}: Access blocked. Check your credentials.")
+            raise NoDataFound()
 
         else:
-            raise Exception(f"{api_response.status_code}: Failed to connect to the RTT API server. Try again in a few minutes.")
+            raise APIResponseError(f"Failed to connect to the RTT API server: {api_response.status_code}")
+
 
     def _get_stat_board_details(self, tiploc: str, search_filter: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> DefaultBoard | str:
         # Create a search query and get the api response using the auth details provided
@@ -138,7 +134,7 @@ class Boards:
             arrivals_data = arr_api_response.json()
 
             if departures_data["services"] == None or arrivals_data["services"] == None:
-                raise ValueError("404: No data found.")
+                raise NoDataFound()
 
             if self.__complexity == "c":
                 # If complexity is c, save the JSON data to new .json files
@@ -165,13 +161,10 @@ class Boards:
             return new_boards._output_formatted_board()
 
         elif dep_api_response.status_code == 404 or arr_api_response == 404:
-            raise Exception(f"{dep_api_response.status_code} | {arr_api_response.status_code}: The data you requested could not be found.")
-
-        elif (dep_api_response == 401 or arr_api_response == 401) or (dep_api_response == 403 or arr_api_response == 403):
-            raise Exception(f"{dep_api_response.status_code} | {arr_api_response.status_code}: Access blocked. Check your credentials.")
+            raise NoDataFound()
 
         else:
-            raise Exception(f"{dep_api_response.status_code} | {arr_api_response.status_code}: Failed to connect to the RTT API server. Try again in a few minutes.")
+            raise APIResponseError(f"Failed to connect to the RTT API server: {dep_api_response.status_code} | {arr_api_response.status_code}")
 
 
 def get_dep_service_data(service) -> DepartureBoardDetails:

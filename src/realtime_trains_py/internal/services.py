@@ -6,6 +6,7 @@ from tabulate import tabulate
 
 # Import necessary items from other files
 from realtime_trains_py.internal.details import ServiceData, CallingPoint
+from realtime_trains_py.internal.errors import APIResponseError, NoDataFound, UnexpectedResponseError
 from realtime_trains_py.internal.utilities import create_file, format_time, validate_date, validate_uid
 
 
@@ -18,13 +19,10 @@ class ServiceDetails:
 
     # Get the service details
     def _get_service_details(self, service_uid: str, date: str | None=None) -> ServiceData | str:
-        if not validate_uid(service_uid):
-            # Check if the Service UID is valid. If not, raise an error
-            raise ValueError("400: Invalid Service UID. The service UID provided did not meet requirements or fall into the valid range.")
+        validate_uid(service_uid)
 
-        if date is not None and not validate_date(date):
-            # If a date is provided and it isn't valid, raise an error
-            raise ValueError("400: Invalid date. The date provided did not meet requirements or fall into the valid date range.")
+        if date is not None:
+            validate_date(date)
 
         elif date is None:
             # If a date isn't provided, set the date to be now
@@ -35,6 +33,9 @@ class ServiceDetails:
 
         if api_response.status_code == 200:
             service_data = api_response.json()
+
+            if "error" in service_data:
+                raise NoDataFound()
 
             if self.__complexity == "c":
                 date_parts = date.split("/")
@@ -52,19 +53,13 @@ class ServiceDetails:
 
             except:
                 # If an item couldn't be found, raise an error
-                raise Exception("500: An error occurred while fetching service data. This is likely because the API response didn't provide the desired data.")
+                raise UnexpectedResponseError()
 
         elif api_response.status_code == 404:
-            # Raise an error if either status codes are 404 (Not found)
-            raise Exception("404: The data you requested could not be found.")
-
-        elif api_response.status_code == 401 or api_response.status_code == 403:
-            # Raise an error if either status codes are 401 (Unauthorised) or 403 (Forbidden)
-            raise Exception(f"{api_response.status_code}: Access blocked. Check your credentials.")
+           raise NoDataFound()
 
         else:
-            # Raise an error for any other status codes
-            raise Exception(f"{api_response.status_code}: Failed to connect to the RTT API server. Try again in a few minutes.")
+            raise APIResponseError(f"Failed to connect to the RTT API server: {api_response.status_code}")
 
 
 def create_service_record(complexity: str, service_data, service_uid) -> str | ServiceData:  
