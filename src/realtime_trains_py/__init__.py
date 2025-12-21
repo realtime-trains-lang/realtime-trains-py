@@ -13,7 +13,7 @@ class RealtimeTrainsPy:
         :param str username: (Required) A string representing your username for authentication.
         :param str password: (Required) A string representing your password for authentication.
         :param str complexity: (Optional) A string representing your chosen complexity level. 
-        Choose from: `["a", "a.n", "a.p", "c", "s","s.n", "s.p"]`. If not provided, defaults to "s".
+        Choose from: `["a", "a.n", "c", "s","s.n"]`. If not provided, defaults to "s".
         
         ---
         ## Examples
@@ -27,8 +27,15 @@ class RealtimeTrainsPy:
         """
         username = str(username)
         password = str(password)
+
+        if complexity == "s.p":
+            complexity = "s"
+
+        elif complexity == "a.p":
+            complexity = "a"
         
-        complexity = complexity.lower()
+        else:
+            complexity = complexity.lower()
 
         connection_authorised(username=username, password=password)
 
@@ -161,3 +168,25 @@ class RealtimeTrainsPy:
         [Check out the wiki](https://github.com/realtime-trains-lang/realtime-trains-py/wiki) for more examples and information.
         """        
         self.__live_board._get_live(tiploc=tiploc.upper(), mode=mode.upper())
+
+    def watch_service(self, service_uid: str, mode: str="LCD") -> None:
+        """
+        ## Watch Service
+        This function retrieves the service information for a given service UID on a provided date. The service information is updated every 60 seconds, on the minute. 
+        To stop watching the service, press Ctrl + C.
+
+        :param str service_uid: (Required) A string representing the Service Unique Identity (UID) code.
+        :param str mode: (Optional) A string representing the mode of the live board. 
+        Choose from: `["DMI.Y", "DMI.W", "LCD"]`. If not provided, defaults to "LCD".
+
+        ---
+        ## Examples
+        ```python
+        watch_service(service_uid="G54071", mode="DMI.Y")
+
+        watch_service(service_uid="G26171")
+        ```
+
+        [Check out the wiki](https://github.com/realtime-trains-lang/realtime-trains-py/wiki) for more examples and information.
+        """
+        raise NotImplementedError("This method is not yet implemented.")

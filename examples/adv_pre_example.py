@@ -4,7 +4,7 @@ from realtime_trains_py import RealtimeTrainsPy
 rtt = RealtimeTrainsPy(
     username="YOUR_USERNAME", # <----- CHANGE ME
     password="YOUR_PASSWORD", # <----- CHANGE ME
-    complexity="a.p"
+    complexity="a"
 )
 
 #### EXAMPLE 1 ####

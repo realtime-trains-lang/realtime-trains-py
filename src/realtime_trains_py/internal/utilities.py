@@ -85,7 +85,7 @@ def get_time_status(gbtt_time, actual_time, status) -> str | None:
 
 
 def validate_complexity(complexity: str) -> None:
-    if complexity not in ["a", "a.n", "a.p", "c", "s","s.n", "s.p"]:
+    if complexity not in ["a", "a.n", "c", "s","s.n"]:
         raise InvalidComplexity(complexity)
     
     elif complexity == "c":

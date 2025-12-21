@@ -1,7 +1,8 @@
 .home
 .vscode
-tests
+tests/
 tests.py
+live_service.py
 
 
 # Created by https://www.toptal.com/developers/gitignore/api/python,visualstudiocode,venv
