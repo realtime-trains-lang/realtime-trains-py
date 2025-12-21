@@ -122,6 +122,8 @@ class Boards:
         # Create a search query and get the api response using the auth details provided
         search_query = create_search_query(tiploc, search_filter, rows, time, date)
 
+        print("Fetching departure and arrival data...")
+        
         dep_api_response = requests.get(search_query, auth=(self.__username, self.__password))
         arr_api_response = requests.get(f"{search_query}/arrivals", auth=(self.__username, self.__password))
 

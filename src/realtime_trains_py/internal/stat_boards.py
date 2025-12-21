@@ -1,4 +1,5 @@
 # Import external libraries
+from alive_progress import alive_bar
 from datetime import datetime
 from tabulate import tabulate
 
@@ -37,38 +38,41 @@ class NewStationBoard:
             arrival_board.append(create_service_details(arr_service, "Arrival"))
 
         # Iterate over each item in departure board
-        for departures in departure_board:
-            # Iterate over each item in arrival board
-            for arrivals in arrival_board:
-                # If the values at position 0 are equal...
-                if departures[0] == arrivals[0]:
-                    # Remove any duplicates from arr_dep_temp
-                    if arrivals[1] in arr_dep_temp:
-                        arr_dep_temp.remove(arrivals[1])
+        with alive_bar(len(departure_board), title="Combining arrival and departure boards", bar='smooth', spinner=None) as bar:
+            for departures in departure_board:
+                # Iterate over each item in arrival board
+                for arrivals in arrival_board:
+                    # If the values at position 0 are equal...
+                    if departures[0] == arrivals[0]:
+                        # Remove any duplicates from arr_dep_temp
+                        if arrivals[1] in arr_dep_temp:
+                            arr_dep_temp.remove(arrivals[1])
 
-                    if departures[1] in arr_dep_temp:
-                        arr_dep_temp.remove(departures[1])
+                        if departures[1] in arr_dep_temp:
+                            arr_dep_temp.remove(departures[1])
 
-                    # Add the values that need to be inserted to the added items list
-                    added_items.append(departures[1])
-                    added_items.append(arrivals[1])
+                        # Add the values that need to be inserted to the added items list
+                        added_items.append(departures[1])
+                        added_items.append(arrivals[1])
 
-                    # Overwrite the departure times
-                    arrivals[1].realtime_departure = departures[1].realtime_departure
-                    arrivals[1].gbtt_departure = departures[1].gbtt_departure
+                        # Overwrite the departure times
+                        arrivals[1].realtime_departure = departures[1].realtime_departure
+                        arrivals[1].gbtt_departure = departures[1].gbtt_departure
 
-                    # Append the arrivals to the combined board
-                    self._combined_board.append(arrivals[1])
+                        # Append the arrivals to the combined board
+                        self._combined_board.append(arrivals[1])
 
-                    break
+                        break
 
-                else:
-                    # Add any not found items to arr_dep_temp
-                    if arrivals[1] not in arr_dep_temp and arrivals[1] not in added_items:
-                        arr_dep_temp.append(arrivals[1])
+                    else:
+                        # Add any not found items to arr_dep_temp
+                        if arrivals[1] not in arr_dep_temp and arrivals[1] not in added_items:
+                            arr_dep_temp.append(arrivals[1])
 
-                    if departures[1] not in arr_dep_temp and departures[1] not in added_items:
-                        arr_dep_temp.append(departures[1])
+                        if departures[1] not in arr_dep_temp and departures[1] not in added_items:
+                            arr_dep_temp.append(departures[1])
+
+                bar()
 
         for services in arr_dep_temp:
             self._combined_board.append(services)
@@ -96,6 +100,7 @@ class NewStationBoard:
         self._combined_board = temp_board
 
     def _create_station_board(self) -> tuple[list, str]:
+        print("Extracting and sorting times...")
         self.__extract_times()
         self._combined_board.sort(key=lambda x: x[0], reverse=False)
         combined_board = []
