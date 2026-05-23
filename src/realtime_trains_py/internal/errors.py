@@ -23,7 +23,7 @@ class InvalidComplexity(Exception):
 # Invalid Date Provided
 class InvalidDateProvided(Exception):
     def __init__(self, invalid_item: str) -> None:
-        super().__init__(f"\nRealtime Trains Py error:\nThe date you provided didn't meet the requirements or fall into a valid range. \nGiven: \"{invalid_item}\" \nExpected: YYYY/MM/DD format.")
+        super().__init__(f"\nRealtime Trains Py error:\nThe date you provided didn't meet the requirements or fall into a valid range. \nGiven: \"{invalid_item}\" \nExpected: YYYY-MM-DD format.")
 
 # Invalid Mode Provided
 class InvalidModeProvided(Exception):

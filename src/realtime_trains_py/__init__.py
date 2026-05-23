@@ -8,25 +8,23 @@ from realtime_trains_py.internal.utilities import connection_authorised, validat
 
 
 class RealtimeTrainsPy:
-    def __init__(self, complexity: str="s", username: str | None=None, password: str | None=None) -> None:
+    def __init__(self, complexity: str="s", request_token: str | None=None) -> None:
         """
-        :param str username: (Required) A string representing your username for authentication.
-        :param str password: (Required) A string representing your password for authentication.
+        :param str request_token: (Required) A string representing your request token for authentication.
         :param str complexity: (Optional) A string representing your chosen complexity level. 
         Choose from: `["a", "a.n", "c", "s","s.n"]`. If not provided, defaults to "s".
         
         ---
         ## Examples
         ```python
-        rtt = RealtimeTrainsPy(complexity="s", username="rttapi_<a_username>", password="<a_password>")
+        rtt = RealtimeTrainsPy(complexity="s", request_token="<a_request_token>")
 
-        rtt = RealtimeTrainsPy(complexity="a.n", username="rttapi_<a_username>", password="<a_password>")
+        rtt = RealtimeTrainsPy(complexity="a.n", request_token="<a_request_token>")
         ```
 
         [Check out the wiki](https://github.com/realtime-trains-lang/realtime-trains-py/wiki) for more examples and information.
         """
-        username = str(username)
-        password = str(password)
+        request_token = str(request_token)
 
         if complexity == "s.p":
             complexity = "s"
@@ -37,75 +35,78 @@ class RealtimeTrainsPy:
         else:
             complexity = complexity.lower()
 
-        connection_authorised(username=username, password=password)
+        request_token = str(connection_authorised(request_token=request_token))
 
         validate_complexity(complexity)
 
-        self.__services = ServiceDetails(username=username, password=password, complexity=complexity)
-        self.__boards = Boards(username=username, password=password, complexity=complexity)
-        self.__live_board = LiveBoard(username=username, password=password)
+        self.__services = ServiceDetails(request_token=request_token, complexity=complexity)
+        self.__boards = Boards(request_token=request_token, complexity=complexity)
+        self.__live_board = LiveBoard(request_token=request_token)
 
 
-    def get_departures(self, tiploc: str, filter: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> DefaultBoard | None:
+    def get_departures(self, tiploc: str, filter_from: str | None=None, filter_to: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> DefaultBoard | None:
         """
         ## Get Departures
         This function retrieves the departures for a given station.
 
         :param str tiploc: (Required) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the station.
-        :param str filter: (Optional) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the filter station.
-        :param str date: (Optional) A string representing the date in the format YYYY/MM/DD.
+        :param str filter_from: (Optional) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the originating station.
+        :param str filter_to: (Optional) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the destination station.
+        :param str date: (Optional) A string representing the date in the format YYYY-MM-DD.
         :param int rows: (Optional) An integer representing the maximum number of rows to return. (Only available for simple and advanced complexity.)
         :param str time: (Optional) A string representing the time in the format HHMM.
 
         ---
         ## Examples
         ```python
-        get_departures(tiploc="KNGX", filter="STEVNGE", date="2024/11/16", time="1800", rows=10)
+        get_departures(tiploc="KNGX", filter="STEVNGE", date="2024-11-16", time="1800", rows=10)
 
-        get_departures(tiploc="YORK", date="2024/11/16", time="1800")
+        get_departures(tiploc="YORK", date="2024-11-16", time="1800")
         ```
 
         [Check out the wiki](https://github.com/realtime-trains-lang/realtime-trains-py/wiki) for more examples and information.
         """
-        return self.__boards._get_dep_board_details(tiploc=tiploc.upper(), search_filter=filter, date=date, rows=rows, time=time)
+        return self.__boards._get_dep_board_details(tiploc=tiploc.upper(), filter_from=filter_from, filter_to=filter_to, date=date, rows=rows, time=time)
 
 
-    def get_arrivals(self, tiploc: str, filter: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> DefaultBoard | None:
+    def get_arrivals(self, tiploc: str, filter_from: str | None=None, filter_to: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> DefaultBoard | None:
         """
         ## Get Arrivals
         This function retrieves the arrivals for a given station.
 
         :param str tiploc: (Required) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the station.
-        :param str filter: (Optional) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the filter station.
-        :param str date: (Optional) A string representing the date in the format YYYY/MM/DD.
+        :param str filter_from: (Optional) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the originating station.
+        :param str filter_to: (Optional) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the destination station.
+        :param str date: (Optional) A string representing the date in the format YYYY-MM-DD.
         :param int rows: (Optional) An integer representing the maximum number of rows to return. (Only available for simple and advanced complexity.)
         :param str time: (Optional) A string representing the time in the format HHMM.
 
         ---
         ## Examples
         ```python
-        get_arrivals(tiploc="KNGX", filter="STEVNGE", date="2024/11/16", time="1800", rows=10)
+        get_arrivals(tiploc="KNGX", filter="STEVNGE", date="2024-11-16", time="1800", rows=10)
 
-        get_arrivals(tiploc="YORK", date="2024/11/16", time="1800")
+        get_arrivals(tiploc="YORK", date="2024-11-16", time="1800")
         ```
 
         [Check out the wiki](https://github.com/realtime-trains-lang/realtime-trains-py/wiki) for more examples and information.
         """
+        raise NotImplementedError("This method is not yet implemented.")
         return self.__boards._get_arr_board_details(tiploc=tiploc.upper(), search_filter=filter, date=date, rows=rows, time=time)
 
 
-    def get_service(self, service_uid: str, date: str | None=None) -> ServiceData:
+    def get_service(self, service_uid: str, date: str | None=None) -> ServiceData | None:
         """
         ## Get Service
         This function retrieves the service information for a given service UID on a provided date.
 
         :param str service_uid: (Required) A string representing the Service Unique Identity (UID) code.
-        :param str date: (Optional) A string representing the date in the format YYYY/MM/DD.
+        :param str date: (Optional) A string representing the date in the format YYYY-MM-DD.
 
         ---
         ## Examples
         ```python
-        get_service(service_uid="G54071", date="2024/11/16")
+        get_service(service_uid="G54071", date="2024-11-16")
 
         get_service(service_uid="G26171")
         ```
@@ -122,7 +123,7 @@ class RealtimeTrainsPy:
 
         :param str tiploc: (Required) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the station.
         :param str filter: (Optional) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the filter station.
-        :param str date: (Optional) A string representing the date in the format YYYY/MM/DD.
+        :param str date: (Optional) A string representing the date in the format YYYY-MM-DD.
         :param int rows: (Optional) An integer representing half of the maximum number of rows to return. See below for more details.
         :param str time: (Optional) A string representing the time in the format HHMM.
 
@@ -136,13 +137,14 @@ class RealtimeTrainsPy:
         ---
         ## Examples
         ```python
-        get_station(tiploc="STEVNGE", filter="KNGX", date="2024/11/16", time="1800", rows=10)
+        get_station(tiploc="STEVNGE", filter="KNGX", date="2024-11-16", time="1800", rows=10)
 
-        get_station(tiploc="YORK", date="2024/11/16", time="1800")
+        get_station(tiploc="YORK", date="2024-11-16", time="1800")
         ```
 
         [Check out the wiki](https://github.com/realtime-trains-lang/realtime-trains-py/wiki) for more examples and information.
         """
+        raise NotImplementedError("This method is not yet implemented.")
         return self.__boards._get_stat_board_details(tiploc=tiploc.upper(), search_filter=filter, date=date, rows=rows, time=time)
 
 

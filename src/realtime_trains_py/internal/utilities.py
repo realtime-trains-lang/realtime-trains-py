@@ -15,13 +15,20 @@ def complex_setup() -> None:
         os.mkdir("realtime_trains_py_data")
 
 
-def connection_authorised(username: str, password: str) -> None:
-    if username == None or password == None:
-        raise AuthenticationError("Username or password wasn't provided.")
+def connection_authorised(request_token: str) -> str | None:
+    if request_token == None:
+        raise AuthenticationError("Request token wasn't provided.")
+    
+    headers={"Accept": "application/json", "Authorization": f"Bearer {request_token}"}
     
     # Test the connection for departures at KNGX, with the auth details provided
-    if requests.get("https://api.rtt.io/api/v1/json/search/KNGX", auth=(username, password)).status_code == 401:
-        raise AuthenticationError("Couldn't verify your username or password.")
+    if requests.get("https://data.rtt.io/api/info", headers=headers).status_code != 200:
+        response = requests.get("https://data.rtt.io/api/get_access_token", headers=headers)
+        if response.status_code != 200:
+            raise AuthenticationError("Request token provided isn't valid.")
+        
+        else:
+            return response.json()["token"]
 
 
 def create_file(name: str, contents) -> None:
@@ -38,7 +45,7 @@ def create_file(name: str, contents) -> None:
 
 
 # Create a new search query for board data requests to the API
-def create_search_query(tiploc: str, search_filter: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> str:
+def create_parameters(tiploc: str, filter_from: str | None=None, filter_to: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> dict:
     # If a date is provided and it isn't valid, raise an error
     if date is not None:
         validate_date(date)
@@ -47,22 +54,26 @@ def create_search_query(tiploc: str, search_filter: str | None=None, rows: int |
     if time is not None:
         validate_time(time)
 
-    search_query = f"https://api.rtt.io/api/v1/json/search/{tiploc}"
+    parameters = {
+        "code": f"gb-nr:{tiploc.upper()}",
+        "filterFrom": f"gb-nr:{filter_from.upper()}" if filter_from is not None else "",
+        "filterTo" : f"gb-nr:{filter_to.upper()}" if filter_to is not None else "",
+        "timeFrom": "",
+        "timeTolerance": "false",
+        "detailed": "false"
+    }
 
-    # If a search filter was provided, append it to the search_query
-    if search_filter is not None:
-        search_query += f"/to/{search_filter.upper()}"
-
+    # Add the timeFrom parameter based on the time and date parameters provided
     if time is not None and date is None:
-        search_query += f"/{(datetime.now()).strftime('%Y/%m/%d')}/{time}"
+        parameters["timeFrom"] = time
 
-    elif date is not None:
-        search_query += f"/{date}"
+    elif time is not None and date is not None:
+        parameters["timeFrom"] = f"{date} {time}"
 
-        if time is not None:
-            search_query += f"/{time}"
+    elif time is None and date is not None:
+        parameters["timeFrom"] = date
 
-    return search_query
+    return parameters
 
 
 def format_time(time: str) -> str:
@@ -93,7 +104,7 @@ def validate_complexity(complexity: str) -> None:
 
 
 def validate_date(date: str) -> None:
-    if re.match("[1-9][0-9][0-9]{2}/([0][1-9]|[1][0-2])/([1-2][0-9]|[0][1-9]|[3][0-1])", date) == None:
+    if re.match("[1-9][0-9][0-9]{2}-([0][1-9]|[1][0-2])-([1-2][0-9]|[0][1-9]|[3][0-1])", date) == None:
         raise InvalidDateProvided(date) 
 
 

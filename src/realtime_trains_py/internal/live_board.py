@@ -11,9 +11,11 @@ from realtime_trains_py.internal.utilities import format_time, validate_mode
 
 
 class LiveBoard:
-    def __init__(self, username: str, password: str) -> None:
-        self.__username = username
-        self.__password = password
+    def __init__(self, request_token: str) -> None:
+        self.__headers = {
+            "Accept": "application/json",
+            "Authorization": f"Bearer {request_token}",
+            }
 
     def _get_live(self, tiploc: str, mode: str="LCD") -> None:  
         validate_mode(mode)
@@ -24,13 +26,19 @@ class LiveBoard:
 
         count = 0
 
+        params = {
+        "code": f"gb-nr:{tiploc.upper()}",
+        "timeTolerance": "false",
+        "detailed": "false"
+    }
+
         while True:
             departure_board = []
             # Update the departure board every 60 seconds, on the minute
             if count == 0 or datetime.now().strftime("%S") == "00":
                 count = 0
 
-                departure_data = requests.get(f"https://api.rtt.io/api/v1/json/search/{tiploc}", auth=(self.__username, self.__password)).json()
+                departure_data = requests.get(f"https://data.rtt.io/rtt/location", params=params, headers=self.__headers).json()
 
                 # If the data is not None, continue
                 if "error" not in departure_board and departure_data["services"] != None:
@@ -122,7 +130,7 @@ class LiveBoard:
         """
         line_two = f"1st {service.gbtt_departure} {service.terminus} {service.platform}  {check_cancel(service.realtime_departure, mode)}\n"
 
-        service_api_response = requests.get(f"https://api.rtt.io/api/v1/json/service/{service.service_uid}/{(datetime.now()).strftime('%Y/%m/%d')}", auth=(self.__username, self.__password))
+        service_api_response = requests.get(f"https://data.rtt.io/rtt/service", params={"identity": service.service_uid}, headers=self.__headers)
         service_data = service_api_response.json()
 
         line_three = "Calling at: "

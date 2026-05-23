@@ -12,24 +12,26 @@ from realtime_trains_py.internal.utilities import create_file, format_time, vali
 
 # Class for getting and creating service details
 class ServiceDetails:
-    def __init__(self, username: str, password: str, complexity: str="s") -> None:
-        self.__username = username
-        self.__password = password
+    def __init__(self, request_token: str, complexity: str="s") -> None:
+        self.__headers = {
+            "Authorization": f"Bearer {request_token}",
+            "Accept": "application/json"
+        }
         self.__complexity = complexity
 
     # Get the service details
-    def _get_service_details(self, service_uid: str, date: str | None=None) -> ServiceData:
+    def _get_service_details(self, service_uid: str, date: str | None=None) -> ServiceData | None:
         validate_uid(service_uid)
 
-        if date is not None:
+        if date == None:
+            date = datetime.now().strftime("%Y-%m-%d")
+            print(date)
+
+        else:
             validate_date(date)
 
-        elif date is None:
-            # If a date isn't provided, set the date to be now
-            date = (datetime.now()).strftime("%Y/%m/%d")
-
         # Get the api response using the auth details provided
-        api_response = requests.get(f"https://api.rtt.io/api/v1/json/service/{service_uid}/{date}", auth=(self.__username, self.__password))
+        api_response = requests.get(f"https://data.rtt.io/rtt/service", params={"uniqueIdentity": f"gb-nr:{service_uid}:{date}",}, headers=self.__headers)
 
         if api_response.status_code == 200:
             service_data = api_response.json()
@@ -38,7 +40,7 @@ class ServiceDetails:
                 raise NoDataFound()
 
             if self.__complexity == "c":
-                date_parts = date.split("/")
+                date_parts = date.split("-")
 
                 # Set the file name
                 file_name = f"{service_uid}_on_{date_parts[0]}.{date_parts[1]}.{date_parts[2]}_service_data"
@@ -47,6 +49,7 @@ class ServiceDetails:
                 create_file(file_name, service_data)
 
                 print(f"Service data saved to file: \n  {file_name}")
+                return None
 
             try:
                 return create_service_record(self.__complexity, service_data, service_uid)
