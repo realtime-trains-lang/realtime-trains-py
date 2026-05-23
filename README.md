@@ -1,5 +1,10 @@
 # Realtime Trains API Python Module
 
+## THIS API WRAPPER IS INCOMPATIBLE WITH THE LATEST VERSION OF THE RTT API
+We're working on a big update coming in late 2026 to allow you to use this API wrapper to access the new version of the API. Support for the previous generation of the API will end when this API wrapper is updated to version 2027.1.0 
+
+---
+
 Maintained and managed by members of [realtime-trains-lang](https://github.com/realtime-trains-lang).
 
 ![PyPI](https://img.shields.io/pypi/v/realtime-trains-py) ![License](https://img.shields.io/github/license/realtime-trains-lang/realtime-trains-py) ![Issues](https://img.shields.io/github/issues/realtime-trains-lang/realtime-trains-py) ![Downloads](https://img.shields.io/pypi/dm/realtime-trains-py)
@@ -13,12 +18,12 @@ Maintained and managed by members of [realtime-trains-lang](https://github.com/r
 
 **realtime-trains-py** is an open-source python API Wrapper designed to allow you to access data directly from the Realtime Trains API, in a simple and user-friendly way. This package includes five different [complexity modes](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Complexity) that allow you to customise how you want to see the data provided by the API.
 
-This package can be used for anything railway related, whether you're a rail enthusiast or commuter, this package can be used for all your purposes. The package can be used in **personal** applications or for **personal** rail data access. For **commercial** use, you should contact [Realtime Trains](https://www.realtimetrains.co.uk/). More information can be found on their [API home page](https://api.rtt.io)
+This package can be used for anything railway related. Whether you're a rail enthusiast or commuter, this package can be used for all your purposes. The package can be used in **personal** applications or for **personal** rail data access. For **commercial** use, you should contact [Realtime Trains](https://www.realtimetrains.co.uk/). More information can be found on their [API home page](https://api.rtt.io)
 
 This package is not affiliated with [Realtime Trains](https://www.realtimetrains.co.uk/). 
 
 ## What can I do with this package?
-This package allows you to access data directly from the [Realtime Trains API](https://api.rtt.io) using one of [five complexities](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Complexity). Each complexity mode gives you access to different access to the data the API offers. 
+This package allows you to access data directly from the [Realtime Trains API](https://api.rtt.io) using one of [five complexities](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Complexity). Each complexity mode gives you access to different data the API offers. 
 
 For the most flexibility, you can use **simple** mode, the recommended mode. Simple mode allows you to access a fair amount of the data available from the Realtime Trains API. This mode is recommended for those that want a manageable amount of information while keeping it easy to read. Use `complexity="s"`.
 
@@ -26,7 +31,7 @@ For the most freedom with the API, you can use **complex** mode. Complex mode le
 
 For a balance of freedom and flexibility, you can use **advanced** mode. Advanced mode allows you to access most of the data available from the Realtime Trains API. This mode is recommended for those that want to see a bit more information, but like to keep things easy to read. Use `complexity="a"`.
 
-Using advanced and simple mode, you can optionally select between prettier or normal mode. The default, prettier mode, gives you your data in a nicely formatted table, while normal mode gives you your data as a list of objects, so you'll need to get the data out of the objects yourself. To use a normal mode, use `complexity="s.n"` or `complexity="a.n"`. Don't worry though! If you're confused, we have plenty of [documentation](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Home) to help you out.
+Using advanced and simple mode, you can optionally select between prettier or normal mode. The default, prettier mode, gives you your data in a nicely formatted table, while normal mode gives you your data as objects, so you'll need to get the data out of the objects yourself. To use a normal mode, use `complexity="s.n"` or `complexity="a.n"`. Don't worry though! If you're confused, we have plenty of [documentation](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Home) to help you out.
 
 
 ## Installation Instructions
