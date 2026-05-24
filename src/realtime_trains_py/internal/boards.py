@@ -1,14 +1,15 @@
 # Import external libraries
+import json
+
 import requests
 
 from datetime import datetime
 from tabulate import tabulate
 
 # Import necessary items from other files
-from realtime_trains_py.internal.details import ArrivalBoardDetails, DefaultBoard, DepartureBoardDetails
+from realtime_trains_py.internal.details import DefaultBoard, StationBoardDetails
 from realtime_trains_py.internal.errors import APIResponseError, NoDataFound
-from realtime_trains_py.internal.stat_boards import NewStationBoard
-from realtime_trains_py.internal.utilities import create_file, create_parameters, format_time, get_time_status
+from realtime_trains_py.internal.utilities import create_file, create_parameters
 
 
 class Boards:
@@ -54,15 +55,47 @@ class Boards:
                     departure_board.append(service_info)
 
                 else:
+        #       scheduled_arrival,
+        #       scheduled_departure,
+        #       destination,
+        #       origin,
+        #       platform,
+        #       expected_arrival,
+        #       expected_departure,
+        #       service_uid,
+        #       coaches
                     # Unpack the service details and append them to a list if complexity does not end with n
-                    departure_board.append([service_info.gbtt_departure, service_info.terminus, service_info.platform, service_info.realtime_departure, service_info.service_uid])
+                    departure_board.append([
+                        service_info.scheduled_arrival,
+                        service_info.scheduled_departure, 
+                        service_info.origin,
+                        service_info.terminus, 
+                        service_info.platform, 
+                        service_info.coaches,
+                        service_info.actual_arrival,
+                        service_info.actual_departure, 
+                        service_info.service_uid
+                        ])
 
             if self.__complexity.endswith("n"):
                 return DefaultBoard(departure_board, requested_location)
 
             # Pint the departure info and tabulate table with the headers defined
             print(f"Departure board for {requested_location}. Generated at {datetime.now().strftime('%H:%M:%S on %d/%m/%y')}.")
-            print(tabulate(departure_board, tablefmt="rounded_grid", headers=["Booked Departure", "Destination", "Platform", "Actual Departure", "Service UID"]))
+            print(tabulate(
+                departure_board, 
+                tablefmt="rounded_grid", 
+                headers=[
+                    "Scheduled \nArrival", 
+                    "Scheduled \nDeparture",
+                    "Origin",
+                    "Destination", 
+                    "Platform",
+                    "Coaches",
+                    "Actual \nArrival",
+                    "Actual \nDeparture", 
+                    "Service UID"
+                    ]))
 
         elif api_response.status_code == 404:
            raise NoDataFound()
@@ -70,108 +103,7 @@ class Boards:
         else:
             raise APIResponseError(f"Failed to connect to the RTT API server: {api_response.status_code}")
 
-#     def _get_arr_board_details(self, tiploc: str, filter_from: str | None=None, filter_to: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> DefaultBoard | None:
-#         # Create the parameters for the API request using the create_parameters function
-#         params = create_parameters(tiploc, filter_from, filter_to, rows, time, date)
-
-#         # Get the API response using the auth details provided
-#         api_response = requests.get("https://data.rtt.io/rtt/loaction", headers=self.__headers, params=params)
-
-#         if api_response.status_code == 200:
-#             service_data = api_response.json()
-
-#             if service_data["services"] == None:
-#                 raise NoDataFound()
-
-#             if self.__complexity == "c":
-#                 # If complexity is c, save the JSON data to a new .json file
-#                 if date is None:
-#                     date = datetime.now().strftime("%Y/%m/%d")
-
-#                 date_parts = date.split("/")
-
-#                 file_name = f"{tiploc}_on_{date_parts[0]}.{date_parts[1]}.{date_parts[2]}_arr_board_data"
-
-#                 create_file(file_name, service_data)
-
-#                 print(f"Arrival data saved to file: \n  {file_name}.")
-            
-#             arrivals_board: list = []
-#             requested_location = service_data["location"]["name"] 
-
-#             # For each service in the arrival data, get the service data
-#             for service in service_data["services"][:rows]:
-#                 service_info = get_arr_service_data(service)
-                    
-#                 if self.__complexity.endswith("n"):
-#                     arrivals_board.append(service_info)
-
-#                 else:
-#                     # Unpack the service details and append them to a list if complexity does not end with n
-#                     arrivals_board.append([service_info.gbtt_arrival, service_info.terminus, service_info.origin, service_info.platform, service_info.realtime_arrival, service_info.service_uid])
-
-#             if self.__complexity.endswith("n"):
-#                 return DefaultBoard(arrivals_board, requested_location)
-            
-#             # Pint the arrival info and tabulate table with the headers defined
-#             print(f"Arrivals board for {requested_location}. Generated at {datetime.now().strftime('%H:%M:%S on %d/%m/%y.')}")
-#             print(tabulate(arrivals_board, tablefmt="rounded_grid", headers=["Booked Arrival", "Destination", "Origin", "Platform", "Actual Arrival", "Service UID"]))
-
-#         elif api_response.status_code == 404:
-#             raise NoDataFound()
-
-#         else:
-#             raise APIResponseError(f"Failed to connect to the RTT API server: {api_response.status_code}")
-
-
-#     def _get_stat_board_details(self, tiploc: str, search_filter: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> DefaultBoard | None:
-#         # Create a search query and get the api response using the auth details provided
-#         search_query = create_parameters(tiploc, search_filter, rows, time, date)
-
-#         print("Fetching departure and arrival data...")
-        
-#         dep_api_response = requests.get(search_query, auth=(self.__username, self.__password))
-#         arr_api_response = requests.get(f"{search_query}/arrivals", auth=(self.__username, self.__password))
-
-#         if dep_api_response.status_code == 200 and arr_api_response.status_code == 200:
-#             departures_data = dep_api_response.json()
-#             arrivals_data = arr_api_response.json()
-
-#             if departures_data["services"] == None or arrivals_data["services"] == None:
-#                 raise NoDataFound()
-
-#             if self.__complexity == "c":
-#                 # If complexity is c, save the JSON data to new .json files
-#                 if date is None:
-#                     date = datetime.now().strftime("%Y/%m/%d")
-
-#                 date_parts = date.split("/")
-
-#                 dep_file_name = f"{tiploc}_on_{date_parts[0]}.{date_parts[1]}.{date_parts[2]}_dep_board_data"
-#                 arr_file_name = f"{tiploc}_on_{date_parts[0]}.{date_parts[1]}.{date_parts[2]}_arr_board_data"
-
-#                 create_file(dep_file_name, departures_data)
-#                 create_file(arr_file_name, arrivals_data)
-
-#                 print(f"Departures and arrivals saved to files: \n  {dep_file_name} \n  {arr_file_name}. \n")
-
-#             # Create the station board
-#             new_boards = NewStationBoard(departures_data, arrivals_data, rows)
-#             board = new_boards._create_station_board()
-
-#             if self.__complexity.endswith("n"):
-#                 return DefaultBoard(board[0], board[1])
-            
-#             new_boards._output_formatted_board()
-
-#         elif dep_api_response.status_code == 404 or arr_api_response == 404:
-#             raise NoDataFound()
-
-#         else:
-#             raise APIResponseError(f"Failed to connect to the RTT API server: {dep_api_response.status_code} | {arr_api_response.status_code}")
-
-
-def get_dep_service_data(service) -> DepartureBoardDetails:
+def get_dep_service_data(service) -> StationBoardDetails:
     """
     Get the departure service data from the API response.
     This function extracts the relevant information from the service data and returns it as a DepartureBoardDetails object.
@@ -182,65 +114,80 @@ def get_dep_service_data(service) -> DepartureBoardDetails:
     
     Finally, it returns a DepartureBoardDetails object with the formatted gbtt_departure, destination, platform, time status (aka expected arrival), and service_uid.
     """
-    gbtt_departure = platform = realtime_departure = service_uid = "-"
 
-    location_detail = service["locationDetail"] 
-    status = location_detail["displayAs"] 
+    scheduled_arrival = expected_arrival = scheduled_departure = expected_departure = platform = "-"
+    coaches = 0
 
-    if "gbttBookedDeparture" in location_detail:
-        gbtt_departure = location_detail["gbttBookedDeparture"]                        
+    destination = service["destination"][0]["location"]["description"]
+    # print(destination)
+    origin = service["origin"][0]["location"]["description"]
+    # print(origin)
 
-    if "platform" in location_detail:
-        platform = location_detail["platform"]
+    temporal_data = service["temporalData"]
+    location_data = service["locationMetadata"]
+    service_uid = service["scheduleMetadata"]["identity"]
 
-    if "realtimeDeparture" in location_detail:
-        realtime_departure = location_detail["realtimeDeparture"]
+    print(json.dumps(service))
 
-    if "serviceUid" in service:
-        service_uid = service["serviceUid"]
 
-    return DepartureBoardDetails(
-        format_time(gbtt_departure), 
-        (location_detail["destination"]).pop()["description"], 
-        platform, 
-        get_time_status(gbtt_departure, realtime_departure, status),
-        service_uid
+    # Extract arrival data if it exists
+    if "arrival" in temporal_data:
+        is_cancelled = temporal_data["arrival"]["isCancelled"]
+        scheduled_arrival = temporal_data["arrival"]["scheduleAdvertised"].split("T")[1]
+
+        if is_cancelled:
+            expected_arrival = "Cancelled"
+        
+        elif "realtimeActual" in temporal_data["arrival"]:
+            expected_arrival = temporal_data["arrival"]["realtimeActual"].split("T")[1]
+
+        elif "realtimeForecast" in temporal_data["arrival"]:
+            expected_arrival = temporal_data["arrival"]["realtimeForecast"].split("T")[1]
+
+    # Extract departure data if it exists
+    if "departure" in temporal_data:
+        is_cancelled = temporal_data["departure"]["isCancelled"]
+        scheduled_departure = temporal_data["departure"]["scheduleAdvertised"].split("T")[1]
+        if is_cancelled:
+            expected_departure = "Cancelled"
+
+        elif "realtimeActual" in temporal_data["departure"]:
+            expected_departure = temporal_data["departure"]["realtimeActual"].split("T")[1]
+
+        elif "realtimeForecast" in temporal_data["departure"]:
+            expected_departure = temporal_data["departure"]["realtimeForecast"].split("T")[1]                    
+
+    # Extract platform data if it exists
+    if "platform" in location_data:
+        # print(location_data)
+        if "forecast" in location_data["platform"]:
+            platform = location_data["platform"]["forecast"]
+
+        else:
+            platform = location_data["platform"]["actual"]
+
+    # Extract vehicle length (coaches) data if it exists
+    if "numberOfVehicles" in location_data:
+        coaches = location_data["numberOfVehicles"]
+
+    print(location_data)
+
+    # print(f"""
+    # {scheduled_departure} (Exp: {expected_departure}) service to {destination} from platform {platform}.
+    # Arrival is {scheduled_arrival} (Exp: {expected_arrival}).
+
+    # Service {service_uid} is formed of {coaches} coaches. Service originates from {origin}.
+
+# """)
+
+    return StationBoardDetails(
+        scheduled_arrival,
+        scheduled_departure,
+        destination,
+        origin,
+        platform,
+        expected_arrival,
+        expected_departure,
+        service_uid,
+        coaches
     )
-
-
-# def get_arr_service_data(service) -> ArrivalBoardDetails:
-#     """
-#     Get the arrival service data from the API response.
-#     This function extracts the relevant information from the service data and returns it as a ArrivalBoardDetails object.
-
-#     It begins by setting the default values for gbtt_arrival, platform, realtime_arrival, and service_uid to "-".
-#     Then, it retrieves the location detail and status from the service data.
-#     It checks if the keys "gbttBookedArrival", "platform", "realtimeArrival" and "serviceUid" are in the location detail and assigns their values to the respective variables.
-    
-#     Finally, it returns a ArrivalBoardDetails object with the formatted gbtt_arrival, destination, origin, platform, time status (aka expected arrival), and service_uid.
-#     """
-#     gbtt_arrival = platform = realtime_arrival = service_uid = "-"
-                
-#     location_detail = service["locationDetail"] 
-#     status = location_detail["displayAs"] 
-
-#     if "gbttBookedArrival" in location_detail:
-#         gbtt_arrival = location_detail["gbttBookedArrival"]
-
-#     if "platform" in location_detail:
-#         platform = location_detail["platform"]
-
-#     if "realtimeArrival" in location_detail:
-#         realtime_arrival = location_detail["realtimeArrival"]
-
-#     if "serviceUid" in service:
-#         service_uid = service["serviceUid"]
-
-#     return ArrivalBoardDetails(
-#         format_time(gbtt_arrival), 
-#         (location_detail["destination"]).pop()["description"], 
-#         (location_detail["origin"]).pop()["description"],
-#         platform, 
-#         get_time_status(gbtt_arrival, realtime_arrival, status),
-#         service_uid
-#     )

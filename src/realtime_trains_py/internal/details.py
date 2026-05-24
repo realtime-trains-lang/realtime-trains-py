@@ -33,41 +33,32 @@ class ServiceData:
 
 # Station Board Details class
 class StationBoardDetails:
-    def __init__(self, gbtt_arrival: str, gbtt_departure: str, terminus: str, origin: str, platform: str, realtime_arrival: str | None, realtime_departure: str | None, service_uid: str) -> None:
-        self.gbtt_arrival: str = gbtt_arrival
-        self.gbtt_departure: str = gbtt_departure
+    def __init__(
+            self, 
+            scheduled_arrival: str, 
+            scheduled_departure: str, 
+            terminus: str, 
+            origin: str, 
+            platform: str, 
+            actual_arrival: str | None, 
+            actual_departure: str | None, 
+            service_uid: str, 
+            coaches: int
+        ) -> None:
+        self.scheduled_arrival: str = scheduled_arrival
+        self.scheduled_departure: str = scheduled_departure
         self.terminus: str = terminus
         self.origin: str = origin
         self.platform: str = platform
-        self.realtime_arrival: str | None = realtime_arrival
-        self.realtime_departure: str | None = realtime_departure
+        self.actual_arrival: str | None = actual_arrival
+        self.actual_departure: str | None = actual_departure
         self.service_uid: str = service_uid
+        self.coaches: int = coaches
 
-
-
-# Departure Board Details class
-class DepartureBoardDetails:
-    def __init__(self, gbtt_departure: str, terminus: str, platform: str, realtime_departure: str | None, service_uid: str) -> None:
-        self.gbtt_departure: str = gbtt_departure
-        self.terminus: str = terminus
-        self.platform: str = platform
-        self.realtime_departure: str | None = realtime_departure
-        self.service_uid: str = service_uid
-
-
-# Arrivals Board Details class
-class ArrivalBoardDetails:
-    def __init__(self, gbtt_arrival: str, terminus: str, origin: str, platform: str, realtime_arrival: str | None, service_uid: str) -> None:
-        self.gbtt_arrival: str = gbtt_arrival
-        self.terminus: str = terminus
-        self.origin: str = origin
-        self.platform: str = platform
-        self.realtime_arrival: str | None = realtime_arrival
-        self.service_uid: str = service_uid
 
 
 # Default Board class
 class DefaultBoard:
-    def __init__(self, board: list[ArrivalBoardDetails] | list[DepartureBoardDetails], location: str) -> None:
-        self.board: list[ArrivalBoardDetails] | list[DepartureBoardDetails] = board
+    def __init__(self, board: list[StationBoardDetails], location: str) -> None:
+        self.board: list[StationBoardDetails] = board
         self.location: str = location

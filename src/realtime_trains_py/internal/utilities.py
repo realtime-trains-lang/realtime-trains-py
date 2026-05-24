@@ -80,21 +80,6 @@ def format_time(time: str) -> str:
     return f"{time[0]}{time[1]}:{time[2]}{time[3]}"
 
 
-# Get the time status
-def get_time_status(gbtt_time, actual_time, status) -> str | None:
-    # Check that the status isn't cancelled
-    if status != "CANCELLED_CALL":
-        if gbtt_time == actual_time:
-            return "On time"
-
-        # If the realtime departure isn't null, format and add Exp
-        elif actual_time != "-":
-            return f"Exp {format_time(actual_time)}"
-
-    else:
-        return "Cancelled"
-
-
 def validate_complexity(complexity: str) -> None:
     if complexity not in ["a", "a.n", "c", "s","s.n"]:
         raise InvalidComplexity(complexity)

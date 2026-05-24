@@ -2,7 +2,7 @@
 
 from realtime_trains_py.internal.boards import Boards
 from realtime_trains_py.internal.details import DefaultBoard
-from realtime_trains_py.internal.live_board import LiveBoard
+# from realtime_trains_py.internal.live_board import LiveBoard
 from realtime_trains_py.internal.services import ServiceDetails, ServiceData, ServiceDetails
 from realtime_trains_py.internal.utilities import connection_authorised, validate_complexity
 
@@ -41,7 +41,7 @@ class RealtimeTrainsPy:
 
         self.__services = ServiceDetails(request_token=request_token, complexity=complexity)
         self.__boards = Boards(request_token=request_token, complexity=complexity)
-        self.__live_board = LiveBoard(request_token=request_token)
+        # self.__live_board = LiveBoard(request_token=request_token)
 
 
     def get_departures(self, tiploc: str, filter_from: str | None=None, filter_to: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> DefaultBoard | None:
@@ -168,7 +168,8 @@ class RealtimeTrainsPy:
         ```
 
         [Check out the wiki](https://github.com/realtime-trains-lang/realtime-trains-py/wiki) for more examples and information.
-        """        
+        """       
+        raise NotImplementedError("This method is not yet implemented.") 
         self.__live_board._get_live(tiploc=tiploc.upper(), mode=mode.upper())
 
     def watch_service(self, service_uid: str, mode: str="LCD") -> None:
