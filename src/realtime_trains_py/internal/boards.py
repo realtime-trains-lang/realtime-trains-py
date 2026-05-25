@@ -1,6 +1,4 @@
 # Import external libraries
-import json
-
 import requests
 
 from datetime import datetime
@@ -55,15 +53,6 @@ class Boards:
                     departure_board.append(service_info)
 
                 else:
-        #       scheduled_arrival,
-        #       scheduled_departure,
-        #       destination,
-        #       origin,
-        #       platform,
-        #       expected_arrival,
-        #       expected_departure,
-        #       service_uid,
-        #       coaches
                     # Unpack the service details and append them to a list if complexity does not end with n
                     departure_board.append([
                         service_info.scheduled_arrival,

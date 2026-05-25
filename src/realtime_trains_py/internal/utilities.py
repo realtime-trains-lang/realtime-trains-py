@@ -77,10 +77,6 @@ def create_parameters(tiploc: str, filter_from: str | None=None, filter_to: str 
     return parameters
 
 
-def format_time(time: str) -> str:
-    return f"{time[0]}{time[1]}:{time[2]}{time[3]}"
-
-
 def get_dep_service_data(service) -> StationBoardDetails:
     """
     Get the departure service data from the API response.

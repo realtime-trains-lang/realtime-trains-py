@@ -1,6 +1,4 @@
 # Import external libraries
-import json
-
 import requests
 import sys
 import time
@@ -46,10 +44,6 @@ class LiveBoard:
                 self.__update_request_token(check_token(request_token=self.__headers["Authorization"].split(" ")[1]))
 
                 station_data = requests.get(f"https://data.rtt.io/rtt/location", params=params, headers=self.__headers)
-
-                # print(station_data.status_code)
-                # print(station_data.text)
-                # time.sleep(5)
 
                 if station_data.status_code == 200:
                     departure_data = station_data.json()
@@ -115,9 +109,6 @@ class LiveBoard:
         """
         line_two = f"1st {service.scheduled_departure} {service.terminus} {service.platform}  {check_cancel(service.actual_departure, mode)}\n"
 
-        # print(service.service_uid)
-        # print(self.__headers)
-
         params = {
             "uniqueIdentity": f"gb-nr:{service.service_uid}:{datetime.now().strftime('%Y-%m-%d')}", 
             "timeTolerance": "false", 
@@ -129,8 +120,6 @@ class LiveBoard:
 
         line_three = "Calling at: "
 
-        # print(json.dumps(all_service_data, indent=4))
-
         schedule_data = all_service_data["scheduleMetadata"]
         location_data = all_service_data["locations"]
         origin = all_service_data["origin"][0]["location"].pop("description")
@@ -139,7 +128,6 @@ class LiveBoard:
         if destination == requested_location:
             line_two = f"1st Terminates here. Service from {origin}.\n"
         
-
         valid = False
         stops_outputted = False
         stops = len(location_data)

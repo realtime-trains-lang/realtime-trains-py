@@ -7,7 +7,7 @@ from tabulate import tabulate
 # Import necessary items from other files
 from realtime_trains_py.internal.details import ServiceData, CallingPoint
 from realtime_trains_py.internal.errors import APIResponseError, NoDataFound, UnexpectedResponseError
-from realtime_trains_py.internal.utilities import create_file, format_time, validate_date, validate_uid
+from realtime_trains_py.internal.utilities import create_file, validate_date, validate_uid
 
 
 # Class for getting and creating service details
