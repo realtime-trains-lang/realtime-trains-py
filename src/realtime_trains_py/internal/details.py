@@ -40,8 +40,8 @@ class StationBoardDetails:
             terminus: str, 
             origin: str, 
             platform: str, 
-            actual_arrival: str | None, 
-            actual_departure: str | None, 
+            actual_arrival: str, 
+            actual_departure: str, 
             service_uid: str, 
             coaches: int
         ) -> None:
@@ -50,8 +50,8 @@ class StationBoardDetails:
         self.terminus: str = terminus
         self.origin: str = origin
         self.platform: str = platform
-        self.actual_arrival: str | None = actual_arrival
-        self.actual_departure: str | None = actual_departure
+        self.actual_arrival: str = actual_arrival
+        self.actual_departure: str = actual_departure
         self.service_uid: str = service_uid
         self.coaches: int = coaches
 

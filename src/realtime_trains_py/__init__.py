@@ -2,9 +2,9 @@
 
 from realtime_trains_py.internal.boards import Boards
 from realtime_trains_py.internal.details import DefaultBoard
-# from realtime_trains_py.internal.live_board import LiveBoard
+from realtime_trains_py.internal.live_board import LiveBoard
 from realtime_trains_py.internal.services import ServiceDetails, ServiceData, ServiceDetails
-from realtime_trains_py.internal.utilities import connection_authorised, validate_complexity
+from realtime_trains_py.internal.utilities import check_token, validate_complexity
 
 
 class RealtimeTrainsPy:
@@ -26,22 +26,15 @@ class RealtimeTrainsPy:
         """
         request_token = str(request_token)
 
-        if complexity == "s.p":
-            complexity = "s"
+        complexity = complexity.lower()
 
-        elif complexity == "a.p":
-            complexity = "a"
-        
-        else:
-            complexity = complexity.lower()
-
-        request_token = str(connection_authorised(request_token=request_token))
+        request_token = str(check_token(request_token=request_token))
 
         validate_complexity(complexity)
 
         self.__services = ServiceDetails(request_token=request_token, complexity=complexity)
         self.__boards = Boards(request_token=request_token, complexity=complexity)
-        # self.__live_board = LiveBoard(request_token=request_token)
+        self.__live_board = LiveBoard(request_token=request_token)
 
 
     def get_departures(self, tiploc: str, filter_from: str | None=None, filter_to: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> DefaultBoard | None:
@@ -68,33 +61,6 @@ class RealtimeTrainsPy:
         """
         return self.__boards._get_dep_board_details(tiploc=tiploc.upper(), filter_from=filter_from, filter_to=filter_to, date=date, rows=rows, time=time)
 
-
-    def get_arrivals(self, tiploc: str, filter_from: str | None=None, filter_to: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> DefaultBoard | None:
-        """
-        ## Get Arrivals
-        This function retrieves the arrivals for a given station.
-
-        :param str tiploc: (Required) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the station.
-        :param str filter_from: (Optional) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the originating station.
-        :param str filter_to: (Optional) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the destination station.
-        :param str date: (Optional) A string representing the date in the format YYYY-MM-DD.
-        :param int rows: (Optional) An integer representing the maximum number of rows to return. (Only available for simple and advanced complexity.)
-        :param str time: (Optional) A string representing the time in the format HHMM.
-
-        ---
-        ## Examples
-        ```python
-        get_arrivals(tiploc="KNGX", filter="STEVNGE", date="2024-11-16", time="1800", rows=10)
-
-        get_arrivals(tiploc="YORK", date="2024-11-16", time="1800")
-        ```
-
-        [Check out the wiki](https://github.com/realtime-trains-lang/realtime-trains-py/wiki) for more examples and information.
-        """
-        raise NotImplementedError("This method is not yet implemented.")
-        return self.__boards._get_arr_board_details(tiploc=tiploc.upper(), search_filter=filter, date=date, rows=rows, time=time)
-
-
     def get_service(self, service_uid: str, date: str | None=None) -> ServiceData | None:
         """
         ## Get Service
@@ -114,39 +80,6 @@ class RealtimeTrainsPy:
         [Check out the wiki](https://github.com/realtime-trains-lang/realtime-trains-py/wiki) for more examples and information.
         """
         return self.__services._get_service_details(service_uid=service_uid.upper(), date=date)
-
-
-    def get_station(self, tiploc: str, filter: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> DefaultBoard | None:
-        """
-        ## Get Station
-        This function retrieves the departures and arrivals for a given station and orders these into one big board.
-
-        :param str tiploc: (Required) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the station.
-        :param str filter: (Optional) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the filter station.
-        :param str date: (Optional) A string representing the date in the format YYYY-MM-DD.
-        :param int rows: (Optional) An integer representing half of the maximum number of rows to return. See below for more details.
-        :param str time: (Optional) A string representing the time in the format HHMM.
-
-        ### Rows
-        Rows is the maximum number of rows to return. The API may return twice the number of rows requested, so if you want 10 rows, 
-        you should set rows to 5. This is because the API returns both departures and arrivals. 
-        
-        If you set rows to 10, the API will return up to 10 departures and 10 arrivals. These are then sorted and combined into a single list, so you may
-        not actually receive 20 rows of data.
-
-        ---
-        ## Examples
-        ```python
-        get_station(tiploc="STEVNGE", filter="KNGX", date="2024-11-16", time="1800", rows=10)
-
-        get_station(tiploc="YORK", date="2024-11-16", time="1800")
-        ```
-
-        [Check out the wiki](https://github.com/realtime-trains-lang/realtime-trains-py/wiki) for more examples and information.
-        """
-        raise NotImplementedError("This method is not yet implemented.")
-        return self.__boards._get_stat_board_details(tiploc=tiploc.upper(), search_filter=filter, date=date, rows=rows, time=time)
-
 
     def get_live(self, tiploc: str, mode: str="LCD") -> None:
         """
@@ -169,7 +102,6 @@ class RealtimeTrainsPy:
 
         [Check out the wiki](https://github.com/realtime-trains-lang/realtime-trains-py/wiki) for more examples and information.
         """       
-        raise NotImplementedError("This method is not yet implemented.") 
         self.__live_board._get_live(tiploc=tiploc.upper(), mode=mode.upper())
 
     def watch_service(self, service_uid: str, mode: str="LCD") -> None:
