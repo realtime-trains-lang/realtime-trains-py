@@ -8,7 +8,7 @@ from realtime_trains_py.internal.utilities import check_token, validate_complexi
 
 
 class RealtimeTrainsPy:
-    def __init__(self, complexity: str="s", request_token: str | None=None) -> None:
+    def __init__(self, request_token: str, complexity: str="s") -> None:
         """
         :param str request_token: (Required) A string representing your request token for authentication.
         :param str complexity: (Optional) A string representing your chosen complexity level. 
@@ -17,18 +17,16 @@ class RealtimeTrainsPy:
         ---
         ## Examples
         ```python
-        rtt = RealtimeTrainsPy(complexity="s", request_token="<a_request_token>")
+        rtt = RealtimeTrainsPy(request_token="<a_request_token>", complexity="s")
 
-        rtt = RealtimeTrainsPy(complexity="a.n", request_token="<a_request_token>")
+        rtt = RealtimeTrainsPy(request_token="<a_request_token>", complexity="a.n")
         ```
 
         [Check out the wiki](https://github.com/realtime-trains-lang/realtime-trains-py/wiki) for more examples and information.
         """
-        request_token = str(request_token)
-
         complexity = complexity.lower()
 
-        request_token = str(check_token(request_token=request_token))
+        request_token = check_token(request_token=request_token)
 
         validate_complexity(complexity)
 
