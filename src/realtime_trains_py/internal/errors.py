@@ -35,7 +35,3 @@ class InvalidUIDProvided(Exception):
 class NoDataFound(Exception):
     def __init__(self) -> None:
         super().__init__(f"\nRealtime Trains Py error:\nNo data found for the request made. Please check your parameters and try again.")
-
-class UnexpectedResponseError(Exception):
-    def __init__(self) -> None:
-        super().__init__(f"\nRealtime Trains Py error:\nAn unexpected error occurred handling your request. Try again in a few minutes. \nIf this issue persists, please open an issue on the GitHub repository.")

@@ -1,9 +1,5 @@
 # Realtime Trains API Python Module
 
-## THIS API WRAPPER IS INCOMPATIBLE WITH THE LATEST VERSION OF THE RTT API
-We're working on a big update coming in Summer 2026 to allow you to use this API wrapper to access the new version of the API. Support for the previous generation of the API will end when this API wrapper is updated to version 2027.1.0. 
-You can continue to use previous versions of realtime-trains-py until 31st September 2026. After this date, RTT will turn off access to the [legacy API](https://api.rtt.io).
-
 ---
 
 Maintained and managed by members of [realtime-trains-lang](https://github.com/realtime-trains-lang).
@@ -24,15 +20,13 @@ This package can be used for anything railway related. Whether you're a rail ent
 This package is not affiliated with [Realtime Trains](https://www.realtimetrains.co.uk/). 
 
 ## What can I do with this package?
-This package allows you to access data directly from the [Realtime Trains API](https://api-portal.rtt.io/welcome/) using one of [five complexities](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Complexity). Each complexity mode gives you access to different data the API offers. 
+This package allows you to access data directly from the [Realtime Trains API](https://api-portal.rtt.io/welcome/) using one of [three complexities](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Complexity). Each complexity mode gives you access to different data the API offers. 
 
 For the most flexibility, you can use **simple** mode, the recommended mode. Simple mode allows you to access a fair amount of the data available from the Realtime Trains API. This mode is recommended for those that want a manageable amount of information while keeping it easy to read. Use `complexity="s"`.
 
 For the most freedom with the API, you can use **complex** mode. Complex mode lets you access all the data available from the Realtime Trains API. This mode does not format any data for you - it creates new `.json` files with the data you requested. This mode is recommended for those who have a good understanding of python and managing json files. Use `complexity="c"`.
 
-For a balance of freedom and flexibility, you can use **advanced** mode. Advanced mode allows you to access most of the data available from the Realtime Trains API. This mode is recommended for those that want to see a bit more information, but like to keep things easy to read. Use `complexity="a"`.
-
-Using advanced and simple mode, you can optionally select between prettier or normal mode. The default, prettier mode, gives you your data in a nicely formatted table, while normal mode gives you your data as objects, so you'll need to get the data out of the objects yourself. To use a normal mode, use `complexity="s.n"` or `complexity="a.n"`. Don't worry though! If you're confused, we have plenty of [documentation](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Home) to help you out.
+Using simple mode, you can optionally select between prettier or normal mode. The default, prettier mode, gives you your data in a nicely formatted table, while normal mode gives you your data as objects, so you'll need to get the data out of the objects yourself. To use normal mode, use `complexity="s.n"`. Don't worry though! If you're confused, we have plenty of [documentation](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Home) to help you out.
 
 
 ## Installation Instructions
@@ -48,8 +42,7 @@ Once installed, you can import the package. Place the lines below in your file o
 from realtime_trains_py import RealtimeTrainsPy
 
 rtt = RealtimeTrainsPy(
-    username="<your_username>", 
-    password="<your_password>", 
+    request_token="<your_request_token>", 
     complexity="<your_choice>"
 )
 ```
@@ -73,22 +66,10 @@ rtt.get_live(tiploc="ELYY")
 rtt.get_departures(tiploc="KNGX", rows=15)
 ```
 
-#### Get Arrivals
-###### The example below will return up to 15 rows on the arrivals board for London King's Cross at the time you run the program. 
-```python
-rtt.get_arrivals(tiploc="KNGX", rows=15)
-```
-
 #### Get Service
 ###### The example below will return the service information of G28171 (2H18 0958 London Liverpool Street to Cambridge North) at the time you run the program. 
 ```python
 rtt.get_service(service_uid="G28171")
-```
-
-#### Get Station
-###### The example below will return up to 30 rows of departures and arrivals for London King's Cross at the time you run the program. 
-```python
-rtt.get_station(tiploc="KNGX", rows=15)
 ```
 
 More in-depth examples can be found on our [examples page](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Examples). 
