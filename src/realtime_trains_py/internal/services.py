@@ -53,10 +53,10 @@ class ServiceDetails:
            raise NoDataFound()
 
         else:
-            raise APIResponseError(f"Failed to connect to the RTT API server: {api_response.status_code}")
+            raise APIResponseError(f"Failed to connect to the RTT API server: {api_response.status_code} \nResponse message: {api_response.text}")
 
 
-    def _create_service_record(self,service_data, service_uid) -> ServiceData | None:  
+    def _create_service_record(self,service_data, service_uid) -> ServiceData:  
         operator = service_data["scheduleMetadata"]["operator"].pop("name")
         origin = service_data["origin"][0]["location"].pop("description")
         start_time = service_data["origin"][0]["temporalData"].pop("scheduleAdvertised").split("T")[1][:5]
@@ -98,7 +98,6 @@ class ServiceDetails:
             print(tabulate(calling_points, tablefmt="rounded_grid",
                     headers=["Stop Name", "Scheduled Arrival", "Expected Arrival", "Platform", "Line", "Scheduled Departure", "Expected Departure"]
             ))
-            return None
         
         return ServiceData(service_uid, operator, origin, destination, calling_points, start_time, end_time, coaches)
 

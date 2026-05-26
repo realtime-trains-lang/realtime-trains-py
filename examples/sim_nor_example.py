@@ -29,14 +29,14 @@ if departures_at_hull != None:
 
 
 
-#### EXAMPLE 3 ####
+#### EXAMPLE 2 ####
 
 # Query for getting the details of the service with service_uid "W47587" 
 service = rtt.get_service("W47587")
 
-print(f"Service: {service.train_id} ({service.service_uid})\n{service.origin} to {service.destination} \nOperated by {service.operator}")
+print(f"Service: {service.service_uid}\n{service.origin} to {service.destination} \nOperated by {service.operator}")
 for calling_point in service.calling_points:
-    print(f"Arrive: {calling_point.booked_arrival} Depart: {calling_point.booked_departure} | {calling_point.stop_name} Platform {calling_point.platform}")
+    print(f"Arrive: {calling_point.expected_arrival} Depart: {calling_point.expected_departure} | {calling_point.stop_name} Platform {calling_point.platform}")
 
 ### EXAMPLE OUTPUT ###
 # Service: 2C56 (W47587)

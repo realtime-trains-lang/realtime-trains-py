@@ -2,8 +2,7 @@ from realtime_trains_py import RealtimeTrainsPy
 
 # Initialise RealtimeTrainsPy
 rtt = RealtimeTrainsPy(
-    request token="YOUR_USERNAME", # <----- CHANGE ME
-    password="YOUR_PASSWORD", # <----- CHANGE ME
+    request_token="YOUR_REQUEST_TOKEN", # <----- CHANGE ME
     complexity="c"
 )
 
@@ -14,8 +13,7 @@ rtt.get_departures(tiploc="NRCH")
 
 # Running this will create a new file called NRCH_on_yyyy.mm.dd_arr_board.json
 
-# NOTE - If you provide a rows field in get_arrivals, get_station
-# or get_departures when using complex mode, it will be ignored
+# NOTE - If you provide a rows field in get_departures when using complex mode, it will be ignored
 
 
 
@@ -26,8 +24,7 @@ rtt.get_departures(tiploc="HULL", date="2025/01/10", time="1000")
 
 # Running this will create a new file called HULL_on_2025.01.10_dep_board.json
 
-# NOTE - If you provide a rows field in get_arrivals, get_station 
-# or get_departures when using complex mode, it will be ignored
+# NOTE - If you provide a rows field in get_departures when using complex mode, it will be ignored
 
 
 
