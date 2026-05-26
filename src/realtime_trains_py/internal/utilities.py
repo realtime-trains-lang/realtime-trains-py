@@ -46,7 +46,7 @@ def create_file(name: str, contents) -> None:
 
 
 # Create a new search query for board data requests to the API
-def create_parameters(tiploc: str, filter_from: str | None=None, filter_to: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> dict:
+def create_parameters(tiploc: str, filter_from: str | None=None, filter_to: str | None=None, time: str | None=None, date: str | None=None) -> dict:
     # If a date is provided and it isn't valid, raise an error
     if date is not None:
         validate_date(date)
@@ -119,8 +119,8 @@ def get_dep_service_data(service) -> StationBoardDetails:
 
         elif "realtimeForecast" in temporal_data["arrival"]:
             expected_arrival = temporal_data["arrival"]["realtimeForecast"].split("T")[1][:5]
-            if expected_departure == scheduled_departure:
-                expected_departure = "On time"
+            if expected_arrival == scheduled_arrival:
+                expected_arrival = "On time"
 
     # Extract departure data if it exists
     if "departure" in temporal_data:
@@ -176,8 +176,8 @@ def get_dep_service_data(service) -> StationBoardDetails:
 
 
 def validate_complexity(complexity: str) -> None:
-    if complexity not in ["a", "a.n", "c", "s","s.n"]:
-        if complexity in ["a.p", "s.p"]:
+    if complexity not in ["c", "s","s.n"]:
+        if complexity == "s.p":
             complexity = complexity[:-2]
 
         else:

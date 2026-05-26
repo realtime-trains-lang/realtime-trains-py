@@ -12,14 +12,14 @@ class RealtimeTrainsPy:
         """
         :param str request_token: (Required) A string representing your request token for authentication.
         :param str complexity: (Optional) A string representing your chosen complexity level. 
-        Choose from: `["a", "a.n", "c", "s","s.n"]`. If not provided, defaults to "s".
+        Choose from: `["c", "s","s.n"]`. If not provided, defaults to "s".
         
         ---
         ## Examples
         ```python
         rtt = RealtimeTrainsPy(request_token="<a_request_token>", complexity="s")
 
-        rtt = RealtimeTrainsPy(request_token="<a_request_token>", complexity="a.n")
+        rtt = RealtimeTrainsPy(request_token="<a_request_token>", complexity="c")
         ```
 
         [Check out the wiki](https://github.com/realtime-trains-lang/realtime-trains-py/wiki) for more examples and information.

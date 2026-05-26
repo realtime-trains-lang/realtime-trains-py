@@ -85,7 +85,7 @@ class LiveBoard:
                                     line_four += f"2nd {service.scheduled_arrival} Terminates here. Service from {service.origin}.\n"
 
                                 else:
-                                    line_four += f"2nd {service.scheduled_departure} {service.terminus} {service.platform}  {check_cancel(service.actual_departure, mode)}\n"
+                                    line_four += f"2nd {service.scheduled_departure} {service.terminus} {service.platform}  {check_cancel(service.expected_departure, mode)}\n"
 
                                 second = False
 
@@ -96,7 +96,7 @@ class LiveBoard:
                                     line_five += f"3rd {service.scheduled_arrival} Terminates here. Service from {service.origin}.\n"
 
                                 else:
-                                    line_five += f"3rd {service.scheduled_departure} {service.terminus} {service.platform}  {check_cancel(service.actual_departure, mode)}\n"
+                                    line_five += f"3rd {service.scheduled_departure} {service.terminus} {service.platform}  {check_cancel(service.expected_departure, mode)}\n"
                     
                     # Clear the screen
                     sys.stdout.write("\033c\r")
@@ -140,7 +140,7 @@ class LiveBoard:
             line_two = f"1st {service.scheduled_arrival} Terminates here. Service from {origin}.\n"
 
         else:
-            line_two = f"1st {service.scheduled_departure} {service.terminus} {service.platform}  {check_cancel(service.actual_departure, mode)}\n"
+            line_two = f"1st {service.scheduled_departure} {service.terminus} {service.platform}  {check_cancel(service.expected_departure, mode)}\n"
 
         
         can_continue = False

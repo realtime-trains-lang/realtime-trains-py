@@ -20,7 +20,7 @@ class Boards:
 
     def _get_dep_board_details(self, tiploc: str, filter_from: str | None=None, filter_to: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> DefaultBoard | None:
         # Create the parameters for the API request using the create_parameters function
-        params = create_parameters(tiploc, filter_from, filter_to, rows, time, date)
+        params = create_parameters(tiploc, filter_from, filter_to, time, date)
 
         # Get the API response using the auth details provided
         api_response = requests.get("https://data.rtt.io/rtt/location", headers=self.__headers, params=params)
@@ -61,8 +61,8 @@ class Boards:
                         service_info.terminus, 
                         service_info.platform, 
                         service_info.coaches,
-                        service_info.actual_arrival,
-                        service_info.actual_departure, 
+                        service_info.expected_arrival,
+                        service_info.expected_departure, 
                         service_info.service_uid
                         ])
 
@@ -90,4 +90,4 @@ class Boards:
            raise NoDataFound()
 
         else:
-            raise APIResponseError(f"Failed to connect to the RTT API server: {api_response.status_code}")
+            raise APIResponseError(f"Failed to connect to the RTT API server: {api_response.status_code} \nResponse message: {api_response.text}")
