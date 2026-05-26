@@ -6,39 +6,37 @@ from tabulate import tabulate
 
 # Import necessary items from other files
 from realtime_trains_py.internal.details import ServiceData, CallingPoint
-from realtime_trains_py.internal.errors import APIResponseError, NoDataFound, UnexpectedResponseError
-from realtime_trains_py.internal.utilities import create_file, format_time, validate_date, validate_uid
+from realtime_trains_py.internal.errors import APIResponseError, NoDataFound
+from realtime_trains_py.internal.utilities import create_file, validate_date, validate_uid
 
 
 # Class for getting and creating service details
 class ServiceDetails:
-    def __init__(self, username: str, password: str, complexity: str="s") -> None:
-        self.__username = username
-        self.__password = password
+    def __init__(self, request_token: str, complexity: str="s") -> None:
+        self.__headers = {
+            "Authorization": f"Bearer {request_token}",
+            "Accept": "application/json"
+        }
         self.__complexity = complexity
 
     # Get the service details
-    def _get_service_details(self, service_uid: str, date: str | None=None) -> ServiceData:
+    def _get_service_details(self, service_uid: str, date: str | None=None) -> ServiceData | None:
         validate_uid(service_uid)
 
-        if date is not None:
+        if date == None:
+            date = datetime.now().strftime("%Y-%m-%d")
+
+        else:
             validate_date(date)
 
-        elif date is None:
-            # If a date isn't provided, set the date to be now
-            date = (datetime.now()).strftime("%Y/%m/%d")
-
         # Get the api response using the auth details provided
-        api_response = requests.get(f"https://api.rtt.io/api/v1/json/service/{service_uid}/{date}", auth=(self.__username, self.__password))
+        api_response = requests.get(f"https://data.rtt.io/rtt/service", params={"uniqueIdentity": f"gb-nr:{service_uid}:{date}",}, headers=self.__headers)
 
         if api_response.status_code == 200:
-            service_data = api_response.json()
-
-            if "error" in service_data:
-                raise NoDataFound()
+            service_data = api_response.json()["service"]
 
             if self.__complexity == "c":
-                date_parts = date.split("/")
+                date_parts = date.split("-")
 
                 # Set the file name
                 file_name = f"{service_uid}_on_{date_parts[0]}.{date_parts[1]}.{date_parts[2]}_service_data"
@@ -47,114 +45,127 @@ class ServiceDetails:
                 create_file(file_name, service_data)
 
                 print(f"Service data saved to file: \n  {file_name}")
+                return None
 
-            try:
-                return create_service_record(self.__complexity, service_data, service_uid)
-
-            except:
-                # If an item couldn't be found, raise an error
-                raise UnexpectedResponseError()
+            return self._create_service_record(service_data, service_uid)
 
         elif api_response.status_code == 404:
            raise NoDataFound()
 
         else:
-            raise APIResponseError(f"Failed to connect to the RTT API server: {api_response.status_code}")
+            raise APIResponseError(f"Failed to connect to the RTT API server: {api_response.status_code} \nResponse message: {api_response.text}")
 
 
-def create_service_record(complexity: str, service_data, service_uid) -> ServiceData:  
-    service_type = service_data["serviceType"]      
-    calling_points: list = []
-    power_type = train_class = origin = destination = "Unknown"
-    start_time = end_time = operator = train_id = ""
+    def _create_service_record(self,service_data, service_uid) -> ServiceData:  
+        operator = service_data["scheduleMetadata"]["operator"].pop("name")
+        origin = service_data["origin"][0]["location"].pop("description")
+        start_time = service_data["origin"][0]["temporalData"].pop("scheduleAdvertised").split("T")[1][:5]
+        destination = service_data["destination"][0]["location"].pop("description")
+        end_time = service_data["destination"][0]["temporalData"].pop("scheduleAdvertised").split("T")[1][:5]
+        coaches = 0
 
-    train_id = service_data["trainIdentity"]  # Get the train ID
-    operator = service_data["atocName"]  # Get the operator
+        calling_points: list = []
 
-    # Check if the power type is in data
-    if "powerType" in service_data:
-        power_type = service_data["powerType"]
+        for locations in service_data["locations"]:
+            calling_point = get_calling_point(locations)
 
-    elif service_type == "bus":
-        power_type = "BUS"
+            if calling_point.coaches != 0:
+                coaches = calling_point.coaches
+            
+            if self.__complexity == "s":
+                calling_points.append([
+                    calling_point.stop_name,
+                    calling_point.scheduled_arrival,
+                    calling_point.expected_arrival,
+                    calling_point.platform,
+                    calling_point.line,
+                    calling_point.scheduled_departure,
+                    calling_point.expected_departure,
+                    ])
+                
+            else:
+                calling_points.append(calling_point)
 
-    # Check if the train class is in data
-    if "trainClass" in service_data:
-        train_class = service_data["trainClass"]
+        if self.__complexity == "s":
+            if coaches != 0:
+                print(f"{service_uid} \n  {start_time} {origin} to {destination} \n  A {operator} service formed of {coaches} coaches.\n\n  Generated at {datetime.now().strftime('%H:%M:%S on %d/%m/%y.')}")
 
-    elif service_type == "bus":
-        train_class = "BUS"
 
-    for data in service_data["origin"]:
-        origin = data["description"]  # Set the origin
-        start_time = format_time(data["publicTime"])  # Set the start time
+            else:
+                print(f"{service_uid} \n  {start_time} {origin} to {destination} \n  Operated by {operator} \n\n  Generated at {datetime.now().strftime('%H:%M:%S on %d/%m/%y.')}")
 
-    for data in service_data["destination"]:
-        destination = data["description"]  # Set the destination
-        end_time = format_time(data["publicTime"])  # Set the end time
-
-    for locations in service_data["locations"]:
-        calling_point = get_calling_point(locations, service_type)
+            # Print the table for the service
+            print(tabulate(calling_points, tablefmt="rounded_grid",
+                    headers=["Stop Name", "Scheduled Arrival", "Expected Arrival", "Platform", "Line", "Scheduled Departure", "Expected Departure"]
+            ))
         
-        if complexity == "a" or complexity == "a.p":
-            calling_points.append([calling_point.stop_name, calling_point.booked_arrival, calling_point.realtime_arrival, calling_point.platform, calling_point.line, calling_point.booked_departure, calling_point.realtime_departure])
+        return ServiceData(service_uid, operator, origin, destination, calling_points, start_time, end_time, coaches)
 
-        elif complexity == "s" or complexity == "s.p":
-            calling_points.append([calling_point.stop_name, calling_point.booked_arrival, calling_point.realtime_arrival, calling_point.platform, calling_point.booked_departure, calling_point.realtime_departure])
-        
-        elif complexity.endswith("n"):
-            calling_points.append(calling_point)
-
-    if complexity == "a" or complexity == "a.p":
-        print(f"{train_id} ({service_uid}) \n  {start_time} {origin} to {destination} \n  Pathed as {power_type}: train class {train_class} \n  Operated by {operator} \n\n  Generated at {datetime.now().strftime('%H:%M:%S on %d/%m/%y.')}")
-
-        # Print the table for the service
-        print(tabulate(calling_points, tablefmt="rounded_grid",
-                headers=["Stop Name", "Booked Arrival", "Actual Arrival", "Platform", "Line", "Booked Departure", "Actual Departure"]
-        ))
-
-    elif complexity == "s" or complexity == "s.p":
-        print(f"{train_id} ({service_uid}) \n  {start_time} {origin} to {destination} \n  Operated by {operator} \n\n  Generated at {datetime.now().strftime('%H:%M:%S on %d/%m/%y.')}")
-
-        # Print the table for the service
-        print(tabulate(calling_points, tablefmt="rounded_grid",
-                headers=["Stop Name", "Booked Arrival", "Actual Arrival", "Platform", "Booked Departure", "Actual Departure"]
-        ))
     
-    return ServiceData(train_id, service_uid, operator, origin, destination, calling_points, start_time, end_time, power_type, train_class)
 
+def get_calling_point(location) -> CallingPoint:
+    stop_name = scheduled_arrival = expected_arrival = platform = line = scheduled_departure = expected_departure = ""
+    coaches = 0
 
-def get_calling_point(location, service_type) -> CallingPoint:
-    realtime_arrival = realtime_departure = booked_arrival = booked_departure = line = platform = ""
+    temporal_data = location["temporalData"]
+    location_data = location["locationMetadata"]
+    stop_name = location["location"].pop("description")
 
-    stop_name = location["description"]
-    call_type = location["displayAs"]
+    # Extract arrival data if it exists
+    if "arrival" in temporal_data:
+        is_cancelled = temporal_data["arrival"]["isCancelled"]
+        scheduled_arrival = temporal_data["arrival"]["scheduleAdvertised"].split("T")[1][:5]
 
-    if "realtimeArrival" in location:
-        realtime_arrival = format_time(location["realtimeArrival"])
+        if is_cancelled:
+            expected_arrival = "Cancelled"
+        
+        elif "realtimeActual" in temporal_data["arrival"]:
+            expected_arrival = temporal_data["arrival"]["realtimeActual"].split("T")[1][:5]
+            if expected_arrival == scheduled_arrival:
+                expected_arrival = "Arrived on time"
 
-    if call_type == "CANCELLED_CALL" and realtime_arrival != "":
-        realtime_arrival = "Cancelled"
+        elif "realtimeForecast" in temporal_data["arrival"]:
+            expected_arrival = temporal_data["arrival"]["realtimeForecast"].split("T")[1][:5]
+            if expected_arrival == scheduled_arrival:
+                expected_arrival = "On time"
 
-    if "gbttBookedArrival" in location:
-        booked_arrival = format_time(location["gbttBookedArrival"])
+    # Extract departure data if it exists
+    if "departure" in temporal_data:
+        is_cancelled = temporal_data["departure"]["isCancelled"]
+        scheduled_departure = temporal_data["departure"]["scheduleAdvertised"].split("T")[1][:5]
+        if is_cancelled:
+            expected_departure = "Cancelled"
 
-    if "realtimeDeparture" in location:
-        realtime_departure = format_time(location["realtimeDeparture"])
+        elif "realtimeActual" in temporal_data["departure"]:
+            expected_departure = temporal_data["departure"]["realtimeActual"].split("T")[1][:5]
+            if expected_departure == scheduled_departure:
+                expected_departure = "Departed on time"
 
-    if call_type == "CANCELLED_CALL" and realtime_departure != "":
-        realtime_departure = "Cancelled"
+        elif "realtimeForecast" in temporal_data["departure"]:
+            expected_departure = temporal_data["departure"]["realtimeForecast"].split("T")[1][:5] 
+            if expected_departure == scheduled_departure:
+                expected_departure = "On time"  
 
-    if "gbttBookedDeparture" in location:
-        booked_departure = format_time(location["gbttBookedDeparture"])
+    # Extract platform data if it exists
+    if "platform" in location_data:
+        # print(location_data)
+        if "forecast" in location_data["platform"]:
+            platform = location_data["platform"]["forecast"]
 
-    if "platform" in location:
-        platform = location["platform"]
+        else:
+            platform = location_data["platform"]["actual"]
 
-    elif service_type == "bus":
-        platform = "BUS"
+    # Extract line data if it exists
+    if "line" in location_data:
+        # print(location_data)
+        if "forecast" in location_data["line"]:
+            line = location_data["line"]["forecast"]
 
-    if "line" in location:
-        line = location["line"]
+        else:
+            line = location_data["line"]["actual"]
 
-    return CallingPoint(stop_name, booked_arrival, realtime_arrival, platform, line, booked_departure, realtime_departure)
+    # If a number of coaches is given in the location data, get that number to display later
+    if "numberOfVehicles" in location["locationMetadata"]:
+        coaches = location["locationMetadata"].pop("numberOfVehicles")
+
+    return CallingPoint(stop_name, scheduled_arrival, expected_arrival, platform, line, scheduled_departure, expected_departure, coaches)

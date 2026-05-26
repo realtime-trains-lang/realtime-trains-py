@@ -1,0 +1,1816 @@
+{
+    "systemStatus": {
+        "realtimeNetworkRail": "OK",
+        "rttCore": "OK"
+    },
+    "query": {
+        "location": {
+            "namespace": "gb-nr",
+            "description": "London Kings Cross",
+            "shortCodes": [
+                "KGX"
+            ],
+            "longCodes": [
+                "KNGX"
+            ]
+        },
+        "timeFrom": "2026-05-23T15:54:43+01:00",
+        "timeTo": "2026-05-23T16:54:43+01:00",
+        "detailed": false
+    },
+    "services": [
+        {
+            "temporalData": {
+                "arrival": {
+                    "scheduleInternal": "2026-05-23T15:51:00",
+                    "scheduleAdvertised": "2026-05-23T15:53:00",
+                    "realtimeActual": "2026-05-23T15:56:00",
+                    "realtimeInternalLateness": 4,
+                    "realtimeAdvertisedLateness": 2,
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_SET_DOWN",
+                "realtimeCallType": "ADVERTISED_SET_DOWN",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "0",
+                    "actual": "0"
+                },
+                "numberOfVehicles": 9,
+                "allocationIndex": 0
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:G07993:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "G07993",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "GR",
+                    "name": "LNER"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "Leeds",
+                        "longCodes": [
+                            "LEEDS"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T13:40:00",
+                        "scheduleAdvertised": "2026-05-23T13:40:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T15:51:00",
+                        "scheduleAdvertised": "2026-05-23T15:53:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "departure": {
+                    "scheduleInternal": "2026-05-23T15:55:00",
+                    "scheduleAdvertised": "2026-05-23T15:55:00",
+                    "realtimeForecast": "2026-05-23T15:55:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_PICK_UP",
+                "realtimeCallType": "ADVERTISED_PICK_UP",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "8",
+                    "actual": "3"
+                },
+                "line": {
+                    "planned": "F"
+                },
+                "numberOfVehicles": 12,
+                "allocationIndex": 0
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:X51339:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "X51339",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "TL",
+                    "name": "Thameslink"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T15:55:00",
+                        "scheduleAdvertised": "2026-05-23T15:55:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "Cambridge",
+                        "longCodes": [
+                            "CAMBDGE"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T17:09:00",
+                        "scheduleAdvertised": "2026-05-23T17:09:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "arrival": {
+                    "scheduleInternal": "2026-05-23T15:59:00",
+                    "scheduleAdvertised": "2026-05-23T16:02:00",
+                    "realtimeForecast": "2026-05-23T16:09:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_SET_DOWN",
+                "realtimeCallType": "ADVERTISED_SET_DOWN",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "1",
+                    "forecast": "1"
+                },
+                "numberOfVehicles": 9,
+                "allocationIndex": 0
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:N29299:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "N29299",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "GR",
+                    "name": "LNER"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "York",
+                        "longCodes": [
+                            "YORK"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T13:55:00",
+                        "scheduleAdvertised": "2026-05-23T13:55:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T15:59:00",
+                        "scheduleAdvertised": "2026-05-23T16:02:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "arrival": {
+                    "scheduleInternal": "2026-05-23T16:01:00",
+                    "scheduleAdvertised": "2026-05-23T16:01:00",
+                    "realtimeForecast": "2026-05-23T16:00:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_SET_DOWN",
+                "realtimeCallType": "ADVERTISED_SET_DOWN",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "8",
+                    "forecast": "8"
+                }
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:X51340:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "X51340",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "TL",
+                    "name": "Thameslink"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "Cambridge",
+                        "longCodes": [
+                            "CAMBDGE"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T14:51:00",
+                        "scheduleAdvertised": "2026-05-23T14:51:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:01:00",
+                        "scheduleAdvertised": "2026-05-23T16:01:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "departure": {
+                    "scheduleInternal": "2026-05-23T16:03:00",
+                    "scheduleAdvertised": "2026-05-23T16:03:00",
+                    "realtimeForecast": "2026-05-23T16:03:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_PICK_UP",
+                "realtimeCallType": "ADVERTISED_PICK_UP",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "2",
+                    "actual": "2"
+                },
+                "line": {
+                    "planned": "B"
+                },
+                "numberOfVehicles": 9,
+                "allocationIndex": 0
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:G08130:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "G08130",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "GR",
+                    "name": "LNER"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:03:00",
+                        "scheduleAdvertised": "2026-05-23T16:03:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "Leeds",
+                        "longCodes": [
+                            "LEEDS"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T18:19:00",
+                        "scheduleAdvertised": "2026-05-23T18:21:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "arrival": {
+                    "scheduleInternal": "2026-05-23T16:04:00",
+                    "scheduleAdvertised": "2026-05-23T16:04:00",
+                    "realtimeForecast": "2026-05-23T16:04:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_SET_DOWN",
+                "realtimeCallType": "ADVERTISED_SET_DOWN",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "9",
+                    "forecast": "9"
+                },
+                "numberOfVehicles": 8,
+                "allocationIndex": 0
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:G27009:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "G27009",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "GN",
+                    "name": "Great Northern"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "Ely",
+                        "longCodes": [
+                            "ELYY"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T14:51:00",
+                        "scheduleAdvertised": "2026-05-23T14:51:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:04:00",
+                        "scheduleAdvertised": "2026-05-23T16:04:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "departure": {
+                    "scheduleInternal": "2026-05-23T16:06:00",
+                    "scheduleAdvertised": "2026-05-23T16:06:00",
+                    "realtimeNoReport": false,
+                    "isCancelled": true,
+                    "cancellationReasonCode": "IA"
+                },
+                "scheduledCallType": "ADVERTISED_PICK_UP",
+                "realtimeCallType": "ADVERTISED_PICK_UP",
+                "displayAs": "CANCELLED",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "10",
+                    "forecast": "10"
+                },
+                "line": {
+                    "planned": "F"
+                }
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:W27974:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "W27974",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "GN",
+                    "name": "Great Northern"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:06:00",
+                        "scheduleAdvertised": "2026-05-23T16:06:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "Letchworth",
+                        "longCodes": [
+                            "LTCE"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T17:02:00",
+                        "scheduleAdvertised": "2026-05-23T17:02:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "departure": {
+                    "scheduleInternal": "2026-05-23T16:10:00",
+                    "scheduleAdvertised": "2026-05-23T16:10:00",
+                    "realtimeForecast": "2026-05-23T16:10:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_PICK_UP",
+                "realtimeCallType": "ADVERTISED_PICK_UP",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "7R",
+                    "actual": "7"
+                },
+                "line": {
+                    "planned": "D"
+                },
+                "numberOfVehicles": 5,
+                "allocationIndex": 0
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:W04533:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "W04533",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "HT",
+                    "name": "Hull Trains"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:10:00",
+                        "scheduleAdvertised": "2026-05-23T16:10:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "Beverley",
+                        "longCodes": [
+                            "BEVERLY"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T19:06:00",
+                        "scheduleAdvertised": "2026-05-23T19:06:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "departure": {
+                    "scheduleInternal": "2026-05-23T16:12:00",
+                    "scheduleAdvertised": "2026-05-23T16:12:00",
+                    "realtimeForecast": "2026-05-23T16:12:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_PICK_UP",
+                "realtimeCallType": "ADVERTISED_PICK_UP",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "8",
+                    "actual": "8"
+                },
+                "line": {
+                    "planned": "F"
+                },
+                "numberOfVehicles": 12,
+                "allocationIndex": 0
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:X51702:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "X51702",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "TL",
+                    "name": "Thameslink"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:12:00",
+                        "scheduleAdvertised": "2026-05-23T16:12:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "Peterborough",
+                        "longCodes": [
+                            "PBRO"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T17:36:00",
+                        "scheduleAdvertised": "2026-05-23T17:36:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "departure": {
+                    "scheduleInternal": "2026-05-23T16:13:00",
+                    "scheduleAdvertised": "2026-05-23T16:13:00",
+                    "realtimeForecast": "2026-05-23T16:13:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_PICK_UP",
+                "realtimeCallType": "ADVERTISED_PICK_UP",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "5",
+                    "actual": "5"
+                },
+                "line": {
+                    "planned": "D"
+                },
+                "numberOfVehicles": 5,
+                "allocationIndex": 0
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:G08065:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "G08065",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "GR",
+                    "name": "LNER"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:13:00",
+                        "scheduleAdvertised": "2026-05-23T16:13:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "Lincoln Central",
+                        "longCodes": [
+                            "LINCLNC"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T18:11:00",
+                        "scheduleAdvertised": "2026-05-23T18:13:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "arrival": {
+                    "scheduleInternal": "2026-05-23T16:16:00",
+                    "scheduleAdvertised": "2026-05-23T16:16:00",
+                    "realtimeForecast": "2026-05-23T16:18:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_SET_DOWN",
+                "realtimeCallType": "ADVERTISED_SET_DOWN",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "8",
+                    "forecast": "8"
+                },
+                "numberOfVehicles": 12,
+                "allocationIndex": 0
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:X51364:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "X51364",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "TL",
+                    "name": "Thameslink"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "Peterborough",
+                        "longCodes": [
+                            "PBRO"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T14:53:00",
+                        "scheduleAdvertised": "2026-05-23T14:53:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:16:00",
+                        "scheduleAdvertised": "2026-05-23T16:16:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "departure": {
+                    "scheduleInternal": "2026-05-23T16:18:00",
+                    "scheduleAdvertised": "2026-05-23T16:18:00",
+                    "realtimeForecast": "2026-05-23T16:18:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_PICK_UP",
+                "realtimeCallType": "ADVERTISED_PICK_UP",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "9",
+                    "forecast": "9"
+                },
+                "line": {
+                    "planned": "FX"
+                },
+                "numberOfVehicles": 8,
+                "allocationIndex": 0
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:G77038:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "G77038",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "GN",
+                    "name": "Great Northern"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:18:00",
+                        "scheduleAdvertised": "2026-05-23T16:18:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "Kings Lynn",
+                        "longCodes": [
+                            "KLYNN"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T18:05:00",
+                        "scheduleAdvertised": "2026-05-23T18:05:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "arrival": {
+                    "scheduleInternal": "2026-05-23T16:20:00",
+                    "scheduleAdvertised": "2026-05-23T16:22:00",
+                    "realtimeForecast": "2026-05-23T16:19:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_SET_DOWN",
+                "realtimeCallType": "ADVERTISED_SET_DOWN",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "3",
+                    "forecast": "3"
+                },
+                "numberOfVehicles": 10,
+                "allocationIndex": 1
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:C02118:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "C02118",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "GR",
+                    "name": "LNER"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "Bradford Forster Square",
+                        "longCodes": [
+                            "BRADFS"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T13:37:00",
+                        "scheduleAdvertised": "2026-05-23T13:37:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:20:00",
+                        "scheduleAdvertised": "2026-05-23T16:22:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "arrival": {
+                    "scheduleInternal": "2026-05-23T16:24:00",
+                    "scheduleAdvertised": "2026-05-23T16:24:00",
+                    "realtimeForecast": "2026-05-23T16:24:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_SET_DOWN",
+                "realtimeCallType": "ADVERTISED_SET_DOWN",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "9",
+                    "forecast": "9"
+                },
+                "numberOfVehicles": 8,
+                "allocationIndex": 0
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:C56317:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "C56317",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "GN",
+                    "name": "Great Northern"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "Letchworth",
+                        "longCodes": [
+                            "LTCE"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T15:27:00",
+                        "scheduleAdvertised": "2026-05-23T15:27:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:24:00",
+                        "scheduleAdvertised": "2026-05-23T16:24:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "departure": {
+                    "scheduleInternal": "2026-05-23T16:25:00",
+                    "scheduleAdvertised": "2026-05-23T16:25:00",
+                    "realtimeForecast": "2026-05-23T16:25:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_PICK_UP",
+                "realtimeCallType": "ADVERTISED_PICK_UP",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "4",
+                    "forecast": "4"
+                },
+                "line": {
+                    "planned": "CX"
+                },
+                "numberOfVehicles": 5,
+                "allocationIndex": 0
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:Y14839:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "Y14839",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "GC",
+                    "name": "Grand Central"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:25:00",
+                        "scheduleAdvertised": "2026-05-23T16:25:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "Bradford Interchange",
+                        "longCodes": [
+                            "BRADIN"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T19:36:00",
+                        "scheduleAdvertised": "2026-05-23T19:36:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "departure": {
+                    "scheduleInternal": "2026-05-23T16:28:00",
+                    "scheduleAdvertised": "2026-05-23T16:28:00",
+                    "realtimeForecast": "2026-05-23T16:28:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_PICK_UP",
+                "realtimeCallType": "ADVERTISED_PICK_UP",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "8",
+                    "forecast": "8"
+                },
+                "line": {
+                    "planned": "F"
+                },
+                "numberOfVehicles": 12,
+                "allocationIndex": 0
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:X51388:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "X51388",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "TL",
+                    "name": "Thameslink"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:28:00",
+                        "scheduleAdvertised": "2026-05-23T16:28:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "Cambridge",
+                        "longCodes": [
+                            "CAMBDGE"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T17:39:00",
+                        "scheduleAdvertised": "2026-05-23T17:39:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "arrival": {
+                    "scheduleInternal": "2026-05-23T16:32:00",
+                    "scheduleAdvertised": "2026-05-23T16:32:00",
+                    "realtimeForecast": "2026-05-23T16:30:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_SET_DOWN",
+                "realtimeCallType": "ADVERTISED_SET_DOWN",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "2R",
+                    "forecast": "2R"
+                },
+                "numberOfVehicles": 8,
+                "allocationIndex": 0
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:G77031:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "G77031",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "GN",
+                    "name": "Great Northern"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "Kings Lynn",
+                        "longCodes": [
+                            "KLYNN"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T14:45:00",
+                        "scheduleAdvertised": "2026-05-23T14:45:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:32:00",
+                        "scheduleAdvertised": "2026-05-23T16:32:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "departure": {
+                    "scheduleInternal": "2026-05-23T16:33:00",
+                    "scheduleAdvertised": "2026-05-23T16:33:00",
+                    "realtimeForecast": "2026-05-23T16:33:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_PICK_UP",
+                "realtimeCallType": "ADVERTISED_PICK_UP",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "0",
+                    "actual": "0"
+                },
+                "line": {
+                    "planned": "A"
+                },
+                "numberOfVehicles": 9,
+                "allocationIndex": 0
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:G80145:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "G80145",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "GR",
+                    "name": "LNER"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:33:00",
+                        "scheduleAdvertised": "2026-05-23T16:33:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "York",
+                        "longCodes": [
+                            "YORK"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T18:29:00",
+                        "scheduleAdvertised": "2026-05-23T18:29:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "arrival": {
+                    "scheduleInternal": "2026-05-23T16:33:00",
+                    "scheduleAdvertised": "2026-05-23T16:33:00",
+                    "realtimeForecast": "2026-05-23T16:32:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_SET_DOWN",
+                "realtimeCallType": "ADVERTISED_SET_DOWN",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "8",
+                    "forecast": "8"
+                },
+                "numberOfVehicles": 12,
+                "allocationIndex": 0
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:X51656:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "X51656",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "TL",
+                    "name": "Thameslink"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "Cambridge",
+                        "longCodes": [
+                            "CAMBDGE"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T15:21:00",
+                        "scheduleAdvertised": "2026-05-23T15:21:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:33:00",
+                        "scheduleAdvertised": "2026-05-23T16:33:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "departure": {
+                    "scheduleInternal": "2026-05-23T16:36:00",
+                    "scheduleAdvertised": "2026-05-23T16:36:00",
+                    "realtimeForecast": "2026-05-23T16:36:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_PICK_UP",
+                "realtimeCallType": "ADVERTISED_PICK_UP",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "9",
+                    "forecast": "9"
+                },
+                "line": {
+                    "planned": "F"
+                },
+                "numberOfVehicles": 8,
+                "allocationIndex": 0
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:C10229:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "C10229",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "GN",
+                    "name": "Great Northern"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:36:00",
+                        "scheduleAdvertised": "2026-05-23T16:36:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "Cambridge",
+                        "longCodes": [
+                            "CAMBDGE"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T18:05:00",
+                        "scheduleAdvertised": "2026-05-23T18:05:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "arrival": {
+                    "scheduleInternal": "2026-05-23T16:38:00",
+                    "scheduleAdvertised": "2026-05-23T16:40:00",
+                    "realtimeForecast": "2026-05-23T16:36:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_SET_DOWN",
+                "realtimeCallType": "ADVERTISED_SET_DOWN",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "0",
+                    "forecast": "0"
+                },
+                "numberOfVehicles": 9,
+                "allocationIndex": 0
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:L01634:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "L01634",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "GR",
+                    "name": "LNER"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "York",
+                        "longCodes": [
+                            "YORK"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T14:27:00",
+                        "scheduleAdvertised": "2026-05-23T14:27:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:38:00",
+                        "scheduleAdvertised": "2026-05-23T16:40:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "departure": {
+                    "scheduleInternal": "2026-05-23T16:39:00",
+                    "scheduleAdvertised": "2026-05-23T16:39:00",
+                    "realtimeForecast": "2026-05-23T16:39:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_PICK_UP",
+                "realtimeCallType": "ADVERTISED_PICK_UP",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "6",
+                    "actual": "6"
+                },
+                "line": {
+                    "planned": "D"
+                }
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:C02019:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "C02019",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "GR",
+                    "name": "LNER"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:39:00",
+                        "scheduleAdvertised": "2026-05-23T16:39:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "Harrogate",
+                        "longCodes": [
+                            "HAGT"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T19:27:00",
+                        "scheduleAdvertised": "2026-05-23T19:29:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "departure": {
+                    "scheduleInternal": "2026-05-23T16:42:00",
+                    "scheduleAdvertised": "2026-05-23T16:42:00",
+                    "realtimeNoReport": false,
+                    "isCancelled": true,
+                    "cancellationReasonCode": "TG"
+                },
+                "scheduledCallType": "ADVERTISED_PICK_UP",
+                "realtimeCallType": "ADVERTISED_PICK_UP",
+                "displayAs": "CANCELLED",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "10",
+                    "forecast": "10"
+                },
+                "line": {
+                    "planned": "FX"
+                }
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:C93012:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "C93012",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "GN",
+                    "name": "Great Northern"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:42:00",
+                        "scheduleAdvertised": "2026-05-23T16:42:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "Peterborough",
+                        "longCodes": [
+                            "PBRO"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T17:53:00",
+                        "scheduleAdvertised": "2026-05-23T17:53:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "departure": {
+                    "scheduleInternal": "2026-05-23T16:45:00",
+                    "scheduleAdvertised": "2026-05-23T16:45:00",
+                    "realtimeForecast": "2026-05-23T16:45:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_PICK_UP",
+                "realtimeCallType": "ADVERTISED_PICK_UP",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "8",
+                    "forecast": "8"
+                },
+                "line": {
+                    "planned": "F"
+                },
+                "numberOfVehicles": 12,
+                "allocationIndex": 0
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:X51320:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "X51320",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "TL",
+                    "name": "Thameslink"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:45:00",
+                        "scheduleAdvertised": "2026-05-23T16:45:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "Peterborough",
+                        "longCodes": [
+                            "PBRO"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T18:08:00",
+                        "scheduleAdvertised": "2026-05-23T18:08:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "arrival": {
+                    "scheduleInternal": "2026-05-23T16:49:00",
+                    "scheduleAdvertised": "2026-05-23T16:49:00",
+                    "realtimeForecast": "2026-05-23T16:48:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_SET_DOWN",
+                "realtimeCallType": "ADVERTISED_SET_DOWN",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "8",
+                    "forecast": "8"
+                },
+                "numberOfVehicles": 12,
+                "allocationIndex": 0
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:X51303:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "X51303",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "TL",
+                    "name": "Thameslink"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "Peterborough",
+                        "longCodes": [
+                            "PBRO"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T15:23:00",
+                        "scheduleAdvertised": "2026-05-23T15:23:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:49:00",
+                        "scheduleAdvertised": "2026-05-23T16:49:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "arrival": {
+                    "scheduleInternal": "2026-05-23T16:51:00",
+                    "scheduleAdvertised": "2026-05-23T16:53:00",
+                    "realtimeForecast": "2026-05-23T16:50:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_SET_DOWN",
+                "realtimeCallType": "ADVERTISED_SET_DOWN",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "7",
+                    "forecast": "7"
+                },
+                "numberOfVehicles": 9,
+                "allocationIndex": 0
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:G08001:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "G08001",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "GR",
+                    "name": "LNER"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "Leeds",
+                        "longCodes": [
+                            "LEEDS"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T14:40:00",
+                        "scheduleAdvertised": "2026-05-23T14:40:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:51:00",
+                        "scheduleAdvertised": "2026-05-23T16:53:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "arrival": {
+                    "scheduleInternal": "2026-05-23T16:52:00",
+                    "scheduleAdvertised": "2026-05-23T16:52:00",
+                    "realtimeForecast": "2026-05-23T16:51:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_SET_DOWN",
+                "realtimeCallType": "ADVERTISED_SET_DOWN",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "10",
+                    "forecast": "10"
+                },
+                "numberOfVehicles": 8,
+                "allocationIndex": 0
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:C10256:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "C10256",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "GN",
+                    "name": "Great Northern"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "Cambridge",
+                        "longCodes": [
+                            "CAMBDGE"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T15:24:00",
+                        "scheduleAdvertised": "2026-05-23T15:24:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:52:00",
+                        "scheduleAdvertised": "2026-05-23T16:52:00"
+                    }
+                }
+            ]
+        },
+        {
+            "temporalData": {
+                "departure": {
+                    "scheduleInternal": "2026-05-23T16:54:00",
+                    "scheduleAdvertised": "2026-05-23T16:54:00",
+                    "realtimeForecast": "2026-05-23T16:54:00",
+                    "isCancelled": false
+                },
+                "scheduledCallType": "ADVERTISED_PICK_UP",
+                "realtimeCallType": "ADVERTISED_PICK_UP",
+                "displayAs": "CALL",
+                "isInterpolated": false
+            },
+            "locationMetadata": {
+                "platform": {
+                    "planned": "2",
+                    "forecast": "2"
+                },
+                "line": {
+                    "planned": "B"
+                },
+                "numberOfVehicles": 12,
+                "allocationIndex": 0
+            },
+            "scheduleMetadata": {
+                "uniqueIdentity": "gb-nr:G77045:2026-05-23",
+                "namespace": "gb-nr",
+                "identity": "G77045",
+                "departureDate": "2026-05-23",
+                "operator": {
+                    "code": "GN",
+                    "name": "Great Northern"
+                },
+                "modeType": "TRAIN",
+                "inPassengerService": true
+            },
+            "origin": [
+                {
+                    "location": {
+                        "description": "London Kings Cross",
+                        "longCodes": [
+                            "KNGX"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T16:54:00",
+                        "scheduleAdvertised": "2026-05-23T16:54:00"
+                    }
+                }
+            ],
+            "destination": [
+                {
+                    "location": {
+                        "description": "Kings Lynn",
+                        "longCodes": [
+                            "KLYNN"
+                        ]
+                    },
+                    "temporalData": {
+                        "scheduleInternal": "2026-05-23T18:39:00",
+                        "scheduleAdvertised": "2026-05-23T18:39:00"
+                    }
+                }
+            ]
+        }
+    ],
+    "reasons": [
+        {
+            "type": "CANCEL",
+            "code": "IA",
+            "system": "TRUST",
+            "shortText": "signal failure",
+            "longText": "a signal failure"
+        },
+        {
+            "type": "CANCEL",
+            "code": "TG",
+            "system": "TRUST",
+            "shortText": "issue with train crew",
+            "longText": "an issue with the train crew"
+        }
+    ]
+}

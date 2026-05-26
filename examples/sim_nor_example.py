@@ -2,37 +2,18 @@ from realtime_trains_py import RealtimeTrainsPy
 
 # Initialise RealtimeTrainsPy
 rtt = RealtimeTrainsPy(
-    username="YOUR_USERNAME", # <----- CHANGE ME
-    password="YOUR_PASSWORD", # <----- CHANGE ME
+    request_token="YOUR_REQUEST_TOKEN", # <----- CHANGE ME
     complexity="s.n"
 )
 
 #### EXAMPLE 1 ####
-
-# Query for getting the next 5 arrivals at Norwich
-arrivals_at_norwich = rtt.get_arrivals(tiploc="NRCH", rows=5)
-
-if arrivals_at_norwich != None:
-    for arrivals in arrivals_at_norwich.board:
-        print(f"{arrivals.service_uid} | {arrivals.gbtt_arrival} | {arrivals.origin} to {arrivals.terminus}")
-
-### EXAMPLE OUTPUT ###
-# W21663 | 21:11 | Liverpool Lime Street to Norwich
-# G27466 | 21:19 | London Liverpool Street to Norwich
-# G28572 | 21:32 | Lowestoft to Norwich
-# G27187 | 21:36 | Cambridge to Norwich
-# G27471 | 21:49 | London Liverpool Street to Norwich
-
-
-
-#### EXAMPLE 2 ####
 
 # Query for getting the next 10 departures from Hull around 10:00 UTC on 10th January 2025
 departures_at_hull = rtt.get_departures(tiploc="HULL", date="2025/01/10", time="1000", rows=10)
 
 if departures_at_hull != None:
     for departures in departures_at_hull.board:
-        print(f"{departures.service_uid} | {departures.gbtt_departure} | Hull to {departures.terminus}")
+        print(f"{departures.service_uid} | {departures.scheduled_departure} | Hull to {departures.terminus}")
 
 ### EXAMPLE OUTPUT ###
 # G31323 | 09:47 | Hull to York
@@ -48,14 +29,14 @@ if departures_at_hull != None:
 
 
 
-#### EXAMPLE 3 ####
+#### EXAMPLE 2 ####
 
 # Query for getting the details of the service with service_uid "W47587" 
 service = rtt.get_service("W47587")
 
-print(f"Service: {service.train_id} ({service.service_uid})\n{service.origin} to {service.destination} \nOperated by {service.operator}")
+print(f"Service: {service.service_uid}\n{service.origin} to {service.destination} \nOperated by {service.operator}")
 for calling_point in service.calling_points:
-    print(f"Arrive: {calling_point.booked_arrival} Depart: {calling_point.booked_departure} | {calling_point.stop_name} Platform {calling_point.platform}")
+    print(f"Arrive: {calling_point.expected_arrival} Depart: {calling_point.expected_departure} | {calling_point.stop_name} Platform {calling_point.platform}")
 
 ### EXAMPLE OUTPUT ###
 # Service: 2C56 (W47587)
