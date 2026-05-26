@@ -50,7 +50,7 @@ class RealtimeTrainsPy:
         ---
         ## Examples
         ```python
-        get_departures(tiploc="KNGX", filter="STEVNGE", date="2024-11-16", time="1800", rows=10)
+        get_departures(tiploc="KNGX", filter_from="STEVNGE", filter_to="PBRO", date="2024-11-16", time="1800", rows=10)
 
         get_departures(tiploc="YORK", date="2024-11-16", time="1800")
         ```
@@ -105,6 +105,9 @@ class RealtimeTrainsPy:
     def watch_service(self, service_uid: str, mode: str="LCD") -> None:
         """
         ## Watch Service
+        
+        # NOT AVAILABLE YET
+
         This function retrieves the service information for a given service UID on a provided date. The service information is updated every 60 seconds, on the minute. 
         To stop watching the service, press Ctrl + C.
 
