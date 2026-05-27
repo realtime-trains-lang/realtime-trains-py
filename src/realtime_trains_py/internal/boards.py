@@ -12,13 +12,10 @@ from realtime_trains_py.internal.utilities import create_file, create_parameters
 
 class Boards:
     def __init__(self, request_token: str, complexity: str="s") -> None:
-        self.__headers = {
-            "Accept": "application/json",
-            "Authorization": f"Bearer {request_token}",
-            }
+        self.__headers = {"Accept": "application/json", "Authorization": f"Bearer {request_token}"}
         self.__complexity = complexity
 
-    def _get_dep_board_details(self, tiploc: str, filter_from: str | None=None, filter_to: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> DefaultBoard | None:
+    def _get_dep_board_details(self, tiploc: str, filter_from: str | None=None, filter_to: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> DefaultBoard:
         # Create the parameters for the API request using the create_parameters function
         params = create_parameters(tiploc, filter_from, filter_to, time, date)
 
@@ -40,7 +37,7 @@ class Boards:
                 create_file(file_name, service_data)
 
                 print(f"Departure data saved to file: \n  {file_name}.")
-                return None
+                return DefaultBoard([], "")
             
             departure_board: list = []
             requested_location = service_data["query"]["location"].pop("description")
@@ -85,6 +82,8 @@ class Boards:
                     "Actual \nDeparture", 
                     "Service UID"
                     ]))
+            
+            return DefaultBoard([], "")
 
         elif api_response.status_code == 404:
            raise NoDataFound()

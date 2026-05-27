@@ -13,14 +13,11 @@ from realtime_trains_py.internal.utilities import create_file, validate_date, va
 # Class for getting and creating service details
 class ServiceDetails:
     def __init__(self, request_token: str, complexity: str="s") -> None:
-        self.__headers = {
-            "Authorization": f"Bearer {request_token}",
-            "Accept": "application/json"
-        }
+        self.__headers = {"Accept": "application/json", "Authorization": f"Bearer {request_token}"}
         self.__complexity = complexity
 
     # Get the service details
-    def _get_service_details(self, service_uid: str, date: str | None=None) -> ServiceData | None:
+    def _get_service_details(self, service_uid: str, date: str | None=None) -> ServiceData:
         validate_uid(service_uid)
 
         if date == None:
@@ -45,7 +42,7 @@ class ServiceDetails:
                 create_file(file_name, service_data)
 
                 print(f"Service data saved to file: \n  {file_name}")
-                return None
+                return ServiceData("", "", "", "", [], "", "", 0)
 
             return self._create_service_record(service_data, service_uid)
 
@@ -98,6 +95,7 @@ class ServiceDetails:
             print(tabulate(calling_points, tablefmt="rounded_grid",
                     headers=["Stop Name", "Scheduled Arrival", "Expected Arrival", "Platform", "Line", "Scheduled Departure", "Expected Departure"]
             ))
+            return ServiceData("", "", "", "", [], "", "", 0)
         
         return ServiceData(service_uid, operator, origin, destination, calling_points, start_time, end_time, coaches)
 

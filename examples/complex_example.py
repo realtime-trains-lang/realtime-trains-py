@@ -3,7 +3,7 @@ from realtime_trains_py import RealtimeTrainsPy
 # Initialise RealtimeTrainsPy
 rtt = RealtimeTrainsPy(
     request_token="YOUR_REQUEST_TOKEN", # <----- CHANGE ME
-    complexity="c"
+    complexity="complex"
 )
 
 #### EXAMPLE 1 ####

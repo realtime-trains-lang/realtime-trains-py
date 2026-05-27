@@ -3,13 +3,13 @@ from realtime_trains_py import RealtimeTrainsPy
 # Initialise RealtimeTrainsPy
 rtt = RealtimeTrainsPy(
     request_token="YOUR_REQUEST_TOKEN", # <----- CHANGE ME
-    complexity="s.n"
+    complexity="simple_normal"
 )
 
 #### EXAMPLE 1 ####
 
 # Query for getting the next 10 departures from Hull around 10:00 UTC on 10th January 2025
-departures_at_hull = rtt.get_departures(tiploc="HULL", date="2025/01/10", time="1000", rows=10)
+departures_at_hull = rtt.get_departures(tiploc="HULL", date="2025-01-10", time="1000", rows=10)
 
 if departures_at_hull != None:
     for departures in departures_at_hull.board:
@@ -39,7 +39,7 @@ for calling_point in service.calling_points:
     print(f"Arrive: {calling_point.expected_arrival} Depart: {calling_point.expected_departure} | {calling_point.stop_name} Platform {calling_point.platform}")
 
 ### EXAMPLE OUTPUT ###
-# Service: 2C56 (W47587)
+# Service: W47587
 # Hull to Doncaster
 # Operated by Northern
 # Arrive:  Depart: 09:50 | Hull Platform 1

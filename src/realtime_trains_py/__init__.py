@@ -1,41 +1,52 @@
 # Import necessary items from other files
 
+from typing import Literal
+
 from realtime_trains_py.internal.boards import Boards
 from realtime_trains_py.internal.details import DefaultBoard
 from realtime_trains_py.internal.live_board import LiveBoard
 from realtime_trains_py.internal.services import ServiceDetails, ServiceData, ServiceDetails
-from realtime_trains_py.internal.utilities import check_token, validate_complexity
+from realtime_trains_py.internal.utilities import check_token, complex_setup
 
+
+Complexity = Literal["simple", "simple_normal", "complex"]
+
+Mode = Literal["DMI_yellow", "DMI_white", "LCD"]
+
+_COMPLEXITY_MAP = {"simple": "s", "simple_normal": "s.n", "complex": "c"}
+
+_MODE_MAP = {"DMI_yellow": "DMI.Y", "DMI_white": "DMI.W", "LCD": "LCD"}
 
 class RealtimeTrainsPy:
-    def __init__(self, request_token: str, complexity: str="s") -> None:
+    def __init__(self, request_token: str, complexity: Complexity="simple") -> None:
         """
         :param str request_token: (Required) A string representing your request token for authentication.
-        :param str complexity: (Optional) A string representing your chosen complexity level. 
-        Choose from: `["c", "s","s.n"]`. If not provided, defaults to "s".
+        :param complexity: (Optional) A string representing your chosen complexity level. 
+        Choose from: `["complex", "simple","simple_normal"]`. If not provided, defaults to "simple".
         
         ---
         ## Examples
         ```python
-        rtt = RealtimeTrainsPy(request_token="<a_request_token>", complexity="s")
+        rtt = RealtimeTrainsPy(request_token="<a_request_token>", complexity="simple")
 
-        rtt = RealtimeTrainsPy(request_token="<a_request_token>", complexity="c")
+        rtt = RealtimeTrainsPy(request_token="<a_request_token>", complexity="complex")
         ```
 
         [Check out the wiki](https://github.com/realtime-trains-lang/realtime-trains-py/wiki) for more examples and information.
         """
-        complexity = complexity.lower()
+        api_complexity = _COMPLEXITY_MAP[complexity]
+
+        if api_complexity == "c":
+            complex_setup()
 
         request_token = check_token(request_token=request_token)
 
-        validate_complexity(complexity)
-
-        self.__services = ServiceDetails(request_token=request_token, complexity=complexity)
-        self.__boards = Boards(request_token=request_token, complexity=complexity)
+        self.__services = ServiceDetails(request_token=request_token, complexity=api_complexity)
+        self.__boards = Boards(request_token=request_token, complexity=api_complexity)
         self.__live_board = LiveBoard(request_token=request_token)
 
 
-    def get_departures(self, tiploc: str, filter_from: str | None=None, filter_to: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> DefaultBoard | None:
+    def get_departures(self, tiploc: str, filter_from: str | None=None, filter_to: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> DefaultBoard:
         """
         ## Get Departures
         This function retrieves the departures for a given station.
@@ -59,7 +70,7 @@ class RealtimeTrainsPy:
         """
         return self.__boards._get_dep_board_details(tiploc=tiploc.upper(), filter_from=filter_from, filter_to=filter_to, date=date, rows=rows, time=time)
 
-    def get_service(self, service_uid: str, date: str | None=None) -> ServiceData | None:
+    def get_service(self, service_uid: str, date: str | None=None) -> ServiceData:
         """
         ## Get Service
         This function retrieves the service information for a given service UID on a provided date.
@@ -79,7 +90,7 @@ class RealtimeTrainsPy:
         """
         return self.__services._get_service_details(service_uid=service_uid.upper(), date=date)
 
-    def get_live(self, tiploc: str, mode: str="LCD") -> None:
+    def get_live(self, tiploc: str, mode: Mode="LCD") -> None:
         """
         ## Get Live
         This function retrieves the live departure board for a given station. The board is updated every 60 seconds, on the minute.
@@ -87,22 +98,23 @@ class RealtimeTrainsPy:
 
         :param str tiploc: (Required) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the station.
 
-        :param str mode: (Optional) A string representing the mode of the live board. 
-        Choose from: `["DMI.Y", "DMI.W", "LCD"]`. If not provided, defaults to "LCD".
+        :param Mode mode: (Optional) A string representing the mode of the live board. 
+        Choose from: `["DMI_yellow", "DMI_white", "LCD"]`. If not provided, defaults to "LCD".
 
         ---
         ## Examples
         ```python
         get_live(tiploc="ELYY") # Live board for Ely
 
-        get_live(tiploc="PBRO", mode="DMI.Y") # Live board for Peterborough, with mode set to DMI (Yellow)
+        get_live(tiploc="PBRO", mode="DMI_yellow") # Live board for Peterborough, with mode set to DMI (Yellow)
         ```
 
         [Check out the wiki](https://github.com/realtime-trains-lang/realtime-trains-py/wiki) for more examples and information.
         """       
-        self.__live_board._get_live(tiploc=tiploc.upper(), mode=mode.upper())
+        api_mode = _MODE_MAP[mode]
+        self.__live_board._get_live(tiploc=tiploc.upper(), mode=api_mode)
 
-    def watch_service(self, service_uid: str, mode: str="LCD") -> None:
+    def watch_service(self, service_uid: str, mode: Mode="LCD") -> None:
         """
         ## Watch Service
         
@@ -112,13 +124,13 @@ class RealtimeTrainsPy:
         To stop watching the service, press Ctrl + C.
 
         :param str service_uid: (Required) A string representing the Service Unique Identity (UID) code.
-        :param str mode: (Optional) A string representing the mode of the live board. 
-        Choose from: `["DMI.Y", "DMI.W", "LCD"]`. If not provided, defaults to "LCD".
+        :param Mode mode: (Optional) A string representing the mode of the live board. 
+        Choose from: `["DMI_yellow", "DMI_white", "LCD"]`. If not provided, defaults to "LCD".
 
         ---
         ## Examples
         ```python
-        watch_service(service_uid="G54071", mode="DMI.Y")
+        watch_service(service_uid="G54071", mode="DMI_yellow")
 
         watch_service(service_uid="G26171")
         ```
@@ -126,3 +138,4 @@ class RealtimeTrainsPy:
         [Check out the wiki](https://github.com/realtime-trains-lang/realtime-trains-py/wiki) for more examples and information.
         """
         raise NotImplementedError("This method is not yet implemented.")
+        api_mode = _MODE_MAP[mode]

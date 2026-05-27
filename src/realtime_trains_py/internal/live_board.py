@@ -7,22 +7,17 @@ from datetime import datetime
 
 # Import necessary items from other files
 from realtime_trains_py.internal.details import StationBoardDetails
-from realtime_trains_py.internal.utilities import check_token, get_dep_service_data, validate_mode
+from realtime_trains_py.internal.utilities import check_token, get_dep_service_data
 
 
 class LiveBoard:
     def __init__(self, request_token: str) -> None:
-        self.__headers = {
-            "Accept": "application/json",
-            "Authorization": f"Bearer {request_token}",
-            }
-        
+        self.__headers = {"Accept": "application/json", "Authorization": f"Bearer {request_token}"}
+
     def __update_request_token(self, request_token: str) -> None:
         self.__headers["Authorization"] = f"Bearer {request_token}"
 
     def _get_live(self, tiploc: str, mode: str="LCD") -> None:  
-        validate_mode(mode)
-
         # Output a helpful message to the user: Press Ctrl+C to close live departure board.
         sys.stdout.write("\033[1;2mPress Ctrl+C to close live departure board.\n")
         time.sleep(2)
@@ -186,10 +181,10 @@ class LiveBoard:
 
         # If the number of coaches is given, add that to the end of the line. Otherwise, just display the operator.
         if coaches > 0:
-            line_three += f". A {operator} service formed of {coaches} coaches.\n"
+            line_three += f". {operator} service formed of {coaches} coaches.\n"
 
         else:
-            line_three += f". A {operator} service.\n"
+            line_three += f". {operator} service.\n"
 
         return line_two, line_three
 
