@@ -5,7 +5,7 @@ from datetime import datetime
 from tabulate import tabulate
 
 # Import necessary items from other files
-from realtime_trains_py.internal.details import DefaultBoard
+from realtime_trains_py.internal.details import DefaultBoard, StationBoardDetails
 from realtime_trains_py.internal.errors import APIResponseError, NoDataFound
 from realtime_trains_py.internal.utilities import create_file, create_parameters, get_dep_service_data
 
@@ -30,7 +30,7 @@ class Boards:
                 if date is None:
                     date = datetime.now().strftime("%Y/%m/%d")
 
-                date_parts = date.split("/")
+                date_parts: list[str] = date.split("/")
 
                 file_name = f"{tiploc}_on_{date_parts[0]}.{date_parts[1]}.{date_parts[2]}_dep_board_data"
 
@@ -39,8 +39,9 @@ class Boards:
                 print(f"Departure data saved to file: \n  {file_name}.")
                 return DefaultBoard([], "")
             
-            departure_board: list = []
-            requested_location = service_data["query"]["location"].pop("description")
+            departure_board: list[StationBoardDetails] = []
+            departure_board_data: list[list[str | int]] = []
+            requested_location: str = service_data["query"]["location"].pop("description")
 
             # For each service in the departure data, get the service data
             for service in service_data["services"][:rows]:
@@ -51,7 +52,7 @@ class Boards:
 
                 else:
                     # Unpack the service details and append them to a list if complexity does not end with n
-                    departure_board.append([
+                    departure_board_data.append([
                         service_info.scheduled_arrival,
                         service_info.scheduled_departure, 
                         service_info.origin,
@@ -69,7 +70,7 @@ class Boards:
             # Pint the departure info and tabulate table with the headers defined
             print(f"Departure board for {requested_location}. Generated at {datetime.now().strftime('%H:%M:%S on %d/%m/%y')}.")
             print(tabulate(
-                departure_board, 
+                departure_board_data, 
                 tablefmt="rounded_grid", 
                 headers=[
                     "Scheduled \nArrival", 
