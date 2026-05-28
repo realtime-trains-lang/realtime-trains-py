@@ -95,7 +95,6 @@ def get_dep_service_data(service) -> StationBoardDetails:
 
     # Extract arrival data if it exists
     if "arrival" in temporal_data:
-        print(temporal_data["arrival"])
         # Check if the service is cancelled based on the API response, and set the expected arrival time accordingly. 
         # If the service isn't cancelled, check if there is a realtime actual or forecast arrival time, and set the 
         # expected arrival time accordingly. If the realtime data matches the scheduled arrival time, set the expected 
