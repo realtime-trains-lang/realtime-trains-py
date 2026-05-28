@@ -4,8 +4,9 @@ import os, os.path
 import re
 import requests
 
+# Import necessary items from other files
 from realtime_trains_py.internal.details import StationBoardDetails
-from realtime_trains_py.internal.errors import AuthenticationError, FileWriteError, InvalidComplexity, InvalidDateProvided, InvalidTimeProvided, InvalidUIDProvided
+from realtime_trains_py.internal.errors import AuthenticationError, FileWriteError, InvalidDateProvided, InvalidTimeProvided, InvalidUIDProvided
 
 
 def complex_setup() -> None:
@@ -17,7 +18,7 @@ def complex_setup() -> None:
 def check_token(request_token: str) -> str:    
     headers={"Accept": "application/json", "Authorization": f"Bearer {request_token}"}
     
-    # Test the connection for departures at KNGX, with the auth details provided
+    # Test the connection by sending a request to the API info endpoint, with the auth details provided
     if requests.get("https://data.rtt.io/api/info", headers=headers).status_code != 200:
         response = requests.get("https://data.rtt.io/api/get_access_token", headers=headers)
         if response.status_code != 200:
@@ -44,14 +45,17 @@ def create_file(name: str, contents) -> None:
 
 # Create a new search query for board data requests to the API
 def create_parameters(tiploc: str, filter_from: str | None=None, filter_to: str | None=None, time: str | None=None, date: str | None=None) -> dict[str, str]:
-    # If a date is provided and it isn't valid, raise an error
+    # If a date is provided validate the date
     if date is not None:
         validate_date(date)
 
-    # If a time is provided and it isn't valid, raise an error
+    # If a time is provided validate the time
     if time is not None:
         validate_time(time)
 
+    # Create the parameters for the API request based on the parameters provided. The tiploc parameter is required, 
+    # but the filter_from, filter_to, time, and date parameters are optional. If the optional parameters are not provided, 
+    # they will be set to an empty string in the parameters dictionary.
     parameters: dict[str, str] = {
         "code": f"gb-nr:{tiploc.upper()}",
         "filterFrom": f"gb-nr:{filter_from.upper()}" if filter_from is not None else "",
@@ -177,15 +181,21 @@ def get_dep_service_data(service) -> StationBoardDetails:
 
 
 def validate_date(date: str) -> None:
+    # Validate the date provided by the user. The date must be in the format YYYY-MM-DD, and must be a valid date.
+    # If the date is not valid, raise an error.
     if re.match("[1-9][0-9][0-9]{2}-([0][1-9]|[1][0-2])-([1-2][0-9]|[0][1-9]|[3][0-1])", date) == None:
         raise InvalidDateProvided(date) 
 
 
 def validate_time(time: str) -> None:
+    # Validate the time provided by the user. The time must be in the format HHMM, and must be a valid time.
+    # If the time is not valid, raise an error.
     if re.match("([01][0-9]|2[0-3])([0-5][0-9])", time) == None:
         raise InvalidTimeProvided(time)
 
 
 def validate_uid(uid: str) -> None:
+    # Validate the service UID provided by the user. The UID must be a string starting with a capital letter followed 
+    # by 5 digits (e.g. A12345). If the UID is not valid, raise an error.
     if re.match("[A-Z][0-9]{5}", uid) == None:
         raise InvalidUIDProvided(uid)

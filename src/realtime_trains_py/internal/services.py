@@ -30,7 +30,7 @@ class ServiceDetails:
         api_response = requests.get(f"https://data.rtt.io/rtt/service", params={"uniqueIdentity": f"gb-nr:{service_uid}:{date}",}, headers=self.__headers)
 
         if api_response.status_code == 200:
-            service_data = api_response.json()["service"]
+            service_data = api_response.json()
 
             if self.__complexity == "c":
                 date_parts = date.split("-")
@@ -42,7 +42,8 @@ class ServiceDetails:
                 create_file(file_name, service_data)
 
                 print(f"Service data saved to file: \n  {file_name}")
-                return ServiceData("", "", "", "", [], "", "", 0)
+                # Return an empty ServiceData object since the data is saved to a file and not returned as an object
+                return ServiceData("", "", "", "", [], "", "", 0) 
 
             return self._create_service_record(service_data, service_uid)
 
@@ -54,6 +55,7 @@ class ServiceDetails:
 
 
     def _create_service_record(self,service_data, service_uid) -> ServiceData:  
+        # Extract the relevant data from the API response and create a ServiceData object to return
         operator = service_data["scheduleMetadata"]["operator"].pop("name")
         origin = service_data["origin"][0]["location"].pop("description")
         start_time = service_data["origin"][0]["temporalData"].pop("scheduleAdvertised").split("T")[1][:5]
@@ -61,8 +63,11 @@ class ServiceDetails:
         end_time = service_data["destination"][0]["temporalData"].pop("scheduleAdvertised").split("T")[1][:5]
         coaches = 0
 
-        calling_points: list = []
+        calling_points: list[CallingPoint] = []
+        calling_point_data: list[list[str]] = []
 
+        # Loop through the locations in the service data and create CallingPoint objects for each location. If the complexity is simple, 
+        # also create a 2D array to print as a table later.
         for locations in service_data["locations"]:
             calling_point = get_calling_point(locations)
 
@@ -70,7 +75,7 @@ class ServiceDetails:
                 coaches = calling_point.coaches
             
             if self.__complexity == "s":
-                calling_points.append([
+                calling_point_data.append([
                     calling_point.stop_name,
                     calling_point.scheduled_arrival,
                     calling_point.expected_arrival,
@@ -91,8 +96,8 @@ class ServiceDetails:
             else:
                 print(f"{service_uid} \n  {start_time} {origin} to {destination} \n  Operated by {operator} \n\n  Generated at {datetime.now().strftime('%H:%M:%S on %d/%m/%y.')}")
 
-            # Print the table for the service
-            print(tabulate(calling_points, tablefmt="rounded_grid",
+            # Print the table for the service and return an empty ServiceData object since the data is printed and not returned as an object
+            print(tabulate(calling_point_data, tablefmt="rounded_grid",
                     headers=["Stop Name", "Scheduled Arrival", "Expected Arrival", "Platform", "Line", "Scheduled Departure", "Expected Departure"]
             ))
             return ServiceData("", "", "", "", [], "", "", 0)
@@ -102,6 +107,7 @@ class ServiceDetails:
     
 
 def get_calling_point(location) -> CallingPoint:
+    # Initialize variables to store the calling point data. Set default values for all variables in case some data is missing from the API response.
     stop_name = scheduled_arrival = expected_arrival = platform = line = scheduled_departure = expected_departure = ""
     coaches = 0
 
@@ -109,7 +115,10 @@ def get_calling_point(location) -> CallingPoint:
     location_data = location["locationMetadata"]
     stop_name = location["location"].pop("description")
 
-    # Extract arrival data if it exists
+    # Extract arrival data if it exists. If the service is cancelled, set the expected arrival to "Cancelled". If the service 
+    # has an actual arrival time, use that as the expected arrival. If the service has a forecast arrival time, use that as the 
+    # expected arrival. If the expected arrival time is the same as the scheduled arrival time, set the expected arrival to 
+    # "On time" or "Arrived on time" depending on whether it has arrived or not.
     if "arrival" in temporal_data:
         is_cancelled = temporal_data["arrival"]["isCancelled"]
         scheduled_arrival = temporal_data["arrival"]["scheduleAdvertised"].split("T")[1][:5]
@@ -127,7 +136,10 @@ def get_calling_point(location) -> CallingPoint:
             if expected_arrival == scheduled_arrival:
                 expected_arrival = "On time"
 
-    # Extract departure data if it exists
+    # Extract departure data if it exists. If the service is cancelled, set the expected departure to "Cancelled". If the service 
+    # has an actual departure time, use that as the expected departure. If the service has a forecast departure time, use that as the 
+    # expected departure. If the expected departure time is the same as the scheduled departure time, set the expected departure to 
+    # "On time" or "Departed on time" depending on whether it has departed or not.
     if "departure" in temporal_data:
         is_cancelled = temporal_data["departure"]["isCancelled"]
         scheduled_departure = temporal_data["departure"]["scheduleAdvertised"].split("T")[1][:5]
@@ -146,7 +158,6 @@ def get_calling_point(location) -> CallingPoint:
 
     # Extract platform data if it exists
     if "platform" in location_data:
-        # print(location_data)
         if "forecast" in location_data["platform"]:
             platform = location_data["platform"]["forecast"]
 
@@ -155,14 +166,15 @@ def get_calling_point(location) -> CallingPoint:
 
     # Extract line data if it exists
     if "line" in location_data:
-        # print(location_data)
         if "forecast" in location_data["line"]:
             line = location_data["line"]["forecast"]
 
         else:
             line = location_data["line"]["actual"]
 
-    # If a number of coaches is given in the location data, get that number to display later
+    # If a number of coaches is given in the location data, get the number of coaches for the calling point. This is 
+    # usually the same throughout the service, but if it's given for any other calling point, it can mean that the service
+    # gains or loses coaches.
     if "numberOfVehicles" in location["locationMetadata"]:
         coaches = location["locationMetadata"].pop("numberOfVehicles")
 

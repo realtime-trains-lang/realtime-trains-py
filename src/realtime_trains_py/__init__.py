@@ -1,20 +1,17 @@
-# Import necessary items from other files
-
+# Import external libraries
 from typing import Literal
 
+# Import necessary items from other files
 from realtime_trains_py.internal.boards import Boards
 from realtime_trains_py.internal.details import DefaultBoard
 from realtime_trains_py.internal.live_board import LiveBoard
 from realtime_trains_py.internal.services import ServiceDetails, ServiceData, ServiceDetails
 from realtime_trains_py.internal.utilities import check_token, complex_setup
 
-
+# Define the complexity and mode types, and their corresponding mappings to the API parameters
 Complexity = Literal["simple", "simple_normal", "complex"]
-
 Mode = Literal["DMI_yellow", "DMI_white", "LCD"]
-
 _COMPLEXITY_MAP = {"simple": "s", "simple_normal": "s.n", "complex": "c"}
-
 _MODE_MAP = {"DMI_yellow": "DMI.Y", "DMI_white": "DMI.W", "LCD": "LCD"}
 
 class RealtimeTrainsPy:
@@ -61,7 +58,14 @@ class RealtimeTrainsPy:
         ---
         ## Examples
         ```python
-        get_departures(tiploc="KNGX", filter_from="STEVNGE", filter_to="PBRO", date="2024-11-16", time="1800", rows=10)
+        get_departures(
+            tiploc="KNGX", 
+            filter_from="STEVNGE", 
+            filter_to="PBRO", 
+            date="2024-11-16", 
+            time="1800", 
+            rows=10
+        )
 
         get_departures(tiploc="YORK", date="2024-11-16", time="1800")
         ```
@@ -117,7 +121,7 @@ class RealtimeTrainsPy:
         """
         ## Watch Service
         
-        # NOT AVAILABLE YET
+        # NOT AVAILABLE (YET)
 
         This function retrieves the service information for a given service UID on a provided date. The service information is updated every 60 seconds, on the minute. 
         To stop watching the service, press Ctrl + C.
@@ -136,5 +140,5 @@ class RealtimeTrainsPy:
 
         [Check out the wiki for more examples and information.](https://github.com/realtime-trains-lang/realtime-trains-py/wiki)
         """
-        raise NotImplementedError("This method is not yet implemented.")
+        raise NotImplementedError("Calm down, eager beaver! This method is not implemented yet.")
         api_mode = _MODE_MAP[mode]

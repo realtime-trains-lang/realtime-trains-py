@@ -72,45 +72,42 @@ class LiveBoard:
                             first = False
                             second = True
 
-                        else:
-                            if second:
-                                # If the service terminates at the requested location, display that it terminates here and its origin. 
-                                # Otherwise, display the scheduled departure time, destination, platform and whether it's on time, delayed or cancelled.
-                                if service.terminus == requested_location:
-                                    line_four += f"2nd {service.scheduled_arrival} Terminates here. Service from {service.origin}.\n"
-
-                                else:
-                                    line_four += f"2nd {service.scheduled_departure} {service.terminus} {service.platform}  {check_cancel(service.expected_departure, mode)}\n"
-
-                                second = False
+                        elif second:
+                            # If the service terminates at the requested location, display that it terminates here and its origin. 
+                            # Otherwise, display the scheduled departure time, destination, platform and whether it's on time, delayed or cancelled.
+                            if service.terminus == requested_location:
+                                line_four += f"2nd {service.scheduled_arrival} Terminates here. Service from {service.origin}.\n"
 
                             else:
-                                # If the service terminates at the requested location, display that it terminates here and its origin. 
-                                # Otherwise, display the scheduled departure time, destination, platform and whether it's on time, delayed or cancelled.
-                                if service.terminus == requested_location:
-                                    line_five += f"3rd {service.scheduled_arrival} Terminates here. Service from {service.origin}.\n"
+                                line_four += f"2nd {service.scheduled_departure} {service.terminus} {service.platform}  {check_cancel(service.expected_departure, mode)}\n"
 
-                                else:
-                                    line_five += f"3rd {service.scheduled_departure} {service.terminus} {service.platform}  {check_cancel(service.expected_departure, mode)}\n"
+                            second = False
+
+                        else:
+                            # If the service terminates at the requested location, display that it terminates here and its origin. 
+                            # Otherwise, display the scheduled departure time, destination, platform and whether it's on time, delayed or cancelled.
+                            if service.terminus == requested_location:
+                                line_five += f"3rd {service.scheduled_arrival} Terminates here. Service from {service.origin}.\n"
+
+                            else:
+                                line_five += f"3rd {service.scheduled_departure} {service.terminus} {service.platform}  {check_cancel(service.expected_departure, mode)}\n"
                     
-                    # Clear the screen
+                    # Clear the screen and print the live board information to the screen 
                     sys.stdout.write("\033c\r")
                     sys.stdout.write(f"{line_one}{line_two}{line_three}{line_four}{line_five}")
                             
-                # If the data is None, display a Check timetable for services message
+                # If no data is found, display a "Check timetable for services" message
                 else:
                     first_run = False
                     # Clear the screen
                     sys.stdout.write("\033c\r")
                     sys.stdout.write(f"\033[1;34m{tiploc} Live:\n \033[1;30mCheck timetable for services.\n")
 
+            # Display the current time at the bottom of the board and update it every second
             sys.stdout.write(f"\033[1;3m{datetime.now().strftime('         %H:%M:%S')}\033[K\r")
             time.sleep(1)
 
     def __first_service(self, service: StationBoardDetails, requested_location: str, mode) -> tuple:
-        """
-        Get the first service from the live board and print it to the screen with its subsequent calling points and service operator.
-        """
         params = {
             "uniqueIdentity": f"gb-nr:{service.service_uid}:{datetime.now().strftime('%Y-%m-%d')}", 
             "timeTolerance": "false", 
@@ -140,7 +137,7 @@ class LiveBoard:
         
         can_continue = False
         stops_outputted = False
-        number_of_stops = len(location_data)
+        number_of_stops = len(location_data) # Number of stops in the service, used to determine how to format the calling points line
         coaches = 0
         stop_count = 0 # Keep track of the number of stops added
         for location in location_data:
@@ -155,7 +152,6 @@ class LiveBoard:
             # end of the line without an ampersand and set can_continue to False. If they haven't, add the stop name with 'only' and break the loop.
             if stop_count == number_of_stops:
                 if stops_outputted:
-                    # Adds the last stop to the line without an ampersand and sets can_continue to False
                     can_continue = False
                     line_three += f"{stop_name}"
 
@@ -163,10 +159,11 @@ class LiveBoard:
                     line_three += f"{stop_name} only"
                     break
 
+            # If can_continue is True, set stops_outputted to True. If the stop count is one less than the number of stops, add the stop 
+            # name with an ampersand. Otherwise, add the stop name with a comma. This is used to format the calling points line correctly 
+            # based on the number of stops in the service.
             if can_continue:
                 stops_outputted = True
-                # If the stop count is one less than the number of stops, add the stop name with an ampersand. 
-                # Otherwise, add the stop name with a comma.
                 if stop_count == number_of_stops-1:
                     line_three += f"{stop_name} & "
 
@@ -174,6 +171,8 @@ class LiveBoard:
                     line_three += f"{stop_name}, "
 
             # If the stop name is the same as the requested location, set can_continue to True to start adding stops to the line.
+            # This is used to only display the calling points after the requested location in the service, as the previous calling 
+            # points would have already been displayed on a previous board.
             if stop_name == requested_location:
                 can_continue = True
 
@@ -189,21 +188,10 @@ class LiveBoard:
         return line_two, line_three
 
 def check_cancel(actual_departure: str, mode) -> str:
-    """
-    Check if the service is cancelled or delayed. Change text colour accordingly.
-    If cancelled, set the text to red. If on time, set the text to green. Otherwise, set the text to yellow.
-    """
-
-    if mode != "LCD":
-        if actual_departure == "Cancelled":
-            return "Cancelled"
-
-        elif actual_departure == "On time":
-            return "On time"
-
-        return f"{actual_departure}"
-
-    else:
+    # If the mode is LCD, check if the service is cancelled or delayed. Change text colour accordingly.
+    # If cancelled, set the text to red. If on time, set the text to green. Otherwise, set the text to yellow.
+    # At the end of the line, reset the text colour to default.
+    if mode == "LCD":
         if actual_departure == "Cancelled":
             return "\033[1;31mCancelled\033[1;39m"
 
@@ -211,3 +199,8 @@ def check_cancel(actual_departure: str, mode) -> str:
             return "\033[1;32mOn time\033[1;39m"
 
         return f"\033[1;33m  {actual_departure}\033[1;39m"
+    
+    else:
+        # If not LCD mode, just return the actual departure without checking if it's cancelled or delayed 
+        # and without changing the text colour.
+        return actual_departure

@@ -1,4 +1,4 @@
-# Custom exception classes for Realtime Trains Py
+# Custom exception classes for realtime-trains-py
 
 class APIResponseError(Exception):
     def __init__(self, message: str) -> None:
@@ -11,10 +11,6 @@ class AuthenticationError(Exception):
 class FileWriteError(Exception):
     def __init__(self, file: str) -> None:
         super().__init__(f"\nrealtime-trains-py error:\nFailed to write to file. Perhaps the file already exists? \nFile: {file}")
-
-class InvalidComplexity(Exception):
-    def __init__(self, invalid_item: str) -> None:
-        super().__init__(f"\nrealtime-trains-py error:\nInvalid complexity level. Please select a valid complexity level. \nGiven: \"{invalid_item}\" \nExpected: One of [\"c\", \"s\",\"s.n\"\"]")
 
 class InvalidDateProvided(Exception):
     def __init__(self, invalid_item: str) -> None:
