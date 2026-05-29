@@ -2,8 +2,8 @@ from dataclasses import dataclass
 
 ### Service Details ###
 
-# Calling point data class
-@dataclass(slots=True)
+# Calling Point dataclass
+@dataclass(slots=True, frozen=True)
 class CallingPoint:
     stop_name: str
     scheduled_arrival: str
@@ -14,8 +14,8 @@ class CallingPoint:
     expected_departure: str
     coaches: int
 
-# Service data class
-@dataclass(slots=True)
+# Service Data dataclass
+@dataclass(slots=True, frozen=True)
 class ServiceData:
     service_uid: str
     operator: str
@@ -28,8 +28,8 @@ class ServiceData:
         
 ### Board Details ###
 
-# Station Board Details class
-@dataclass(slots=True)
+# Station Board Details dataclass
+@dataclass(slots=True, frozen=True)
 class StationBoardDetails:
     scheduled_arrival: str
     scheduled_departure: str
@@ -41,8 +41,8 @@ class StationBoardDetails:
     service_uid: str
     coaches: int
 
-# Default Board class
-@dataclass(slots=True)
+# Default Board dataclass
+@dataclass(slots=True, frozen=True)
 class DefaultBoard:
     board: list[StationBoardDetails]
     location: str
