@@ -8,10 +8,14 @@ Maintained and managed by members of [realtime-trains-lang](https://github.com/r
 
 ![PyPI](https://img.shields.io/pypi/v/realtime-trains-py) ![License](https://img.shields.io/github/license/realtime-trains-lang/realtime-trains-py) ![Issues](https://img.shields.io/github/issues/realtime-trains-lang/realtime-trains-py) ![Downloads](https://img.shields.io/pypi/dm/realtime-trains-py)
 
+### Quick links
+[Latest release](https://github.com/realtime-trains-lang/realtime-trains-py/releases/latest)
 
-### Check out our [release notes.](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Release-Notes)
+[Pre-releases](https://test.pypi.org/project/realtime-trains-py/)
 
-### Read the [documentation.](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Home)
+[Documentation](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Home)
+
+[Repository](https://github.com/realtime-trains-lang/realtime-trains-py)
 
 ## About this package
 
