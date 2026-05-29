@@ -9,11 +9,23 @@ from realtime_trains_py.internal.details import StationBoardDetails
 from realtime_trains_py.internal.errors import AuthenticationError, FileWriteError, InvalidDateProvided, InvalidTimeProvided, InvalidUIDProvided
 
 
-def complex_setup() -> None:
-    # Check if realtime_trains_py_data folder exists and create it if not
-    if not os.path.isdir("realtime_trains_py_data"):
-        os.mkdir("realtime_trains_py_data")
+def check_cancel(actual_departure: str, mode) -> str:
+    # If the mode is LCD, check if the service is cancelled or delayed. Change text colour accordingly.
+    # If cancelled, set the text to red. If on time, set the text to green. Otherwise, set the text to yellow.
+    # At the end of the line, reset the text colour to default.
+    if mode == "LCD":
+        if actual_departure == "Cancelled":
+            return "\033[1;31mCancelled\033[1;39m"
 
+        elif actual_departure == "On time":
+            return "\033[1;32mOn time\033[1;39m"
+
+        return f"\033[1;33m  {actual_departure}\033[1;39m"
+    
+    else:
+        # If not LCD mode, just return the actual departure without checking if it's cancelled or delayed 
+        # and without changing the text colour.
+        return actual_departure
 
 def check_token(request_token: str) -> str:    
     headers={"Accept": "application/json", "Authorization": f"Bearer {request_token}"}
@@ -29,6 +41,10 @@ def check_token(request_token: str) -> str:
         
     return request_token
 
+def complex_setup() -> None:
+    # Check if realtime_trains_py_data folder exists and create it if not
+    if not os.path.isdir("realtime_trains_py_data"):
+        os.mkdir("realtime_trains_py_data")
 
 def create_file(name: str, contents) -> None:
     # Create file name by adding directory and type

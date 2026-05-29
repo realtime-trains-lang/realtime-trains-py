@@ -7,7 +7,7 @@ from datetime import datetime
 
 # Import necessary items from other files
 from realtime_trains_py.internal.details import StationBoardDetails
-from realtime_trains_py.internal.utilities import check_token, get_dep_service_data
+from realtime_trains_py.internal.utilities import check_cancel, check_token, get_dep_service_data
 
 
 class LiveBoard:
@@ -25,7 +25,7 @@ class LiveBoard:
         first_run: bool = True
 
         params = {
-            "code": f"gb-nr:{tiploc.upper()}",
+            "code": f"gb-nr:{tiploc}",
             "timeTolerance": "false",
             "detailed": "false"
         }
@@ -50,7 +50,8 @@ class LiveBoard:
                     for service in departure_data["services"][:3]:
                         departure_board.append(get_dep_service_data(service))
 
-                    # Show the first line and update colours based on the given mode
+                    # Show the first line and update colours based on the given mode. If the mode is DMI.Y, set the text colour to yellow. If the 
+                    # mode is DMI.W, set the text colour to white. If the mode is LCD, set the text colour to default.                        
                     if mode == "DMI.Y":
                         line_one = f"\033[1;93m{requested_location} Live:\n"
 
@@ -144,13 +145,14 @@ class LiveBoard:
             # Get the name of the next stop
             stop_name = location["location"].pop("description")
             stop_count += 1
-            # If a number of coaches is given in the location data, get that number to display later
-            if coaches == 0 and "numberOfVehicles" in location["locationMetadata"]:
-                coaches = location["locationMetadata"].pop("numberOfVehicles")
 
-            # If the stop count is equal to the number of stops, check if any stops have been outputted. If they have, add the stop name to the 
-            # end of the line without an ampersand and set can_continue to False. If they haven't, add the stop name with 'only' and break the loop.
+            # If the stop count is equal to the number of stops, check if a number of coaches is given in the location data, get that number to display 
+            # later. Check if any stops have been outputted. If they have, add the stop name to the end of the line without an ampersand and set 
+            # can_continue to False. If they haven't, add the stop name with 'only' and break the loop.
             if stop_count == number_of_stops:
+                if coaches == 0 and "numberOfVehicles" in location["locationMetadata"]:
+                    coaches = location["locationMetadata"].pop("numberOfVehicles")
+
                 if stops_outputted:
                     can_continue = False
                     line_three += f"{stop_name}"
@@ -186,21 +188,3 @@ class LiveBoard:
             line_three += f". {operator} service.\n"
 
         return line_two, line_three
-
-def check_cancel(actual_departure: str, mode) -> str:
-    # If the mode is LCD, check if the service is cancelled or delayed. Change text colour accordingly.
-    # If cancelled, set the text to red. If on time, set the text to green. Otherwise, set the text to yellow.
-    # At the end of the line, reset the text colour to default.
-    if mode == "LCD":
-        if actual_departure == "Cancelled":
-            return "\033[1;31mCancelled\033[1;39m"
-
-        elif actual_departure == "On time":
-            return "\033[1;32mOn time\033[1;39m"
-
-        return f"\033[1;33m  {actual_departure}\033[1;39m"
-    
-    else:
-        # If not LCD mode, just return the actual departure without checking if it's cancelled or delayed 
-        # and without changing the text colour.
-        return actual_departure
