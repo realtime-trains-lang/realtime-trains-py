@@ -131,9 +131,11 @@ class LiveBoard:
         # Otherwise, display the scheduled departure time, destination, platform and whether it's on time, delayed or cancelled.
         if destination == requested_location:
             line_two = f"1st {service.scheduled_arrival} Terminates here. Service from {origin}.\n"
+            terminating_here = True
 
         else:
             line_two = f"1st {service.scheduled_departure} {service.terminus} {service.platform}  {check_cancel(service.expected_departure, mode)}\n"
+            terminating_here = False
 
         
         can_continue = False
@@ -182,9 +184,17 @@ class LiveBoard:
 
         # If the number of coaches is given, add that to the end of the line. Otherwise, just display the operator.
         if coaches > 0:
-            line_three += f". {operator} service formed of {coaches} coaches.\n"
+            if terminating_here:
+                line_three = f"This service terminates here. {operator} service formed of {coaches} coaches. {check_cancel(service.expected_arrival, mode)}\n"
+
+            else:
+                line_three += f". {operator} service formed of {coaches} coaches.\n"
 
         else:
-            line_three += f". {operator} service.\n"
+            if terminating_here:
+                line_three = f"This service terminates here. {operator} service. {check_cancel(service.expected_arrival, mode)}\n"
+
+            else:   
+                line_three += f". {operator} service.\n"
 
         return line_two, line_three
