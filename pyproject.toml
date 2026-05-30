@@ -1,15 +1,32 @@
 [project]
 name = "realtime-trains-py"
 version = "2027.1.0b3"
-authors = [
-  { name="anonymous44401", email="anonymous4401.ad@gmail.com" },
-]
-description = "Python API Wrapper Package for the Realtime Trains API."
+description = "Python API Wrapper for the Realtime Trains API"
 readme = "README.md"
 license = {file = "LICENSE.md"}
-requires-python = ">=3.8"
+requires-python = ">=3.10"
+
+keywords = [
+    "api",
+    "api wrapper",
+    "realtime trains",
+    "train data",
+    "train API",
+    "UK rail",
+    "railway data",
+    "train tracking",
+    "train schedules",
+    "trains",
+    "railway",
+]
+
 classifiers = [
-    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Development Status :: 5 - Production/Stable",
@@ -22,8 +39,8 @@ dependencies = [
 
 [project.urls]
 Repository = "https://github.com/realtime-trains-lang/realtime-trains-py"
+Documentation = "https://github.com/realtime-trains-lang/realtime-trains-py/wiki"
 Issues = "https://github.com/realtime-trains-lang/realtime-trains-py/issues"
-Discord = "https://discord.gg/8xcXSGhBAR"
 
 [build-system]
 requires = ["hatchling"]
