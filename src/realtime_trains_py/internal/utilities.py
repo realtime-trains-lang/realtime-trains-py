@@ -199,19 +199,19 @@ def get_dep_service_data(service) -> StationBoardDetails:
 def validate_date(date: str) -> None:
     # Validate the date provided by the user. The date must be in the format YYYY-MM-DD, and must be a valid date.
     # If the date is not valid, raise an error.
-    if re.match("[1-9][0-9][0-9]{2}-([0][1-9]|[1][0-2])-([1-2][0-9]|[0][1-9]|[3][0-1])", date) == None:
+    if re.fullmatch("[1-9][0-9][0-9]{2}-([0][1-9]|[1][0-2])-([1-2][0-9]|[0][1-9]|[3][0-1])", date) == None:
         raise InvalidDateProvided(date) 
 
 
 def validate_time(time: str) -> None:
     # Validate the time provided by the user. The time must be in the format HHMM, and must be a valid time.
     # If the time is not valid, raise an error.
-    if re.match("([01][0-9]|2[0-3])([0-5][0-9])", time) == None:
+    if re.fullmatch("([01][0-9]|2[0-3])([0-5][0-9])", time) == None:
         raise InvalidTimeProvided(time)
 
 
 def validate_uid(uid: str) -> None:
     # Validate the service UID provided by the user. The UID must be a string starting with a capital letter followed 
     # by 5 digits (e.g. A12345). If the UID is not valid, raise an error.
-    if re.match("[A-Z][0-9]{5}", uid) == None:
+    if re.fullmatch("[A-Z][0-9]{5}", uid) == None:
         raise InvalidUIDProvided(uid)

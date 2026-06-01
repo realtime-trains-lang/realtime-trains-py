@@ -30,7 +30,7 @@ class ServiceDetails:
         api_response = requests.get(f"https://data.rtt.io/rtt/service", params={"uniqueIdentity": f"gb-nr:{service_uid}:{date}",}, headers=self.__headers)
 
         if api_response.status_code == 200:
-            service_data = api_response.json()
+            service_data = api_response.json()["service"]
 
             if self.__complexity == "c":
                 date_parts = date.split("-")
@@ -54,7 +54,7 @@ class ServiceDetails:
             raise APIResponseError(f"Failed to connect to the RTT API server: {api_response.status_code} \nResponse message: {api_response.text}")
 
 
-    def _create_service_record(self,service_data, service_uid) -> ServiceData:  
+    def _create_service_record(self, service_data, service_uid) -> ServiceData:  
         # Extract the relevant data from the API response and create a ServiceData object to return
         operator = service_data["scheduleMetadata"]["operator"].pop("name")
         origin = service_data["origin"][0]["location"].pop("description")

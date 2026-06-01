@@ -28,11 +28,11 @@ class Boards:
             if self.__complexity == "c":
                 # If complexity is c, save the JSON data to a new .json file
                 if date is None:
-                    date = datetime.now().strftime("%Y/%m/%d")
+                    date = datetime.now().strftime("%Y-%m-%d")
 
-                date_parts: list[str] = date.split("/")
+                date_parts: list[str] = date.split("-")
 
-                file_name = f"{tiploc}_on_{date_parts[0]}.{date_parts[1]}.{date_parts[2]}_dep_board_data"
+                file_name = f"{tiploc}_on_{date_parts[0]}.{date_parts[1]}.{date_parts[2]}_board_data"
 
                 create_file(file_name, service_data)
 
