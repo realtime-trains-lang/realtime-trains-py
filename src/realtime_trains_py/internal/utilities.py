@@ -54,6 +54,7 @@ def create_file(name: str, contents) -> None:
     if not os.path.isfile(file_name):
         with open(file_name, "x", encoding="utf-8") as file:
             json.dump(contents, file, ensure_ascii=False, indent=4)
+            print(f"Data saved to file: \n  {file_name}.")
 
     else:
         raise FileWriteError(file_name)

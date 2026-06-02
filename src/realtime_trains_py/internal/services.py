@@ -17,14 +17,10 @@ class ServiceDetails:
         self.__complexity = complexity
 
     # Get the service details
-    def _get_service_details(self, service_uid: str, date: str | None=None) -> ServiceData:
+    def _get_service_details(self, service_uid: str, date: str) -> ServiceData:
         validate_uid(service_uid)
 
-        if date == None:
-            date = datetime.now().strftime("%Y-%m-%d")
-
-        else:
-            validate_date(date)
+        validate_date(date)
 
         # Get the api response using the auth details provided
         api_response = requests.get(f"https://data.rtt.io/rtt/service", params={"uniqueIdentity": f"gb-nr:{service_uid}:{date}",}, headers=self.__headers)
@@ -33,15 +29,9 @@ class ServiceDetails:
             service_data = api_response.json()["service"]
 
             if self.__complexity == "c":
-                date_parts = date.split("-")
-
-                # Set the file name
-                file_name = f"{service_uid}_on_{date_parts[0]}.{date_parts[1]}.{date_parts[2]}_service_data"
-
                 # Create a new file
-                create_file(file_name, service_data)
+                create_file(f"{service_uid}_on_{date}_service_data", service_data)
 
-                print(f"Service data saved to file: \n  {file_name}")
                 # Return an empty ServiceData object since the data is saved to a file and not returned as an object
                 return ServiceData("", "", "", "", [], "", "", 0) 
 
@@ -55,7 +45,7 @@ class ServiceDetails:
 
 
     def _create_service_record(self, service_data, service_uid) -> ServiceData:  
-        # Extract the relevant data from the API response and create a ServiceData object to return
+        # Extract the relevant data from the API response and create a ServiceData data class to return
         operator = service_data["scheduleMetadata"]["operator"].pop("name")
         origin = service_data["origin"][0]["location"].pop("description")
         start_time = service_data["origin"][0]["temporalData"].pop("scheduleAdvertised").split("T")[1][:5]
@@ -66,8 +56,8 @@ class ServiceDetails:
         calling_points: list[CallingPoint] = []
         calling_point_data: list[list[str]] = []
 
-        # Loop through the locations in the service data and create CallingPoint objects for each location. If the complexity is simple, 
-        # also create a 2D array to print as a table later.
+        # Iterate through the locations in the service data and create CallingPoint data classes for each location. 
+        # If the complexity is simple, create a 2D array to print as a table later.
         for locations in service_data["locations"]:
             calling_point = get_calling_point(locations)
 
@@ -91,7 +81,6 @@ class ServiceDetails:
         if self.__complexity == "s":
             if coaches != 0:
                 print(f"{service_uid} \n  {start_time} {origin} to {destination} \n  A {operator} service formed of {coaches} coaches.\n\n  Generated at {datetime.now().strftime('%H:%M:%S on %d/%m/%y.')}")
-
 
             else:
                 print(f"{service_uid} \n  {start_time} {origin} to {destination} \n  Operated by {operator} \n\n  Generated at {datetime.now().strftime('%H:%M:%S on %d/%m/%y.')}")

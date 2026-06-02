@@ -27,16 +27,10 @@ class Boards:
 
             if self.__complexity == "c":
                 # If complexity is c, save the JSON data to a new .json file
-                if date is None:
-                    date = datetime.now().strftime("%Y-%m-%d")
+                date = datetime.now().strftime("%Y-%m-%d") if date is None else date
 
-                date_parts: list[str] = date.split("-")
+                create_file(f"{tiploc}_on_{date}_board_data", service_data)
 
-                file_name = f"{tiploc}_on_{date_parts[0]}.{date_parts[1]}.{date_parts[2]}_board_data"
-
-                create_file(file_name, service_data)
-
-                print(f"Departure data saved to file: \n  {file_name}.")
                 return DefaultBoard([], "")
             
             departure_board: list[StationBoardDetails] = []

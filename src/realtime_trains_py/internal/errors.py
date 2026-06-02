@@ -10,7 +10,7 @@ class AuthenticationError(Exception):
 
 class FileWriteError(Exception):
     def __init__(self, file: str) -> None:
-        super().__init__(f"\nrealtime-trains-py error:\nFailed to write to file. Perhaps the file already exists? \nFile: {file}")
+        super().__init__(f"\nrealtime-trains-py error:\nFailed to write to file. Perhaps the file already exists? \nFile: \"{file}\"")
 
 class InvalidDateProvided(Exception):
     def __init__(self, invalid_item: str) -> None:

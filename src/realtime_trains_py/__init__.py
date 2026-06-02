@@ -1,4 +1,5 @@
 # Import external libraries
+from datetime import datetime
 from typing import Literal
 
 # Import necessary items from other files
@@ -74,7 +75,7 @@ class RealtimeTrainsPy:
         """
         return self.__boards._get_dep_board_details(tiploc=tiploc.upper(), filter_from=filter_from, filter_to=filter_to, date=date, rows=rows, time=time)
 
-    def get_service(self, service_uid: str, date: str | None=None) -> ServiceData:
+    def get_service(self, service_uid: str, date: str=datetime.now().strftime("%Y-%m-%d")) -> ServiceData:
         """
         ## Get Service
         This function retrieves the service information for a given service UID on a provided date.
