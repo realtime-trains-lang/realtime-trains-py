@@ -12,7 +12,7 @@ from realtime_trains_py.internal.utilities import create_file, validate_date, va
 
 # Class for getting and creating service details
 class ServiceDetails:
-    def __init__(self, request_token: str, complexity: str="s") -> None:
+    def __init__(self, request_token: str, complexity: str) -> None:
         self.__headers = {"Accept": "application/json", "Authorization": f"Bearer {request_token}"}
         self.__complexity = complexity
 
@@ -23,7 +23,7 @@ class ServiceDetails:
         validate_date(date)
 
         # Get the api response using the auth details provided
-        api_response = requests.get(f"https://data.rtt.io/rtt/service", params={"uniqueIdentity": f"gb-nr:{service_uid}:{date}",}, headers=self.__headers)
+        api_response = requests.get(f"https://data.rtt.io/rtt/service", params={"uniqueIdentity": f"gb-nr:{service_uid}:{date}"}, headers=self.__headers)
 
         if api_response.status_code == 200:
             service_data = api_response.json()["service"]
@@ -32,7 +32,7 @@ class ServiceDetails:
                 # Create a new file
                 create_file(f"{service_uid}_on_{date}_service_data", service_data)
 
-                # Return an empty ServiceData object since the data is saved to a file and not returned as an object
+                # Return an empty ServiceData data class since the data is saved to a file and not returned as an object
                 return ServiceData("", "", "", "", [], "", "", 0) 
 
             return self._create_service_record(service_data, service_uid)

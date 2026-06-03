@@ -37,11 +37,12 @@ class RealtimeTrainsPy:
         if api_complexity == "c":
             complex_setup()
 
-        request_token = check_token(request_token=request_token)
+        token = request_token
+        api_request_token = check_token(request_token=request_token)
 
-        self.__services = ServiceDetails(request_token=request_token, complexity=api_complexity)
-        self.__boards = Boards(request_token=request_token, complexity=api_complexity)
-        self.__live_board = LiveBoard(request_token=request_token)
+        self.__services = ServiceDetails(request_token=api_request_token, complexity=api_complexity)
+        self.__boards = Boards(request_token=api_request_token, complexity=api_complexity)
+        self.__live_board = LiveBoard(api_request_token=api_request_token, token=token)
 
 
     def get_departures(self, tiploc: str, filter_from: str | None=None, filter_to: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> DefaultBoard:

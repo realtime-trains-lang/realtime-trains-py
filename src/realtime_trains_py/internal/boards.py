@@ -11,7 +11,7 @@ from realtime_trains_py.internal.utilities import create_file, create_parameters
 
 
 class Boards:
-    def __init__(self, request_token: str, complexity: str="s") -> None:
+    def __init__(self, request_token: str, complexity: str) -> None:
         self.__headers = {"Accept": "application/json", "Authorization": f"Bearer {request_token}"}
         self.__complexity = complexity
 
@@ -26,10 +26,9 @@ class Boards:
             service_data = api_response.json()
 
             if self.__complexity == "c":
-                # If complexity is c, save the JSON data to a new .json file
-                date = datetime.now().strftime("%Y-%m-%d") if date is None else date
-
-                create_file(f"{tiploc}_on_{date}_board_data", service_data)
+                # If complexity is c, save the JSON data to a new .json file in the realtime_trains_py_data folder using the create_file 
+                # function and return an empty DefaultBoard data class since the data is saved to a file and not returned as a data class object
+                create_file(f"{tiploc}_on_{datetime.now().strftime('%Y-%m-%d') if date is None else date}_board_data", service_data)
 
                 return DefaultBoard([], "")
             
@@ -61,7 +60,7 @@ class Boards:
             if self.__complexity.endswith("n"):
                 return DefaultBoard(departure_board, requested_location)
 
-            # Pint the departure info and tabulate table with the headers defined
+            # Print the departure info and tabulate table with the headers defined
             print(f"Departure board for {requested_location}. Generated at {datetime.now().strftime('%H:%M:%S on %d/%m/%y')}.")
             print(tabulate(
                 departure_board_data, 

@@ -11,11 +11,12 @@ from realtime_trains_py.internal.utilities import check_cancel, check_token, get
 
 
 class LiveBoard:
-    def __init__(self, request_token: str) -> None:
-        self.__headers = {"Accept": "application/json", "Authorization": f"Bearer {request_token}"}
+    def __init__(self, api_request_token: str, token: str) -> None:
+        self.__headers = {"Accept": "application/json", "Authorization": f"Bearer {api_request_token}"}
+        self.__token = token
 
-    def __update_request_token(self, request_token: str) -> None:
-        self.__headers["Authorization"] = f"Bearer {request_token}"
+    def __update_request_token(self, api_request_token: str) -> None:
+        self.__headers["Authorization"] = f"Bearer {api_request_token}"
 
     def _get_live(self, tiploc: str, mode: str="LCD") -> None:  
         # Output a helpful message to the user: Press Ctrl+C to close live departure board.
@@ -35,9 +36,6 @@ class LiveBoard:
             # Update the departure board every 60 seconds, on the minute
             if first_run or datetime.now().strftime("%S") == "00":
                 first_run = False
-
-                # Check the request token (expires every 20 minutes) and update the headers with the new token
-                self.__update_request_token(check_token(request_token=self.__headers["Authorization"].split(" ")[1]))
 
                 station_data = requests.get(f"https://data.rtt.io/rtt/location", params=params, headers=self.__headers)
 
@@ -77,7 +75,7 @@ class LiveBoard:
                             # If the service terminates at the requested location, display that it terminates here and its origin. 
                             # Otherwise, display the scheduled departure time, destination, platform and whether it's on time, delayed or cancelled.
                             if service.terminus == requested_location:
-                                line_four += f"2nd {service.scheduled_arrival} Terminates here. Service from {service.origin}.\n"
+                                line_four += f"2nd {service.scheduled_arrival} Terminates here. Service from {service.origin}  {check_cancel(service.expected_arrival, mode)}.\n"
 
                             else:
                                 line_four += f"2nd {service.scheduled_departure} {service.terminus} {service.platform}  {check_cancel(service.expected_departure, mode)}\n"
@@ -88,7 +86,7 @@ class LiveBoard:
                             # If the service terminates at the requested location, display that it terminates here and its origin. 
                             # Otherwise, display the scheduled departure time, destination, platform and whether it's on time, delayed or cancelled.
                             if service.terminus == requested_location:
-                                line_five += f"3rd {service.scheduled_arrival} Terminates here. Service from {service.origin}.\n"
+                                line_five += f"3rd {service.scheduled_arrival} Terminates here. Service from {service.origin}  {check_cancel(service.expected_arrival, mode)}.\n"
 
                             else:
                                 line_five += f"3rd {service.scheduled_departure} {service.terminus} {service.platform}  {check_cancel(service.expected_departure, mode)}\n"
@@ -96,7 +94,13 @@ class LiveBoard:
                     # Clear the screen and print the live board information to the screen 
                     sys.stdout.write("\033c\r")
                     sys.stdout.write(f"{line_one}{line_two}{line_three}{line_four}{line_five}")
-                            
+
+                elif station_data.status_code == 401:
+                    # Check the request token and update the headers with the new token
+                    self.__update_request_token(check_token(request_token=self.__token))
+
+                    first_run = True # To immediately retry the request with the new token
+
                 # If no data is found, display a "Check timetable for services" message
                 else:
                     first_run = False
@@ -130,12 +134,10 @@ class LiveBoard:
         # If the service terminates at the requested location, display that it terminates here and its origin. 
         # Otherwise, display the scheduled departure time, destination, platform and whether it's on time, delayed or cancelled.
         if destination == requested_location:
-            line_two = f"1st {service.scheduled_arrival} Terminates here. Service from {origin}.\n"
-            terminating_here = True
+            line_two = f"1st {service.scheduled_arrival} Terminates here. Service from {origin}.  {check_cancel(service.expected_arrival, mode)}\n"
 
         else:
             line_two = f"1st {service.scheduled_departure} {service.terminus} {service.platform}  {check_cancel(service.expected_departure, mode)}\n"
-            terminating_here = False
 
         
         can_continue = False
@@ -184,17 +186,9 @@ class LiveBoard:
 
         # If the number of coaches is given, add that to the end of the line. Otherwise, just display the operator.
         if coaches > 0:
-            if terminating_here:
-                line_three = f"This service terminates here. {operator} service formed of {coaches} coaches. {check_cancel(service.expected_arrival, mode)}\n"
-
-            else:
-                line_three += f". {operator} service formed of {coaches} coaches.\n"
+            line_three += f". {operator} service formed of {coaches} coaches.\n"
 
         else:
-            if terminating_here:
-                line_three = f"This service terminates here. {operator} service. {check_cancel(service.expected_arrival, mode)}\n"
-
-            else:   
-                line_three += f". {operator} service.\n"
+            line_three += f". {operator} service.\n"
 
         return line_two, line_three
