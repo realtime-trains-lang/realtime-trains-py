@@ -84,4 +84,4 @@ More in-depth examples can be found on our [examples page](https://github.com/re
 
 The **realtime-trains-py** API Wrapper uses an MIT License.
 
-All data is kindly provided by [Realtime Trains](https://www.realtimetrains.co.uk/) through the [Realtime Trains API](https://api-portal.rtt.io/welcome/).
+All data is kindly provided by [Realtime Trains](https://www.realtimetrains.co.uk/) through the [Realtime Trains API](https://api-portal.rtt.io/welcome/). This package is not affiliated with [Realtime Trains](https://www.realtimetrains.co.uk/).
