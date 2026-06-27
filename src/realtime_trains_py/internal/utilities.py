@@ -9,23 +9,16 @@ from realtime_trains_py.internal.details import StationBoardDetails
 from realtime_trains_py.internal.errors import AuthenticationError, FileWriteError, InvalidDateProvided, InvalidTimeProvided, InvalidUIDProvided
 
 
-def check_cancel(actual_departure: str, mode) -> str:
-    # If the mode is LCD, check if the service is cancelled or delayed. Change text colour accordingly.
-    # If cancelled, set the text to red. If on time, set the text to green. Otherwise, set the text to yellow.
-    # At the end of the line, reset the text colour to default.
-    if mode == "LCD":
-        if actual_departure == "Cancelled":
-            return "\033[1;31mCancelled\033[1;39m"
+def check_cancel(actual_departure: str) -> str:
+    # Check if the service is cancelled or delayed. Change text colour accordingly. If cancelled, set the text to red. 
+    # If on time, set the text to green. Otherwise, set the text to yellow. At the end of the line, reset the text colour to default.
+    if actual_departure == "Cancelled":
+        return f"\033[1;31m{actual_departure}\033[1;39m"
 
-        elif actual_departure == "On time":
-            return "\033[1;32mOn time\033[1;39m"
+    elif actual_departure == "On time":
+        return f"\033[1;32m{actual_departure}\033[1;39m"
 
-        return f"\033[1;33m  {actual_departure}\033[1;39m"
-    
-    else:
-        # If not LCD mode, just return the actual departure without checking if it's cancelled or delayed 
-        # and without changing the text colour.
-        return actual_departure
+    return f"\033[1;33m{actual_departure}\033[1;39m"
 
 def check_token(request_token: str) -> str:    
     headers={"Accept": "application/json", "Authorization": f"Bearer {request_token}"}
@@ -120,28 +113,20 @@ def get_dep_service_data(service) -> StationBoardDetails:
         # If the service isn't cancelled, check if there is a realtime actual or forecast arrival time, and set the 
         # expected arrival time accordingly. If the realtime data matches the scheduled arrival time, set the expected 
         # arrival time to "On time".
-        is_cancelled: bool = temporal_data["arrival"]["isCancelled"]
         if "scheduleAdvertised" in temporal_data["arrival"]:
             scheduled_arrival: str = temporal_data["arrival"]["scheduleAdvertised"].split("T")[1][:5]
 
-        if is_cancelled:
+        if temporal_data["arrival"]["isCancelled"]:
             expected_arrival: str = "Cancelled"
-        
-        elif "realtimeActual" in temporal_data["arrival"]:
-            expected_arrival: str = temporal_data["arrival"]["realtimeActual"].split("T")[1][:5]
-            if expected_arrival == scheduled_arrival:
-                expected_arrival: str = "On time"
 
-            else:
-                expected_arrival: str = f"Exp {expected_arrival}"
+        else:        
+            if "realtimeActual" in temporal_data["arrival"]:
+                expected_arrival: str = temporal_data["arrival"]["realtimeActual"].split("T")[1][:5]
 
-        elif "realtimeForecast" in temporal_data["arrival"]:
-            expected_arrival: str = temporal_data["arrival"]["realtimeForecast"].split("T")[1][:5]
-            if expected_arrival == scheduled_arrival:
-                expected_arrival: str = "On time"
-            
-            else:
-                expected_arrival: str = f"Exp {expected_arrival}"
+            elif "realtimeForecast" in temporal_data["arrival"]:
+                expected_arrival: str = temporal_data["arrival"]["realtimeForecast"].split("T")[1][:5]
+
+            expected_arrival: str = "On time" if expected_arrival == scheduled_arrival else f"Exp {expected_arrival}"
 
     # Extract departure data if it exists
     if "departure" in temporal_data:
@@ -149,28 +134,20 @@ def get_dep_service_data(service) -> StationBoardDetails:
         # If the service isn't cancelled, check if there is a realtime actual or forecast departure time, and set the 
         # expected departure time accordingly. If the realtime data matches the scheduled departure time, set the expected 
         # departure time to "On time".
-        is_cancelled: bool = temporal_data["departure"]["isCancelled"]
         if "scheduleAdvertised" in temporal_data["departure"]:
             scheduled_departure: str = temporal_data["departure"]["scheduleAdvertised"].split("T")[1][:5]
             
-        if is_cancelled:
+        if temporal_data["departure"]["isCancelled"]:
             expected_departure: str = "Cancelled"
 
-        elif "realtimeActual" in temporal_data["departure"]:
-            expected_departure: str = temporal_data["departure"]["realtimeActual"].split("T")[1][:5]
-            if expected_departure == scheduled_departure:
-                expected_departure: str = "On time"
+        else:
+            if "realtimeActual" in temporal_data["departure"]:
+                expected_departure: str = temporal_data["departure"]["realtimeActual"].split("T")[1][:5]
 
-            else:
-                expected_departure: str = f"Exp {expected_departure}"
+            elif "realtimeForecast" in temporal_data["departure"]:
+                expected_departure: str = temporal_data["departure"]["realtimeForecast"].split("T")[1][:5]    
 
-        elif "realtimeForecast" in temporal_data["departure"]:
-            expected_departure: str = temporal_data["departure"]["realtimeForecast"].split("T")[1][:5] 
-            if expected_departure == scheduled_departure:
-                expected_departure: str = "On time"     
-
-            else:
-                expected_departure: str = f"Exp {expected_departure}"              
+            expected_departure: str = "On time" if expected_departure == scheduled_departure else f"Exp {expected_departure}"   
 
     # Extract platform data if it exists
     if "platform" in location_data:
@@ -214,5 +191,5 @@ def validate_time(time: str) -> None:
 def validate_uid(uid: str) -> None:
     # Validate the service UID provided by the user. The UID must be a string starting with a capital letter followed 
     # by 5 digits (e.g. A12345). If the UID is not valid, raise an error.
-    if re.fullmatch("[A-Z][0-9]{5}", uid) == None:
+    if re.fullmatch("[A-Z]?[0-9]{5}", uid) == None:
         raise InvalidUIDProvided(uid)

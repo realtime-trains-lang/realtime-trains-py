@@ -1,4 +1,6 @@
 # Import external libraries
+from re import match
+
 import requests
 import sys
 import time
@@ -11,8 +13,10 @@ from realtime_trains_py.internal.utilities import check_cancel, check_token, get
 
 
 class LiveBoard:
+    # Take the request token and the token to create a new request token when the old request token expires
     def __init__(self, api_request_token: str, token: str) -> None:
         self.__headers = {"Accept": "application/json", "Authorization": f"Bearer {api_request_token}"}
+        self.__session = requests.Session()
         self.__token = token
 
     def __update_request_token(self, api_request_token: str) -> None:
@@ -37,10 +41,10 @@ class LiveBoard:
             if first_run or datetime.now().strftime("%S") == "00":
                 first_run = False
 
-                station_data = requests.get(f"https://data.rtt.io/rtt/location", params=params, headers=self.__headers)
+                response = self.__session.get(f"https://data.rtt.io/rtt/location", params=params, headers=self.__headers)
 
-                if station_data.status_code == 200:
-                    departure_data = station_data.json()
+                if response.status_code == 200:
+                    departure_data = response.json()
                     # Get the requested location name 
                     requested_location = departure_data["query"]["location"].pop("description")
 
@@ -49,15 +53,17 @@ class LiveBoard:
                         departure_board.append(get_dep_service_data(service))
 
                     # Show the first line and update colours based on the given mode. If the mode is DMI.Y, set the text colour to yellow. If the 
-                    # mode is DMI.W, set the text colour to white. If the mode is LCD, set the text colour to default.                        
-                    if mode == "DMI.Y":
-                        line_one = f"\033[1;93m{requested_location} Live:\n"
+                    # mode is DMI.W, set the text colour to white. If the mode is LCD, set the text colour to default.   
+                    
+                    match mode:              
+                        case "DMI.Y":
+                            line_one = f"\033[1;93m{requested_location} Live:\n"
 
-                    elif mode == "DMI.W":
-                        line_one = f"\033[1;39m{requested_location} Live:\n"
-                        
-                    else:
-                        line_one = f"\033[1;34m{requested_location} Live:\n\033[1;39m"
+                        case "DMI.W":
+                            line_one = f"\033[1;39m{requested_location} Live:\n"
+
+                        case _:
+                            line_one = f"\033[1;34m{requested_location} Live:\n\033[1;39m"
 
                     line_two = line_three = line_four = line_five = ""
                     first = True
@@ -71,31 +77,27 @@ class LiveBoard:
                             first = False
                             second = True
 
-                        elif second:
-                            # If the service terminates at the requested location, display that it terminates here and its origin. 
-                            # Otherwise, display the scheduled departure time, destination, platform and whether it's on time, delayed or cancelled.
-                            if service.terminus == requested_location:
-                                line_four += f"2nd {service.scheduled_arrival} Terminates here. Service from {service.origin}  {check_cancel(service.expected_arrival, mode)}.\n"
-
-                            else:
-                                line_four += f"2nd {service.scheduled_departure} {service.terminus} {service.platform}  {check_cancel(service.expected_departure, mode)}\n"
-
-                            second = False
-
                         else:
                             # If the service terminates at the requested location, display that it terminates here and its origin. 
                             # Otherwise, display the scheduled departure time, destination, platform and whether it's on time, delayed or cancelled.
                             if service.terminus == requested_location:
-                                line_five += f"3rd {service.scheduled_arrival} Terminates here. Service from {service.origin}  {check_cancel(service.expected_arrival, mode)}.\n"
+                                line = f"{service.scheduled_arrival} Terminates here. Service from {service.origin}  {service.expected_arrival if mode!='LCD' else check_cancel(service.expected_arrival)}\n"
 
                             else:
-                                line_five += f"3rd {service.scheduled_departure} {service.terminus} {service.platform}  {check_cancel(service.expected_departure, mode)}\n"
-                    
-                    # Clear the screen and print the live board information to the screen 
-                    sys.stdout.write("\033c\r")
-                    sys.stdout.write(f"{line_one}{line_two}{line_three}{line_four}{line_five}")
+                                line = f"{service.scheduled_departure} {service.terminus} {service.platform}  {service.expected_departure if mode!='LCD' else check_cancel(service.expected_departure)}\n"
 
-                elif station_data.status_code == 401:
+                            if second:
+                                second = False
+                                line_four = f"2nd {line}"
+
+                            else:
+                                line_five = f"3rd {line}"
+
+
+                    # Clear the screen and print the live board information to the screen 
+                    sys.stdout.write(f"\033c\r{line_one}{line_two}{line_three}{line_four}{line_five}")
+
+                elif response.status_code == 401:
                     # Check the request token and update the headers with the new token
                     self.__update_request_token(check_token(request_token=self.__token))
 
@@ -104,9 +106,8 @@ class LiveBoard:
                 # If no data is found, display a "Check timetable for services" message
                 else:
                     first_run = False
-                    # Clear the screen
-                    sys.stdout.write("\033c\r")
-                    sys.stdout.write(f"\033[1;34m{tiploc} Live:\n \033[1;30mCheck timetable for services.\n")
+                    # Clear the screen and output a message to the user to check the timetable for services, in blue text
+                    sys.stdout.write(f"\033c\r\033[1;34m{tiploc} Live:\n \033[1;30mCheck timetable for services\n")
 
             # Display the current time at the bottom of the board and update it every second
             sys.stdout.write(f"\033[1;3m{datetime.now().strftime('         %H:%M:%S')}\033[K\r")
@@ -120,28 +121,24 @@ class LiveBoard:
             }
 
         # Get the service data for the first service 
-        service_api_response = requests.get(f"https://data.rtt.io/rtt/service", params=params, headers=self.__headers)
-        all_service_data = service_api_response.json()["service"]
+        all_service_data = self.__session.get(f"https://data.rtt.io/rtt/service", params=params, headers=self.__headers).json()["service"]
 
         line_three = "Calling at: "
 
         # Prepare to unpack service info
-        schedule_data = all_service_data["scheduleMetadata"]
         location_data = all_service_data["locations"]
-        origin = all_service_data["origin"][0]["location"].pop("description")
-        destination = all_service_data["destination"][0]["location"].pop("description")
 
         # If the service terminates at the requested location, display that it terminates here and its origin. 
         # Otherwise, display the scheduled departure time, destination, platform and whether it's on time, delayed or cancelled.
-        if destination == requested_location:
-            line_two = f"1st {service.scheduled_arrival} Terminates here. Service from {origin}.  {check_cancel(service.expected_arrival, mode)}\n"
+        if service.terminus == requested_location:
+            line_two = f"1st {service.scheduled_arrival} Terminates here. Service from {all_service_data["origin"][0]["location"].pop("description")}  {service.expected_arrival if mode!='LCD' else check_cancel(service.expected_arrival)}\n"
 
         else:
-            line_two = f"1st {service.scheduled_departure} {service.terminus} {service.platform}  {check_cancel(service.expected_departure, mode)}\n"
+            line_two = f"1st {service.scheduled_departure} {service.terminus} {service.platform}  {service.expected_departure if mode!='LCD' else check_cancel(service.expected_departure)}\n"
 
-        
-        can_continue = False
-        stops_outputted = False
+            
+        can_add_calling_points = False
+        stops_outputted = False # Used to determine if any stops have been added to the line yet
         number_of_stops = len(location_data) # Number of stops in the service, used to determine how to format the calling points line
         coaches = 0
         stop_count = 0 # Keep track of the number of stops added
@@ -152,43 +149,45 @@ class LiveBoard:
 
             # If the stop count is equal to the number of stops, check if a number of coaches is given in the location data, get that number to display 
             # later. Check if any stops have been outputted. If they have, add the stop name to the end of the line without an ampersand and set 
-            # can_continue to False. If they haven't, add the stop name with 'only' and break the loop.
+            # can_add_calling_points to False. If they haven't, add the stop name with 'only' and break the loop.
             if stop_count == number_of_stops:
                 if coaches == 0 and "numberOfVehicles" in location["locationMetadata"]:
                     coaches = location["locationMetadata"].pop("numberOfVehicles")
 
                 if stops_outputted:
-                    can_continue = False
+                    can_add_calling_points = False
                     line_three += f"{stop_name}"
 
                 else:
+                    # Only stop
+                    #     Calling at: station only
                     line_three += f"{stop_name} only"
                     break
 
-            # If can_continue is True, set stops_outputted to True. If the stop count is one less than the number of stops, add the stop 
+            # If can_add_calling_points is True, set stops_outputted to True. If the stop count is one less than the number of stops, add the stop 
             # name with an ampersand. Otherwise, add the stop name with a comma. This is used to format the calling points line correctly 
             # based on the number of stops in the service.
-            if can_continue:
+            if can_add_calling_points:
                 stops_outputted = True
                 if stop_count == number_of_stops-1:
+                    # Penultimate stop: 
+                    #     Calling at: ... station & station
                     line_three += f"{stop_name} & "
 
                 else:
+                    # Intermediate stop:
+                    #     Calling at: station, station, station, ...
                     line_three += f"{stop_name}, "
 
-            # If the stop name is the same as the requested location, set can_continue to True to start adding stops to the line.
+            # If the stop name is the same as the requested location, set can_add_calling_points to True to start adding stops to the line.
             # This is used to only display the calling points after the requested location in the service, as the previous calling 
             # points would have already been displayed on a previous board.
-            if stop_name == requested_location:
-                can_continue = True
+            elif stop_name == requested_location:
+                can_add_calling_points = True
 
-        operator = schedule_data["operator"].pop("name")
+        line_three += f". {all_service_data['scheduleMetadata']['operator'].pop('name')} service"
 
-        # If the number of coaches is given, add that to the end of the line. Otherwise, just display the operator.
-        if coaches > 0:
-            line_three += f". {operator} service formed of {coaches} coaches.\n"
-
-        else:
-            line_three += f". {operator} service.\n"
+        # If the number of coaches is given, add that to the end of the line. Otherwise add \n
+        line_three += f" formed of {coaches} coaches\n" if coaches > 0 else f"\n"
 
         return line_two, line_three
