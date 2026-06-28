@@ -90,22 +90,11 @@ def create_parameters(tiploc: str, filter_from: str | None=None, filter_to: str 
 
 def get_dep_service_data(service) -> StationBoardDetails:
     # Set initial values for the service details, which will be updated if the relevant data exists in the API response
-    expected_departure: str = "-"
-    expected_arrival: str = "-"
-    platform: str = "-"
-    scheduled_arrival: str = "-"
-    scheduled_departure: str = "-"
-
-    # Set destination and origin, which will always be present in the API response
-    destination: str = service["destination"][0]["location"]["description"]
-    origin: str = service["origin"][0]["location"]["description"]
+    expected_departure = expected_arrival = platform = scheduled_arrival = scheduled_departure = "-"
 
     # Extract the temporal and location data for the service, which contains the details of the departure and arrival times, platform, and coaches.
     temporal_data = service["temporalData"]
     location_data = service["locationMetadata"]
-    # Extract the service UID, which will always be present in the API response
-    service_uid: str = service["scheduleMetadata"].pop("identity")
-
 
     # Extract arrival data if it exists
     if "arrival" in temporal_data:
@@ -158,19 +147,16 @@ def get_dep_service_data(service) -> StationBoardDetails:
         else:
             platform: str = location_data["platform"]["actual"]
 
-    # Extract vehicle length (coaches) data if it exists
-    coaches: int = location_data.pop("numberOfVehicles") if "numberOfVehicles" in location_data else 0
-
     return StationBoardDetails(
         scheduled_arrival,
         scheduled_departure,
-        destination,
-        origin,
+        service["destination"][0]["location"]["description"],
+        service["origin"][0]["location"]["description"],
         platform,
         expected_arrival,
         expected_departure,
-        service_uid,
-        coaches
+        service["scheduleMetadata"].pop("identity"),
+        location_data.pop("numberOfVehicles") if "numberOfVehicles" in location_data else 0
     )
 
 

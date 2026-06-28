@@ -11,8 +11,8 @@ from realtime_trains_py.internal.utilities import create_file, create_parameters
 
 
 class Boards:
-    def __init__(self, request_token: str, complexity: str) -> None:
-        self.__headers = {"Accept": "application/json", "Authorization": f"Bearer {request_token}"}
+    def __init__(self, api_request_token: str, complexity: str) -> None:
+        self.__headers = {"Accept": "application/json", "Authorization": f"Bearer {api_request_token}"}
         self.__complexity = complexity
 
     def _get_dep_board_details(self, tiploc: str, filter_from: str | None=None, filter_to: str | None=None, rows: int | None=None, time: str | None=None, date: str | None=None) -> DefaultBoard:

@@ -1,6 +1,4 @@
 # Import external libraries
-from re import match
-
 import requests
 import sys
 import time
@@ -9,18 +7,28 @@ from datetime import datetime
 
 # Import necessary items from other files
 from realtime_trains_py.internal.details import StationBoardDetails
-from realtime_trains_py.internal.utilities import check_cancel, check_token, get_dep_service_data
+from realtime_trains_py.internal.errors import AuthenticationError
+from realtime_trains_py.internal.utilities import check_cancel, get_dep_service_data
 
 
 class LiveBoard:
     # Take the request token and the token to create a new request token when the old request token expires
-    def __init__(self, api_request_token: str, token: str) -> None:
+    def __init__(self, api_request_token: str, request_token: str) -> None:
         self.__headers = {"Accept": "application/json", "Authorization": f"Bearer {api_request_token}"}
         self.__session = requests.Session()
-        self.__token = token
+        self.__request_token = request_token
 
-    def __update_request_token(self, api_request_token: str) -> None:
-        self.__headers["Authorization"] = f"Bearer {api_request_token}"
+    def __update_api_request_token(self) -> None:
+        headers={"Accept": "application/json", "Authorization": f"Bearer {self.__request_token}"}
+    
+        # Test the connection by sending a request to the API info endpoint, with the auth details provided
+        if self.__session.get("https://data.rtt.io/api/info", headers=headers).status_code != 200:
+            response = self.__session.get("https://data.rtt.io/api/get_access_token", headers=headers)
+            if response.status_code != 200:
+                raise AuthenticationError("Request token provided isn't valid.")
+            
+            else:
+                self.__headers["Authorization"] = f"Bearer {response.json()["token"]}"
 
     def _get_live(self, tiploc: str, mode: str="LCD") -> None:  
         # Output a helpful message to the user: Press Ctrl+C to close live departure board.
@@ -99,7 +107,7 @@ class LiveBoard:
 
                 elif response.status_code == 401:
                     # Check the request token and update the headers with the new token
-                    self.__update_request_token(check_token(request_token=self.__token))
+                    self.__update_api_request_token()
 
                     first_run = True # To immediately retry the request with the new token
 

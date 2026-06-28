@@ -12,8 +12,8 @@ from realtime_trains_py.internal.utilities import create_file, validate_date, va
 
 # Class for getting and creating service details
 class ServiceDetails:
-    def __init__(self, request_token: str, complexity: str) -> None:
-        self.__headers = {"Accept": "application/json", "Authorization": f"Bearer {request_token}"}
+    def __init__(self, api_request_token: str, complexity: str) -> None:
+        self.__headers = {"Accept": "application/json", "Authorization": f"Bearer {api_request_token}"}
         self.__complexity = complexity
 
     # Get the service details
@@ -97,31 +97,32 @@ class ServiceDetails:
 
 def get_calling_point(location) -> CallingPoint:
     # Initialize variables to store the calling point data. Set default values for all variables in case some data is missing from the API response.
-    stop_name = scheduled_arrival = expected_arrival = platform = line = scheduled_departure = expected_departure = ""
+    scheduled_arrival = expected_arrival = platform = line = scheduled_departure = expected_departure = ""
     coaches = 0
 
     temporal_data = location["temporalData"]
     location_data = location["locationMetadata"]
-    stop_name = location["location"].pop("description")
 
     # Extract arrival data if it exists. If the service is cancelled, set the expected arrival to "Cancelled". If the service 
     # has an actual arrival time, use that as the expected arrival. If the service has a forecast arrival time, use that as the 
     # expected arrival. If the expected arrival time is the same as the scheduled arrival time, set the expected arrival to 
     # "On time" or "Arrived on time" depending on whether it has arrived or not.
     if "arrival" in temporal_data:
-        is_cancelled = temporal_data["arrival"]["isCancelled"]
-        scheduled_arrival = temporal_data["arrival"]["scheduleAdvertised"].split("T")[1][:5]
+        arrival_data = temporal_data["arrival"]
 
-        if is_cancelled:
+        if "scheduleAdvertised" in arrival_data:
+            scheduled_arrival = arrival_data["scheduleAdvertised"].split("T")[1][:5]
+
+        if arrival_data["isCancelled"]:
             expected_arrival = "Cancelled"
         
-        elif "realtimeActual" in temporal_data["arrival"]:
-            expected_arrival = temporal_data["arrival"]["realtimeActual"].split("T")[1][:5]
+        elif "realtimeActual" in arrival_data:
+            expected_arrival = arrival_data["realtimeActual"].split("T")[1][:5]
             if expected_arrival == scheduled_arrival:
                 expected_arrival = "Arrived on time"
 
-        elif "realtimeForecast" in temporal_data["arrival"]:
-            expected_arrival = temporal_data["arrival"]["realtimeForecast"].split("T")[1][:5]
+        elif "realtimeForecast" in arrival_data:
+            expected_arrival = arrival_data["realtimeForecast"].split("T")[1][:5]
             if expected_arrival == scheduled_arrival:
                 expected_arrival = "On time"
 
@@ -130,18 +131,21 @@ def get_calling_point(location) -> CallingPoint:
     # expected departure. If the expected departure time is the same as the scheduled departure time, set the expected departure to 
     # "On time" or "Departed on time" depending on whether it has departed or not.
     if "departure" in temporal_data:
-        is_cancelled = temporal_data["departure"]["isCancelled"]
-        scheduled_departure = temporal_data["departure"]["scheduleAdvertised"].split("T")[1][:5]
-        if is_cancelled:
+        departure_data = temporal_data["departure"]
+
+        if "scheduleAdvertised" in departure_data:
+            scheduled_departure = departure_data["scheduleAdvertised"].split("T")[1][:5]
+        
+        if departure_data["isCancelled"]:
             expected_departure = "Cancelled"
 
-        elif "realtimeActual" in temporal_data["departure"]:
-            expected_departure = temporal_data["departure"]["realtimeActual"].split("T")[1][:5]
+        elif "realtimeActual" in departure_data:
+            expected_departure = departure_data["realtimeActual"].split("T")[1][:5]
             if expected_departure == scheduled_departure:
                 expected_departure = "Departed on time"
 
-        elif "realtimeForecast" in temporal_data["departure"]:
-            expected_departure = temporal_data["departure"]["realtimeForecast"].split("T")[1][:5] 
+        elif "realtimeForecast" in departure_data:
+            expected_departure = departure_data["realtimeForecast"].split("T")[1][:5] 
             if expected_departure == scheduled_departure:
                 expected_departure = "On time"  
 
@@ -167,4 +171,4 @@ def get_calling_point(location) -> CallingPoint:
     if "numberOfVehicles" in location["locationMetadata"]:
         coaches = location["locationMetadata"].pop("numberOfVehicles")
 
-    return CallingPoint(stop_name, scheduled_arrival, expected_arrival, platform, line, scheduled_departure, expected_departure, coaches)
+    return CallingPoint(location["location"].pop("description"), scheduled_arrival, expected_arrival, platform, line, scheduled_departure, expected_departure, coaches)

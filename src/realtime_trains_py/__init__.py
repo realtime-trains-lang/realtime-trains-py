@@ -37,12 +37,11 @@ class RealtimeTrainsPy:
         if api_complexity == "c":
             complex_setup()
 
-        token = request_token
         api_request_token = check_token(request_token=request_token)
 
-        self.__services = ServiceDetails(request_token=api_request_token, complexity=api_complexity)
-        self.__boards = Boards(request_token=api_request_token, complexity=api_complexity)
-        self.__live_board = LiveBoard(api_request_token=api_request_token, token=token)
+        self.__services = ServiceDetails(api_request_token=api_request_token, complexity=api_complexity)
+        self.__boards = Boards(api_request_token=api_request_token, complexity=api_complexity)
+        self.__live_board = LiveBoard(api_request_token=api_request_token, request_token=request_token)
 
 
     def get_departures(self, tiploc: str, filter_from: str | None=None, filter_to: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> DefaultBoard:
@@ -116,8 +115,7 @@ class RealtimeTrainsPy:
 
         [Check out the wiki for more examples and information.](https://github.com/realtime-trains-lang/realtime-trains-py/wiki)
         """       
-        api_mode = _MODE_MAP[mode]
-        self.__live_board._get_live(tiploc=tiploc.upper(), mode=api_mode)
+        self.__live_board._get_live(tiploc=tiploc.upper(), mode=_MODE_MAP[mode])
 
     def watch_service(self, service_uid: str, mode: Mode="LCD") -> None:
         """
@@ -143,4 +141,3 @@ class RealtimeTrainsPy:
         [Check out the wiki for more examples and information.](https://github.com/realtime-trains-lang/realtime-trains-py/wiki)
         """
         raise NotImplementedError("Calm down, eager beaver! This method is not implemented yet.")
-        api_mode = _MODE_MAP[mode]
