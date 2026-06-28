@@ -6,11 +6,17 @@ import requests
 
 # Import necessary items from other files
 from realtime_trains_py.internal.details import StationBoardDetails
-from realtime_trains_py.internal.errors import AuthenticationError, FileWriteError, InvalidDateProvided, InvalidTimeProvided, InvalidUIDProvided
+from realtime_trains_py.internal.errors import (
+    AuthenticationError,
+    FileWriteError,
+    InvalidDateProvided,
+    InvalidTimeProvided,
+    InvalidUIDProvided,
+)
 
 
 def check_cancel(actual_departure: str) -> str:
-    # Check if the service is cancelled or delayed. Change text colour accordingly. If cancelled, set the text to red. 
+    # Check if the service is cancelled or delayed. Change text colour accordingly. If cancelled, set the text to red.
     # If on time, set the text to green. Otherwise, set the text to yellow. At the end of the line, reset the text colour to default.
     if actual_departure == "Cancelled":
         return f"\033[1;31m{actual_departure}\033[1;39m"
@@ -20,24 +26,29 @@ def check_cancel(actual_departure: str) -> str:
 
     return f"\033[1;33m{actual_departure}\033[1;39m"
 
-def check_token(request_token: str) -> str:    
-    headers={"Accept": "application/json", "Authorization": f"Bearer {request_token}"}
-    
+
+def check_token(request_token: str) -> str:
+    headers = {"Accept": "application/json", "Authorization": f"Bearer {request_token}"}
+
     # Test the connection by sending a request to the API info endpoint, with the auth details provided
     if requests.get("https://data.rtt.io/api/info", headers=headers).status_code != 200:
-        response = requests.get("https://data.rtt.io/api/get_access_token", headers=headers)
+        response = requests.get(
+            "https://data.rtt.io/api/get_access_token", headers=headers
+        )
         if response.status_code != 200:
             raise AuthenticationError("Request token provided isn't valid.")
-        
+
         else:
             return response.json()["token"]
-        
+
     return request_token
+
 
 def complex_setup() -> None:
     # Check if realtime_trains_py_data folder exists and create it if not
     if not os.path.isdir("realtime_trains_py_data"):
         os.mkdir("realtime_trains_py_data")
+
 
 def create_file(name: str, contents) -> None:
     # Create file name by adding directory and type
@@ -54,7 +65,13 @@ def create_file(name: str, contents) -> None:
 
 
 # Create a new search query for board data requests to the API
-def create_parameters(tiploc: str, filter_from: str | None=None, filter_to: str | None=None, time: str | None=None, date: str | None=None) -> dict[str, str]:
+def create_parameters(
+    tiploc: str,
+    filter_from: str | None = None,
+    filter_to: str | None = None,
+    time: str | None = None,
+    date: str | None = None,
+) -> dict[str, str]:
     # If a date is provided validate the date
     if date is not None:
         validate_date(date)
@@ -63,16 +80,16 @@ def create_parameters(tiploc: str, filter_from: str | None=None, filter_to: str 
     if time is not None:
         validate_time(time)
 
-    # Create the parameters for the API request based on the parameters provided. The tiploc parameter is required, 
-    # but the filter_from, filter_to, time, and date parameters are optional. If the optional parameters are not provided, 
+    # Create the parameters for the API request based on the parameters provided. The tiploc parameter is required,
+    # but the filter_from, filter_to, time, and date parameters are optional. If the optional parameters are not provided,
     # they will be set to an empty string in the parameters dictionary.
     parameters: dict[str, str] = {
         "code": f"gb-nr:{tiploc.upper()}",
         "filterFrom": f"gb-nr:{filter_from.upper()}" if filter_from is not None else "",
-        "filterTo" : f"gb-nr:{filter_to.upper()}" if filter_to is not None else "",
+        "filterTo": f"gb-nr:{filter_to.upper()}" if filter_to is not None else "",
         "timeFrom": "",
         "timeTolerance": "false",
-        "detailed": "false"
+        "detailed": "false",
     }
 
     # Add the timeFrom parameter based on the time and date parameters provided
@@ -98,45 +115,65 @@ def get_dep_service_data(service) -> StationBoardDetails:
 
     # Extract arrival data if it exists
     if "arrival" in temporal_data:
-        # Check if the service is cancelled based on the API response, and set the expected arrival time accordingly. 
-        # If the service isn't cancelled, check if there is a realtime actual or forecast arrival time, and set the 
-        # expected arrival time accordingly. If the realtime data matches the scheduled arrival time, set the expected 
+        # Check if the service is cancelled based on the API response, and set the expected arrival time accordingly.
+        # If the service isn't cancelled, check if there is a realtime actual or forecast arrival time, and set the
+        # expected arrival time accordingly. If the realtime data matches the scheduled arrival time, set the expected
         # arrival time to "On time".
         if "scheduleAdvertised" in temporal_data["arrival"]:
-            scheduled_arrival: str = temporal_data["arrival"]["scheduleAdvertised"].split("T")[1][:5]
+            scheduled_arrival: str = temporal_data["arrival"][
+                "scheduleAdvertised"
+            ].split("T")[1][:5]
 
         if temporal_data["arrival"]["isCancelled"]:
             expected_arrival: str = "Cancelled"
 
-        else:        
+        else:
             if "realtimeActual" in temporal_data["arrival"]:
-                expected_arrival: str = temporal_data["arrival"]["realtimeActual"].split("T")[1][:5]
+                expected_arrival: str = temporal_data["arrival"][
+                    "realtimeActual"
+                ].split("T")[1][:5]
 
             elif "realtimeForecast" in temporal_data["arrival"]:
-                expected_arrival: str = temporal_data["arrival"]["realtimeForecast"].split("T")[1][:5]
+                expected_arrival: str = temporal_data["arrival"][
+                    "realtimeForecast"
+                ].split("T")[1][:5]
 
-            expected_arrival: str = "On time" if expected_arrival == scheduled_arrival else f"Exp {expected_arrival}"
+            expected_arrival: str = (
+                "On time"
+                if expected_arrival == scheduled_arrival
+                else f"Exp {expected_arrival}"
+            )
 
     # Extract departure data if it exists
     if "departure" in temporal_data:
-        # Check if the service is cancelled based on the API response, and set the expected departure time accordingly. 
-        # If the service isn't cancelled, check if there is a realtime actual or forecast departure time, and set the 
-        # expected departure time accordingly. If the realtime data matches the scheduled departure time, set the expected 
+        # Check if the service is cancelled based on the API response, and set the expected departure time accordingly.
+        # If the service isn't cancelled, check if there is a realtime actual or forecast departure time, and set the
+        # expected departure time accordingly. If the realtime data matches the scheduled departure time, set the expected
         # departure time to "On time".
         if "scheduleAdvertised" in temporal_data["departure"]:
-            scheduled_departure: str = temporal_data["departure"]["scheduleAdvertised"].split("T")[1][:5]
-            
+            scheduled_departure: str = temporal_data["departure"][
+                "scheduleAdvertised"
+            ].split("T")[1][:5]
+
         if temporal_data["departure"]["isCancelled"]:
             expected_departure: str = "Cancelled"
 
         else:
             if "realtimeActual" in temporal_data["departure"]:
-                expected_departure: str = temporal_data["departure"]["realtimeActual"].split("T")[1][:5]
+                expected_departure: str = temporal_data["departure"][
+                    "realtimeActual"
+                ].split("T")[1][:5]
 
             elif "realtimeForecast" in temporal_data["departure"]:
-                expected_departure: str = temporal_data["departure"]["realtimeForecast"].split("T")[1][:5]    
+                expected_departure: str = temporal_data["departure"][
+                    "realtimeForecast"
+                ].split("T")[1][:5]
 
-            expected_departure: str = "On time" if expected_departure == scheduled_departure else f"Exp {expected_departure}"   
+            expected_departure: str = (
+                "On time"
+                if expected_departure == scheduled_departure
+                else f"Exp {expected_departure}"
+            )
 
     # Extract platform data if it exists
     if "platform" in location_data:
@@ -156,15 +193,25 @@ def get_dep_service_data(service) -> StationBoardDetails:
         expected_arrival,
         expected_departure,
         service["scheduleMetadata"].pop("identity"),
-        location_data.pop("numberOfVehicles") if "numberOfVehicles" in location_data else 0
+        (
+            location_data.pop("numberOfVehicles")
+            if "numberOfVehicles" in location_data
+            else 0
+        ),
     )
 
 
 def validate_date(date: str) -> None:
     # Validate the date provided by the user. The date must be in the format YYYY-MM-DD, and must be a valid date.
     # If the date is not valid, raise an error.
-    if re.fullmatch("[1-9][0-9][0-9]{2}-([0][1-9]|[1][0-2])-([1-2][0-9]|[0][1-9]|[3][0-1])", date) == None:
-        raise InvalidDateProvided(date) 
+    if (
+        re.fullmatch(
+            "[1-9][0-9][0-9]{2}-([0][1-9]|[1][0-2])-([1-2][0-9]|[0][1-9]|[3][0-1])",
+            date,
+        )
+        == None
+    ):
+        raise InvalidDateProvided(date)
 
 
 def validate_time(time: str) -> None:
@@ -175,7 +222,7 @@ def validate_time(time: str) -> None:
 
 
 def validate_uid(uid: str) -> None:
-    # Validate the service UID provided by the user. The UID must be a string starting with a capital letter followed 
+    # Validate the service UID provided by the user. The UID must be a string starting with a capital letter followed
     # by 5 digits (e.g. A12345). If the UID is not valid, raise an error.
     if re.fullmatch("[A-Z]?[0-9]{5}", uid) == None:
         raise InvalidUIDProvided(uid)

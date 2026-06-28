@@ -6,7 +6,11 @@ from typing import Literal
 from realtime_trains_py.internal.boards import Boards
 from realtime_trains_py.internal.details import DefaultBoard
 from realtime_trains_py.internal.live_board import LiveBoard
-from realtime_trains_py.internal.services import ServiceDetails, ServiceData, ServiceDetails
+from realtime_trains_py.internal.services import (
+    ServiceDetails,
+    ServiceData,
+    ServiceDetails,
+)
 from realtime_trains_py.internal.utilities import check_token, complex_setup
 
 # Define the complexity and mode types, and their corresponding mappings to the API parameters
@@ -15,13 +19,14 @@ Mode = Literal["DMI_yellow", "DMI_white", "LCD"]
 _COMPLEXITY_MAP = {"simple": "s", "simple_normal": "s.n", "complex": "c"}
 _MODE_MAP = {"DMI_yellow": "DMI.Y", "DMI_white": "DMI.W", "LCD": "LCD"}
 
+
 class RealtimeTrainsPy:
-    def __init__(self, request_token: str, complexity: Complexity="simple") -> None:
+    def __init__(self, request_token: str, complexity: Complexity = "simple") -> None:
         """
         :param str request_token: (Required) A string representing your request token for authentication.
-        :param complexity: (Optional) A string representing your chosen complexity level. 
+        :param complexity: (Optional) A string representing your chosen complexity level.
         Choose from: `complex`, `simple` or `simple_normal`. If not provided, defaults to `simple`.
-        
+
         ---
         ## Examples
         ```python
@@ -39,12 +44,25 @@ class RealtimeTrainsPy:
 
         api_request_token = check_token(request_token=request_token)
 
-        self.__services = ServiceDetails(api_request_token=api_request_token, complexity=api_complexity)
-        self.__boards = Boards(api_request_token=api_request_token, complexity=api_complexity)
-        self.__live_board = LiveBoard(api_request_token=api_request_token, request_token=request_token)
+        self.__services = ServiceDetails(
+            api_request_token=api_request_token, complexity=api_complexity
+        )
+        self.__boards = Boards(
+            api_request_token=api_request_token, complexity=api_complexity
+        )
+        self.__live_board = LiveBoard(
+            api_request_token=api_request_token, request_token=request_token
+        )
 
-
-    def get_departures(self, tiploc: str, filter_from: str | None=None, filter_to: str | None=None, date: str | None=None, rows: int | None=None, time: str | None=None) -> DefaultBoard:
+    def get_departures(
+        self,
+        tiploc: str,
+        filter_from: str | None = None,
+        filter_to: str | None = None,
+        date: str | None = None,
+        rows: int | None = None,
+        time: str | None = None,
+    ) -> DefaultBoard:
         """
         ## Get Departures
         This function retrieves the departures and arrivals for a given station.
@@ -60,11 +78,11 @@ class RealtimeTrainsPy:
         ## Examples
         ```python
         get_departures(
-            tiploc="KNGX", 
-            filter_from="STEVNGE", 
-            filter_to="PBRO", 
-            date="2024-11-16", 
-            time="1800", 
+            tiploc="KNGX",
+            filter_from="STEVNGE",
+            filter_to="PBRO",
+            date="2024-11-16",
+            time="1800",
             rows=10
         )
 
@@ -73,9 +91,18 @@ class RealtimeTrainsPy:
 
         [Check out the wiki for more examples and information.](https://github.com/realtime-trains-lang/realtime-trains-py/wiki)
         """
-        return self.__boards._get_dep_board_details(tiploc=tiploc.upper(), filter_from=filter_from, filter_to=filter_to, date=date, rows=rows, time=time)
+        return self.__boards._get_dep_board_details(
+            tiploc=tiploc.upper(),
+            filter_from=filter_from,
+            filter_to=filter_to,
+            date=date,
+            rows=rows,
+            time=time,
+        )
 
-    def get_service(self, service_uid: str, date: str=datetime.now().strftime("%Y-%m-%d")) -> ServiceData:
+    def get_service(
+        self, service_uid: str, date: str = datetime.now().strftime("%Y-%m-%d")
+    ) -> ServiceData:
         """
         ## Get Service
         This function retrieves the service information for a given service UID on a provided date.
@@ -93,16 +120,18 @@ class RealtimeTrainsPy:
 
         [Check out the wiki for more examples and information.](https://github.com/realtime-trains-lang/realtime-trains-py/wiki)
         """
-        return self.__services._get_service_details(service_uid=service_uid.upper(), date=date)
+        return self.__services._get_service_details(
+            service_uid=service_uid.upper(), date=date
+        )
 
-    def get_live(self, tiploc: str, mode: Mode="LCD") -> None:
+    def get_live(self, tiploc: str, mode: Mode = "LCD") -> None:
         """
         ## Get Live
         This function retrieves the live departure board for a given station. The board is updated every 60 seconds, on the minute.
         To exit the board, press Ctrl + C.
 
         :param str tiploc: (Required) A string representing the Timing Point Location Code (TIPLOC) or Computer Reservation Code (CRS) of the station.
-        :param Mode mode: (Optional) A string representing the mode of the live board. 
+        :param Mode mode: (Optional) A string representing the mode of the live board.
         Choose from: `DMI_yellow`, `DMI_white` or `LCD`. If not provided, the default is `LCD`.
 
         ---
@@ -114,20 +143,20 @@ class RealtimeTrainsPy:
         ```
 
         [Check out the wiki for more examples and information.](https://github.com/realtime-trains-lang/realtime-trains-py/wiki)
-        """       
+        """
         self.__live_board._get_live(tiploc=tiploc.upper(), mode=_MODE_MAP[mode])
 
-    def watch_service(self, service_uid: str, mode: Mode="LCD") -> None:
+    def watch_service(self, service_uid: str, mode: Mode = "LCD") -> None:
         """
         ## Watch Service
-        
+
         # NOT AVAILABLE (YET)
 
-        This function retrieves the service information for a given service UID on a provided date. The service information is updated every 60 seconds, on the minute. 
+        This function retrieves the service information for a given service UID on a provided date. The service information is updated every 60 seconds, on the minute.
         To stop watching the service, press Ctrl + C.
 
         :param str service_uid: (Required) A string representing the Service Unique Identity (UID) code.
-        :param Mode mode: (Optional) A string representing the mode of the live board. 
+        :param Mode mode: (Optional) A string representing the mode of the live board.
         Choose from: `DMI_yellow`, `DMI_white` or `LCD`. If not provided, the default is `LCD`.
 
         ---
@@ -140,4 +169,6 @@ class RealtimeTrainsPy:
 
         [Check out the wiki for more examples and information.](https://github.com/realtime-trains-lang/realtime-trains-py/wiki)
         """
-        raise NotImplementedError("Calm down, eager beaver! This method is not implemented yet.")
+        raise NotImplementedError(
+            "Calm down, eager beaver! This method is not implemented yet."
+        )
