@@ -2,7 +2,7 @@
 
 ---
 
-### Our latest release, [version 2027.1.0](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Release-Notes#version-202710-1), features multiple breaking changes to allow realtime-trains-py to replace the legacy Realtime Trains API with the Next Generation API. Please check the [release notes](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Release-Notes#version-202710-1) for full details about these changes.
+### Our latest release, [version 2027.1.0](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Release-Notes#version-202710), features multiple breaking changes to allow realtime-trains-py to replace the legacy Realtime Trains API with the Next Generation API. Please check the [release notes](https://github.com/realtime-trains-lang/realtime-trains-py/wiki/Release-Notes#version-202710) for full details about these changes.
 
 Maintained and managed by members of [realtime-trains-lang](https://github.com/realtime-trains-lang).
 
