@@ -1,4 +1,4 @@
-# Security Policy: realtime-trains-lang 
+# Security Policy: 
 
 ## Supported Versions of realtime-trains-py
 
@@ -12,7 +12,7 @@ If you are using an unsupported version, please upgrade to a supported version t
 
 ## Reporting a Vulnerability
 
-We take the security of the realtime-trains-lang packages seriously. If you discover a security vulnerability, please report it as soon as possible by emailing us at **[anonymous4401.ad@gmail.com](mailto:anonymous4401.ad@gmail.com)**.
+We take the security of the realtime-trains-lang packages seriously. If you discover a security vulnerability, please report it as soon as possible by emailing **[anonymous4401.ad@gmail.com](mailto:anonymous4401.ad@gmail.com)**.
 
 Ensure you include the details of the issue. Include the following information in your report:
    - A detailed description of the vulnerability.
@@ -30,7 +30,7 @@ After confirming the issue, we will:
 
 ## Security Updates
 
-We will post updates about resolved security vulnerabilities in the **[releases section of this repository.](https://github.com/realtime-trains-lang/realtime-trains-py/releases)**
+We will post updates about resolved security vulnerabilities in the **[releases section of this repository.](https://github.com/anonymous44401/realtime-trains-py/releases)**
 
 ## Scope
 
@@ -38,4 +38,4 @@ This security policy applies to vulnerabilities in the source code and dependenc
 - General bugs that do not pose a security risk.
 - Issues related to third-party services or tools.
 
-Thank you for helping us keep realtime-trains-lang secure!
+Thank you for helping us keep realtime-trains-py secure!

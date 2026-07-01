@@ -35,7 +35,7 @@ class RealtimeTrainsPy:
         rtt = RealtimeTrainsPy(request_token="<a_request_token>", complexity="complex")
         ```
 
-        [Check out the wiki for more examples and information.](https://github.com/realtime-trains-lang/realtime-trains-py/wiki)
+        [Check out the wiki for more examples and information.](https://github.com/anonymous44401/realtime-trains-py/wiki)
         """
         api_complexity = _COMPLEXITY_MAP[complexity]
 
@@ -89,7 +89,7 @@ class RealtimeTrainsPy:
         get_departures(tiploc="YORK", date="2024-11-16", time="1800")
         ```
 
-        [Check out the wiki for more examples and information.](https://github.com/realtime-trains-lang/realtime-trains-py/wiki)
+        [Check out the wiki for more examples and information.](https://github.com/anonymous44401/realtime-trains-py/wiki)
         """
         return self.__boards._get_dep_board_details(
             tiploc=tiploc.upper(),
@@ -118,7 +118,7 @@ class RealtimeTrainsPy:
         get_service(service_uid="G26171")
         ```
 
-        [Check out the wiki for more examples and information.](https://github.com/realtime-trains-lang/realtime-trains-py/wiki)
+        [Check out the wiki for more examples and information.](https://github.com/anonymous44401/realtime-trains-py/wiki)
         """
         return self.__services._get_service_details(
             service_uid=service_uid.upper(), date=date
@@ -142,7 +142,7 @@ class RealtimeTrainsPy:
         get_live(tiploc="PBRO", mode="DMI_yellow") # Live board for Peterborough, with mode set to DMI (Yellow)
         ```
 
-        [Check out the wiki for more examples and information.](https://github.com/realtime-trains-lang/realtime-trains-py/wiki)
+        [Check out the wiki for more examples and information.](https://github.com/anonymous44401/realtime-trains-py/wiki)
         """
         self.__live_board._get_live(tiploc=tiploc.upper(), mode=_MODE_MAP[mode])
 
@@ -167,7 +167,7 @@ class RealtimeTrainsPy:
         watch_service(service_uid="G26171")
         ```
 
-        [Check out the wiki for more examples and information.](https://github.com/realtime-trains-lang/realtime-trains-py/wiki)
+        [Check out the wiki for more examples and information.](https://github.com/anonymous44401/realtime-trains-py/wiki)
         """
         raise NotImplementedError(
             "Calm down, eager beaver! This method is not implemented yet."
